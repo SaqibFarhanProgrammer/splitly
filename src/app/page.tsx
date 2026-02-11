@@ -10,6 +10,7 @@ import { TechPhilosophySection } from "@/components/TechPhilosophySection";
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
 import { FeaturesSection } from "@/components/FeaturesSectiont";
+import { Sidebar } from "lucide-react";
 
 export default function Home() {
   return (

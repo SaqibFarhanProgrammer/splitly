@@ -182,58 +182,8 @@ export default function Page() {
         </div>
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <Card className="bg-zinc-950 border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">Total Balance</p>
-                  <p className="text-3xl font-bold text-white">₹12,400</p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-white" />
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mt-4 text-sm">
-                <span className="text-emerald-400 flex items-center">
-                  <ArrowUpRight className="w-4 h-4 mr-1" />
-                  +12%
-                </span>
-                <span className="text-zinc-500">from last month</span>
-              </div>
-            </CardContent>
-          </Card>
+  
 
-          <Card className="bg-zinc-950 border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">You Are Owed</p>
-                  <p className="text-3xl font-bold text-emerald-400">₹8,500</p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                  <ArrowDownRight className="w-6 h-6 text-emerald-400" />
-                </div>
-              </div>
-              <p className="text-zinc-500 text-sm mt-4">From 3 people</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-zinc-950 border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-zinc-400 text-sm mb-1">You Owe</p>
-                  <p className="text-3xl font-bold text-red-400">₹5,700</p>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center">
-                  <ArrowUpRight className="w-6 h-6 text-red-400" />
-                </div>
-              </div>
-              <p className="text-zinc-500 text-sm mt-4">To 2 people</p>
-            </CardContent>
-          </Card>
-        </div>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="groups" className="w-full">
