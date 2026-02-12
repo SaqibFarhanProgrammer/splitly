@@ -44,7 +44,7 @@ export function Sidebar() {
     <div className="z-20">
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
+        className="lg:hidden fixed top-2 left-4 z-50 p-2.5 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
       >
         <Menu className="w-5 h-5" />
       </button>
@@ -57,7 +57,7 @@ export function Sidebar() {
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-transparent to-transparent pointer-events-none" />
 
         <div
-          className={`relative flex items-center justify-between px-4 py-5 border-b border-zinc-800/50 ${isCollapsed ? "px-3" : "px-6"}`}
+          className={`relative flex items-center justify-between px-4 py-2.5 border-b border-zinc-800/50 ${isCollapsed ? "px-3" : "px-6"}`}
         >
           {!isCollapsed && (
             <div className="flex items-center gap-3 overflow-hidden">
