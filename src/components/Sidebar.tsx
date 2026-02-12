@@ -42,7 +42,6 @@ export function Sidebar() {
 
   return (
     <div className="z-20">
-      {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2.5 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
@@ -50,16 +49,13 @@ export function Sidebar() {
         <Menu className="w-5 h-5" />
       </button>
 
-      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 bg-zinc-950 border-r border-zinc-800/50 z-40 transform transition-all duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        } ${isCollapsed ? "w-20" : "w-72"}`}
+        } ${isCollapsed ? "w-20 " : "w-72"}`}
       >
-        {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-transparent to-transparent pointer-events-none" />
 
-        {/* Header */}
         <div
           className={`relative flex items-center justify-between px-4 py-5 border-b border-zinc-800/50 ${isCollapsed ? "px-3" : "px-6"}`}
         >
@@ -91,9 +87,10 @@ export function Sidebar() {
           </button>
         </div>
 
-        {/* Collapse Toggle (Desktop only) */}
         <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
+          onClick={() => {
+            setIsCollapsed(!isCollapsed);
+          }}
           className="hidden lg:flex absolute -right-3 top-20 w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors z-50"
         >
           <PanelLeft
@@ -101,7 +98,6 @@ export function Sidebar() {
           />
         </button>
 
-        {/* Quick Action */}
         <div className={`relative py-4 ${isCollapsed ? "px-2" : "px-4"}`}>
           <button
             className={`w-full group flex items-center justify-center rounded-xl bg-white text-black font-medium shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.02] transition-all duration-200 ${isCollapsed ? "p-3" : "px-4 py-3 gap-3"}`}
@@ -116,7 +112,6 @@ export function Sidebar() {
           </button>
         </div>
 
-        {/* Main Navigation */}
         <nav className={`relative space-y-1 ${isCollapsed ? "px-2" : "px-3"}`}>
           {!isCollapsed && (
             <p className="px-4 text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
@@ -164,7 +159,6 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* Bottom Section */}
         <div
           className={`absolute bottom-0 left-0 right-0 p-3 border-t border-zinc-800/50 bg-zinc-950/50 backdrop-blur-xl ${isCollapsed ? "px-2" : ""}`}
         >
@@ -203,7 +197,6 @@ export function Sidebar() {
             })}
           </nav>
 
-          {/* User Profile */}
           <div
             className={`flex items-center rounded-xl bg-zinc-900/50 border border-zinc-800/50 ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"}`}
           >
@@ -233,7 +226,6 @@ export function Sidebar() {
         </div>
       </aside>
 
-      {/* Overlay */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"

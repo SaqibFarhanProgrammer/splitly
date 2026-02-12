@@ -102,7 +102,7 @@ export default function GroupsPage() {
   );
 
   return (
-    <div className="space-y-6 mt-20 w-[85vw] mr-20   mx-auto ">
+    <div className="space-y-6 mt-25 w-[85vw] mr-20   mx-auto ">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -128,7 +128,7 @@ export default function GroupsPage() {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800"
+            className="border-zinc-800 py-5 mt-0.5 text-zinc-700 hover:text-white hover:bg-zinc-800"
           >
             <Filter className="w-4 h-4 mr-2" />
             Filter
