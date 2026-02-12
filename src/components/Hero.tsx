@@ -4,7 +4,7 @@ import { Navbar } from "./Navbar";
 
 export function HeroSection() {
   return (
-    <section className="relative h-[190vh] bg-black overflow-hidden">
+    <section className="relative mt-0 h-[190vh] bg-black overflow-hidden">
       {/* Gradient Glow Effect */}
       <div className="absolute bottom-40  right-37 w-[80vw] h-[95vh] bg-gradient-to-tl from-purple-600 via-purple-500 to-zinc-400 opacity-40 blur-[90px] pointer-events-none" />
 

@@ -27,17 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}>
-        <SidebarProvider>
-            <Navbar/>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            
-            <main className="flex-1 lg:ml-64 pt-16 lg:pt-0">
-              {children}
-            </main>
-          </div>
-        </SidebarProvider>
+      <body
+        cz-shortcut-listen="true"
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
+      >
+        <main className="">{children}</main>
       </body>
     </html>
   );

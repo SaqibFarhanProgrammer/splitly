@@ -182,8 +182,6 @@ export default function Page() {
         </div>
 
         {/* Stats Overview */}
-  
-
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="groups" className="w-full">

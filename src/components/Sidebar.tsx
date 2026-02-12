@@ -15,6 +15,7 @@ import {
   ChevronRight,
   Bell,
   PanelLeft,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,10 +23,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 
 const navigation = [
+  { name: "Profile", href: "/profile", icon: User },
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Groups", href: "/groups", icon: Users },
-  { name: "Expenses", href: "/expenses", icon: Receipt },
-  { name: "Balances", href: "/balances", icon: Wallet },
+  { name: "Groups", href: "/allgroups", icon: Users },
 ];
 
 const bottomNavigation = [
@@ -41,7 +41,7 @@ export function Sidebar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <>
+    <div className="z-20">
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(true)}
@@ -60,7 +60,9 @@ export function Sidebar() {
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-transparent to-transparent pointer-events-none" />
 
         {/* Header */}
-        <div className={`relative flex items-center justify-between px-4 py-5 border-b border-zinc-800/50 ${isCollapsed ? "px-3" : "px-6"}`}>
+        <div
+          className={`relative flex items-center justify-between px-4 py-5 border-b border-zinc-800/50 ${isCollapsed ? "px-3" : "px-6"}`}
+        >
           {!isCollapsed && (
             <div className="flex items-center gap-3 overflow-hidden">
               <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-white/5 shrink-0">
@@ -74,7 +76,7 @@ export function Sidebar() {
               </div>
             </div>
           )}
-          
+
           {isCollapsed && (
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-white/5 mx-auto">
               <span className="text-black font-bold text-lg">S</span>
@@ -94,12 +96,16 @@ export function Sidebar() {
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="hidden lg:flex absolute -right-3 top-20 w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors z-50"
         >
-          <PanelLeft className={`w-3 h-3 transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`} />
+          <PanelLeft
+            className={`w-3 h-3 transition-transform duration-300 ${isCollapsed ? "rotate-180" : ""}`}
+          />
         </button>
 
         {/* Quick Action */}
         <div className={`relative py-4 ${isCollapsed ? "px-2" : "px-4"}`}>
-          <button className={`w-full group flex items-center justify-center rounded-xl bg-white text-black font-medium shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.02] transition-all duration-200 ${isCollapsed ? "p-3" : "px-4 py-3 gap-3"}`}>
+          <button
+            className={`w-full group flex items-center justify-center rounded-xl bg-white text-black font-medium shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.02] transition-all duration-200 ${isCollapsed ? "p-3" : "px-4 py-3 gap-3"}`}
+          >
             <PlusCircle className="w-5 h-5 shrink-0" />
             {!isCollapsed && (
               <>
@@ -134,7 +140,11 @@ export function Sidebar() {
               >
                 <div
                   className={`rounded-lg transition-colors shrink-0 ${isCollapsed ? "p-0 bg-transparent" : "p-1.5"} ${
-                    active && !isCollapsed ? "bg-white/10" : !isCollapsed ? "bg-zinc-800/50 group-hover:bg-zinc-700/50" : ""
+                    active && !isCollapsed
+                      ? "bg-white/10"
+                      : !isCollapsed
+                        ? "bg-zinc-800/50 group-hover:bg-zinc-700/50"
+                        : ""
                   }`}
                 >
                   <Icon
@@ -155,7 +165,9 @@ export function Sidebar() {
         </nav>
 
         {/* Bottom Section */}
-        <div className={`absolute bottom-0 left-0 right-0 p-3 border-t border-zinc-800/50 bg-zinc-950/50 backdrop-blur-xl ${isCollapsed ? "px-2" : ""}`}>
+        <div
+          className={`absolute bottom-0 left-0 right-0 p-3 border-t border-zinc-800/50 bg-zinc-950/50 backdrop-blur-xl ${isCollapsed ? "px-2" : ""}`}
+        >
           <nav className="space-y-1 mb-3">
             {bottomNavigation.map((link) => {
               const Icon = link.icon;
@@ -192,8 +204,12 @@ export function Sidebar() {
           </nav>
 
           {/* User Profile */}
-          <div className={`flex items-center rounded-xl bg-zinc-900/50 border border-zinc-800/50 ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"}`}>
-            <Avatar className={`border-2 border-zinc-800 shrink-0 ${isCollapsed ? "w-10 h-10" : "w-10 h-10"}`}>
+          <div
+            className={`flex items-center rounded-xl bg-zinc-900/50 border border-zinc-800/50 ${isCollapsed ? "justify-center p-2" : "gap-3 px-3 py-3"}`}
+          >
+            <Avatar
+              className={`border-2 border-zinc-800 shrink-0 ${isCollapsed ? "w-10 h-10" : "w-10 h-10"}`}
+            >
               <AvatarFallback className="bg-zinc-800 text-zinc-200 text-sm font-bold">
                 JD
               </AvatarFallback>
@@ -204,7 +220,9 @@ export function Sidebar() {
                   <p className="text-sm font-semibold text-zinc-200 truncate">
                     John Doe
                   </p>
-                  <p className="text-xs text-zinc-500 truncate">john@example.com</p>
+                  <p className="text-xs text-zinc-500 truncate">
+                    john@example.com
+                  </p>
                 </div>
                 <button className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-400/10 transition-colors">
                   <LogOut className="w-4 h-4" />
@@ -222,6 +240,6 @@ export function Sidebar() {
           onClick={() => setIsOpen(false)}
         />
       )}
-    </>
+    </div>
   );
 }
