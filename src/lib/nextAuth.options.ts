@@ -12,18 +12,21 @@ export const authOptions: NextAuthOptions = {
         email: { label: "email", type: "text" },
         password: { label: "password", type: "text" },
       },
-      async authorize() {
-        if (!this.credentials?.email || !this.credentials?.password) {
+      async authorize(credentials, req) {
+        if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
         try {
           await ConnectDB();
-          const user = await User.findOne({ email: this.credentials.email });
+          const user = await User.findOne({ email: credentials.email });
           if (
             user &&
-            (await bcrypt.compare(this.credentials.password, user.password))
+            (await bcrypt.compare(credentials.password, user.password))
           ) {
-            return user;
+            return {
+              id: user._id.toString(),
+              email: user.email,
+            };
           }
           return null;
         } catch (error) {
@@ -32,4 +35,30 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id; // now TypeScript knows id exists
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
+
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
+
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60,
+  },
+  secret:process.env.NEXTAUTH_SECRET
 };
