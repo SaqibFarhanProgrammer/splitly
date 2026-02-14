@@ -1,4 +1,3 @@
-// app/auth/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -9,23 +8,19 @@ import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, EyeOff, Mail, Lock, User, Loader2 } from "lucide-react";
-import Link from "next/link";
-import axios from "axios";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
-// Login Form Types
 interface LoginData {
   email: string;
   password: string;
 }
-
-// Register Form Types
 interface RegisterData {
   username: string;
   email: string;
@@ -34,287 +29,180 @@ interface RegisterData {
 }
 
 export default function AuthPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
 
-  // Login Form
   const {
     register: registerLogin,
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
   } = useForm<LoginData>();
-
-  // Register Form
   const {
     register: registerRegister,
     handleSubmit: handleRegisterSubmit,
     watch,
     formState: { errors: registerErrors },
   } = useForm<RegisterData>();
-
   const password = watch("password");
 
   const onLogin = async (data: LoginData) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Login:", data);
-    setIsLoading(false);
-  };
-
-  const onRegister = async (data: RegisterData) => {
-    router.push("/profile");
-
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Register:", data);
-    setIsLoading(false);
-
-    const { username, email, password } = data;
-
+    setServerError(null);
     try {
-      const response = await axios.post("/api/users/register", {
-        username: username,
-        email: email,
-        password: password,
-      });
-
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+      setIsLoading(true);
+      const res = await axios.post("/api/users/login", data);
+      if (res.status >= 400) throw new Error(res.data.error || "Login failed");
+      router.push("/profile");
+    } catch (error: any) {
+      setServerError(error.response?.data?.error || error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  
+  const onRegister = async (data: RegisterData) => {
+    setServerError(null);
+    if (data.password !== data.confirmPassword) {
+      setServerError("Passwords do not match");
+      return;
+    }
+
+    console.log("cahal");
+    
+
+    try {
+      setIsLoading(true);
+      const res = await axios.post("/api/users/register", {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (res.status >= 400)
+        throw new Error(res.data.error || "Registration failed");
+      router.push("/profile");
+    } catch (error: any) {
+      setServerError(error.response?.data?.error || error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 font-inter-reguler">
-      <Card className="w-full max-w-md bg-zinc-950 border-white/10">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-inter-bold text-white">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-zinc-950 border-zinc-800 shadow-2xl">
+        <CardHeader className="text-center space-y-2 pb-6">
+          <CardTitle className="text-3xl font-bold text-white tracking-tight">
             Welcome to Splitwise
           </CardTitle>
-          <CardDescription className="text-zinc-400 font-inter-light-betaa">
+          <CardDescription className="text-zinc-500 text-sm">
             Manage your expenses with friends
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-zinc-900 border-white/10 mb-6">
+            <TabsList className="grid w-full grid-cols-2 bg-zinc-900/50 p-1 rounded-lg mb-8 border border-zinc-800">
               <TabsTrigger
                 value="login"
-                className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-inter-bold"
+                className="data-[state=active]:bg-white data-[state=active]:text-black rounded-md text-zinc-400 hover:text-zinc-200 transition-all"
               >
                 Login
               </TabsTrigger>
               <TabsTrigger
                 value="register"
-                className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-inter-bold"
+                className="data-[state=active]:bg-white data-[state=active]:text-black rounded-md text-zinc-400 hover:text-zinc-200 transition-all"
               >
                 Register
               </TabsTrigger>
             </TabsList>
 
-            {/* Login Tab */}
-            <TabsContent value="login" className="space-y-4">
-              <form onSubmit={handleLoginSubmit(onLogin)} className="space-y-4">
+            {serverError && (
+              <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                <p className="text-sm text-red-400 text-center font-medium">
+                  {serverError}
+                </p>
+              </div>
+            )}
+
+            <TabsContent value="login">
+              <form onSubmit={handleLoginSubmit(onLogin)} className="space-y-5">
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="login-email"
-                    className="text-white font-inter-bold"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      id="login-email"
-                      type="email"
-                      placeholder="you@example.com"
-                      className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler"
-                      {...registerLogin("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /\S+@\S+\.\S+/,
-                          message: "Invalid email",
-                        },
-                      })}
-                    />
-                  </div>
+                  <Label>Email</Label>
+                  <Input
+                    type="email"
+                    placeholder="you@example.com"
+                    {...registerLogin("email", { required: "Email required" })}
+                  />
                   {loginErrors.email && (
-                    <p className="text-xs text-red-400 font-inter-beta">
+                    <p className="text-xs text-red-400">
                       {loginErrors.email.message}
                     </p>
                   )}
                 </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label
-                      htmlFor="login-password"
-                      className="text-white font-inter-bold"
-                    >
-                      Password
-                    </Label>
-                    <Link
-                      href="/forgot"
-                      className="text-xs text-zinc-400 hover:text-white font-inter-beta"
-                    >
-                      Forgot?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      id="login-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      className="pl-10 pr-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler"
-                      {...registerLogin("password", {
-                        required: "Password is required",
-                        minLength: { value: 6, message: "Min 6 characters" },
-                      })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
+                <div className="space-y-2 relative">
+                  <Label>Password</Label>
+                  <Input
+                    type={showLoginPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    {...registerLogin("password", {
+                      required: "Password required",
+                    })}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showLoginPassword ? <EyeOff /> : <Eye />}
+                  </button>
                   {loginErrors.password && (
-                    <p className="text-xs text-red-400 font-inter-beta">
+                    <p className="text-xs text-red-400">
                       {loginErrors.password.message}
                     </p>
                   )}
                 </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-white text-black hover:bg-zinc-200 font-inter-bold"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    "Sign In"
-                  )}
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? <Loader2 className="animate-spin" /> : "Sign In"}
                 </Button>
               </form>
             </TabsContent>
 
-            {/* Register Tab */}
-            <TabsContent value="register" className="space-y-4">
+            <TabsContent value="register">
               <form
                 onSubmit={handleRegisterSubmit(onRegister)}
-                className="space-y-4"
+                className="space-y-5"
               >
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="reg-username"
-                    className="text-white font-inter-bold"
-                  >
-                    Username
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      id="reg-username"
-                      type="text"
-                      placeholder="johndoe"
-                      className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler"
-                      {...registerRegister("username", {
-                        required: "Username is required",
-                        minLength: { value: 3, message: "Min 3 characters" },
-                      })}
-                    />
-                  </div>
-                  {registerErrors.username && (
-                    <p className="text-xs text-red-400 font-inter-beta">
-                      {registerErrors.username.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="reg-email"
-                    className="text-white font-inter-bold"
-                  >
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      id="reg-email"
-                      type="email"
-                      placeholder="you@example.com"
-                      className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler"
-                      {...registerRegister("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /\S+@\S+\.\S+/,
-                          message: "Invalid email",
-                        },
-                      })}
-                    />
-                  </div>
-                  {registerErrors.email && (
-                    <p className="text-xs text-red-400 font-inter-beta">
-                      {registerErrors.email.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="reg-password"
-                    className="text-white font-inter-bold"
-                  >
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      id="reg-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      className="pl-10 pr-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler"
-                      {...registerRegister("password", {
-                        required: "Password is required",
-                        minLength: { value: 6, message: "Min 6 characters" },
-                      })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                  {registerErrors.password && (
-                    <p className="text-xs text-red-400 font-inter-beta">
-                      {registerErrors.password.message}
-                    </p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-white text-black hover:bg-zinc-200 font-inter-bold"
-                  disabled={isLoading}
-                >
+                <Input
+                  placeholder="Username"
+                  {...registerRegister("username", {
+                    required: "Username required",
+                  })}
+                />
+                <Input
+                  placeholder="Email"
+                  {...registerRegister("email", { required: "Email required" })}
+                />
+                <Input
+                  type={showRegisterPassword ? "text" : "password"}
+                  placeholder="Password"
+                  {...registerRegister("password", {
+                    required: "Password required",
+                  })}
+                />
+                <Input
+                  type={showRegisterPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  {...registerRegister("confirmPassword", {
+                    required: "Confirm required",
+                    validate: (val) =>
+                      val === password || "Passwords do not match",
+                  })}
+                />
+                <Button type="submit" disabled={isLoading}>
                   {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="animate-spin" />
                   ) : (
                     "Create Account"
                   )}
