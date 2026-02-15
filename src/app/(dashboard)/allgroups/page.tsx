@@ -17,6 +17,7 @@ import {
   Grid3X3,
   List,
 } from "lucide-react";
+import Link from "next/link";
 
 const groups = [
   {
@@ -102,7 +103,7 @@ export default function GroupsPage() {
   );
 
   return (
-    <div className="space-y-6 mt-25 w-[85vw] mr-20   mx-auto ">
+    <div className="space-y-6 mt-15 w-[85vw] mr-20   ] mx-auto ">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -172,67 +173,69 @@ export default function GroupsPage() {
               key={group.id}
               className="group bg-zinc-950 border border-zinc-800/50 rounded-xl p-5 hover:border-zinc-700 transition-all duration-200 hover:shadow-lg hover:shadow-black/20"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`w-12 h-12 rounded-xl ${group.color} flex items-center justify-center font-bold text-lg`}
-                  >
-                    {group.avatar}
+              <Link href={`/group/${group.id}`}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-12 h-12 rounded-xl ${group.color} flex items-center justify-center font-bold text-lg`}
+                    >
+                      {group.avatar}
+                    </div>
+                    <div>
+                      <h3 className="text-white font-semibold group-hover:text-zinc-200 transition-colors">
+                        {group.name}
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm text-zinc-500 mt-0.5">
+                        <Users className="w-3.5 h-3.5" />
+                        <span>{group.members} members</span>
+                      </div>
+                    </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="secondary"
+                      className={`text-xs ${
+                        group.status === "active"
+                          ? "bg-emerald-500/10 text-emerald-400 border-0"
+                          : "bg-zinc-800 text-zinc-400 border-0"
+                      }`}
+                    >
+                      {group.status === "active" ? "Active" : "Settled"}
+                    </Badge>
+                    <button className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 opacity-0 group-hover:opacity-100 transition-all">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-end justify-between pt-4 border-t border-zinc-800/50">
                   <div>
-                    <h3 className="text-white font-semibold group-hover:text-zinc-200 transition-colors">
-                      {group.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-zinc-500 mt-0.5">
-                      <Users className="w-3.5 h-3.5" />
-                      <span>{group.members} members</span>
+                    <p className="text-zinc-500 text-xs mb-1">Total Expenses</p>
+                    <p className="text-white font-semibold text-lg">
+                      ₹{group.totalExpenses.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    {group.youOwe > 0 ? (
+                      <p className="text-red-400 text-sm font-medium">
+                        You owe ₹{group.youOwe}
+                      </p>
+                    ) : group.youAreOwed > 0 ? (
+                      <p className="text-emerald-400 text-sm font-medium">
+                        You are owed ₹{group.youAreOwed}
+                      </p>
+                    ) : (
+                      <p className="text-zinc-500 text-sm font-medium">
+                        All settled
+                      </p>
+                    )}
+                    <div className="flex items-center gap-1 text-zinc-600 text-xs mt-1">
+                      <Clock className="w-3 h-3" />
+                      <span>{group.lastActivity}</span>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="secondary"
-                    className={`text-xs ${
-                      group.status === "active"
-                        ? "bg-emerald-500/10 text-emerald-400 border-0"
-                        : "bg-zinc-800 text-zinc-400 border-0"
-                    }`}
-                  >
-                    {group.status === "active" ? "Active" : "Settled"}
-                  </Badge>
-                  <button className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 opacity-0 group-hover:opacity-100 transition-all">
-                    <MoreVertical className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex items-end justify-between pt-4 border-t border-zinc-800/50">
-                <div>
-                  <p className="text-zinc-500 text-xs mb-1">Total Expenses</p>
-                  <p className="text-white font-semibold text-lg">
-                    ₹{group.totalExpenses.toLocaleString()}
-                  </p>
-                </div>
-                <div className="text-right">
-                  {group.youOwe > 0 ? (
-                    <p className="text-red-400 text-sm font-medium">
-                      You owe ₹{group.youOwe}
-                    </p>
-                  ) : group.youAreOwed > 0 ? (
-                    <p className="text-emerald-400 text-sm font-medium">
-                      You are owed ₹{group.youAreOwed}
-                    </p>
-                  ) : (
-                    <p className="text-zinc-500 text-sm font-medium">
-                      All settled
-                    </p>
-                  )}
-                  <div className="flex items-center gap-1 text-zinc-600 text-xs mt-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{group.lastActivity}</span>
-                  </div>
-                </div>
-              </div>
+              </Link>
             </div>
           ))}
         </div>

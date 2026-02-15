@@ -50,7 +50,7 @@ export function Sidebar() {
       </button>
 
       <aside
-        className={`fixed inset-y-0 left-0 bg-zinc-950 border-r border-zinc-800/50 z-40 transform transition-all duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 bg-zinc-950 border-r border-zinc-800/50 z-50 transform transition-all duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         } ${isCollapsed ? "w-16" : "w-64"}`}
       >
@@ -68,7 +68,9 @@ export function Sidebar() {
                 <h1 className="text-white font-bold text-base tracking-tight">
                   Splitwise
                 </h1>
-                <p className="text-zinc-500 text-[10px] leading-tight">Manage expenses</p>
+                <p className="text-zinc-500 text-[10px] leading-tight">
+                  Manage expenses
+                </p>
               </div>
             </div>
           )}
@@ -112,7 +114,9 @@ export function Sidebar() {
           </button>
         </div>
 
-        <nav className={`relative space-y-0.5 ${isCollapsed ? "px-2" : "px-3"}`}>
+        <nav
+          className={`relative space-y-0.5 ${isCollapsed ? "px-2" : "px-3"}`}
+        >
           {!isCollapsed && (
             <p className="px-3 text-[10px] font-semibold text-zinc-500 uppercase tracking-wider mb-2">
               Menu

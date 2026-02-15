@@ -43,10 +43,7 @@ export function DashboardHeader({
                 Pro Member
               </Badge>
             )}
-            <Badge
-              variant="outline"
-              className="border-white/20 text-zinc-400"
-            >
+            <Badge variant="outline" className="border-white/20 text-zinc-400">
               Since {memberSince}
             </Badge>
           </div>

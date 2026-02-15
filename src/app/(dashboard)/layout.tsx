@@ -5,7 +5,7 @@ import { SidebarProvider } from "@/context/SidebarContext";
 import { ReactNode } from "react";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-  return <div>
+  return <div className="bg-[#070709]">
     <TopNavbar/>
     <SidebarProvider>
 

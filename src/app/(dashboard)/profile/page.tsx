@@ -26,6 +26,7 @@ import {
   Clock,
 } from "lucide-react";
 import React from "react";
+import Link from "next/link";
 
 // Dummy Group Data
 const groups = [
@@ -138,7 +139,7 @@ export default function Page() {
   };
 
   return (
-    <section className="min-h-screen py-24 px-6 bg-black text-white">
+    <section className="min-h-screen py-14 px-6  text-white">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
@@ -228,73 +229,75 @@ export default function Page() {
                   key={group.id}
                   className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
                 >
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="w-14 h-14 bg-zinc-800">
-                          <AvatarFallback className="bg-zinc-800 text-white text-xl font-bold">
-                            {group.avatar}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="text-lg font-semibold text-white mb-1">
-                            {group.name}
-                          </h3>
-                          <div className="flex items-center gap-3 text-sm text-zinc-400">
-                            <span className="flex items-center gap-1">
-                              <Users className="w-4 h-4" />
-                              {group.members} members
-                            </span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {group.lastActivity}
-                            </span>
+                  <Link href={`/group/${group.id}`}>
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-14 h-14 bg-zinc-800">
+                            <AvatarFallback className="bg-zinc-800 text-white text-xl font-bold">
+                              {group.avatar}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="text-lg font-semibold text-white mb-1">
+                              {group.name}
+                            </h3>
+                            <div className="flex items-center gap-3 text-sm text-zinc-400">
+                              <span className="flex items-center gap-1">
+                                <Users className="w-4 h-4" />
+                                {group.members} members
+                              </span>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {group.lastActivity}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <Badge
+                          variant={
+                            group.status === "active" ? "default" : "secondary"
+                          }
+                          className={
+                            group.status === "active"
+                              ? "bg-white/10 text-white"
+                              : "bg-zinc-800 text-zinc-400"
+                          }
+                        >
+                          {group.status === "active" ? "Active" : "Settled"}
+                        </Badge>
+                      </div>
+
+                      <div className="mt-6 pt-6 border-t border-white/5">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-zinc-400 text-sm mb-1">
+                              Total Expenses
+                            </p>
+                            <p className="text-xl font-semibold text-white">
+                              ₹{group.totalExpenses.toLocaleString()}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            {group.youOwe > 0 ? (
+                              <p className="text-red-400 font-medium">
+                                You owe ₹{group.youOwe}
+                              </p>
+                            ) : group.youAreOwed > 0 ? (
+                              <p className="text-emerald-400 font-medium">
+                                You are owed ₹{group.youAreOwed}
+                              </p>
+                            ) : (
+                              <p className="text-zinc-500 font-medium">
+                                All settled
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
-                      <Badge
-                        variant={
-                          group.status === "active" ? "default" : "secondary"
-                        }
-                        className={
-                          group.status === "active"
-                            ? "bg-white/10 text-white"
-                            : "bg-zinc-800 text-zinc-400"
-                        }
-                      >
-                        {group.status === "active" ? "Active" : "Settled"}
-                      </Badge>
-                    </div>
-
-                    <div className="mt-6 pt-6 border-t border-white/5">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-zinc-400 text-sm mb-1">
-                            Total Expenses
-                          </p>
-                          <p className="text-xl font-semibold text-white">
-                            ₹{group.totalExpenses.toLocaleString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          {group.youOwe > 0 ? (
-                            <p className="text-red-400 font-medium">
-                              You owe ₹{group.youOwe}
-                            </p>
-                          ) : group.youAreOwed > 0 ? (
-                            <p className="text-emerald-400 font-medium">
-                              You are owed ₹{group.youAreOwed}
-                            </p>
-                          ) : (
-                            <p className="text-zinc-500 font-medium">
-                              All settled
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
+                    </CardContent>
+                  </Link>
                 </Card>
               ))}
             </div>

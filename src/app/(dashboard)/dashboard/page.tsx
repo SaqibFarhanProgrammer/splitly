@@ -116,10 +116,9 @@ const balances: Balance[] = [
 
 export default function DashboardPage() {
   return (
-    <section className="min-h-screen py-24 px-6 bg-black text-white">
+    <section className="min-h-screen h-screen  py-7 px-6  text-white">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-    
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -166,7 +165,7 @@ export default function DashboardPage() {
           {/* Left Column - Tabs */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="groups" className="w-full">
-              <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8">
+              <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-2">
                 <TabsTrigger
                   value="groups"
                   className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
