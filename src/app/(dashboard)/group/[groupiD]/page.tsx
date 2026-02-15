@@ -16,6 +16,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Form,
   FormControl,
   FormField,
@@ -40,6 +47,12 @@ import {
   Send,
   Wallet,
   Receipt,
+  Settings,
+  Trash2,
+  UserMinus,
+  UserPlus,
+  LogOut,
+  Edit3,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -57,10 +70,11 @@ interface ExpenseFormValues {
   splitWith: string[];
 }
 
-// Dummy Group Data
+// Dummy Group Data - isAdmin flag added
 const groupData = {
   id: "1",
   name: "Hunza Trip 2024",
+  isAdmin: true, // Change to false to see non-admin view
   members: [
     { id: "1", name: "You", avatar: "Y", balance: 5200 },
     { id: "2", name: "Ahmed", avatar: "A", balance: -3200 },
@@ -239,9 +253,9 @@ export default function GroupPage() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
-        <div className="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
+      {/* Header with Dropdown */}
+      <header className="sticky top-0 z-50   ">
+        <div className="w-full px-25 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
               <Button
@@ -261,9 +275,57 @@ export default function GroupPage() {
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="text-zinc-400">
-            <MoreVertical className="w-5 h-5" />
-          </Button>
+
+          {/* Dropdown Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-zinc-400 hover:text-white"
+              >
+                <MoreVertical className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-56 bg-zinc-950 border-white/10 text-white"
+            >
+              {groupData.isAdmin ? (
+                <>
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                    <Edit3 className="w-4 h-4 mr-2" />
+                    Edit Group
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Add Member
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                    <UserMinus className="w-4 h-4 mr-2" />
+                    Manage Members
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete Group
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Group Info
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuItem className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Leave Group
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
@@ -409,12 +471,12 @@ export default function GroupPage() {
 
       {/* Bottom Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-50">
-        <div className="max-w-3xl mx-auto px-4 py-4 flex gap-3">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           {/* Add Expense Dialog */}
           <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
             <DialogTrigger asChild>
-              <Button className="flex-1 w-15 bg-white text-black hover:bg-zinc-200 h-10">
-                <Plus className="w-5 h-5 mr-2" />
+              <Button className="flex-1 bg-white text-black hover:bg-zinc-200 h-10 text-sm font-medium">
+                <Plus className="w-4 h-4 mr-2" />
                 Add Expense
               </Button>
             </DialogTrigger>
@@ -604,9 +666,9 @@ export default function GroupPage() {
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                className="flex-1 border-white/20 text-black  h-10"
+                className="flex-1 border-white/20 text-white hover:bg-white/10 h-10 text-sm font-medium"
               >
-                <Wallet className="w-5 h-5 mr-2" />
+                <Wallet className="w-4 h-4 mr-2" />
                 Settlement
               </Button>
             </DialogTrigger>
