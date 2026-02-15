@@ -1,4 +1,4 @@
-// components/CTASection.tsx
+// components/CTASect
 import { ArrowRight, Sparkles } from "lucide-react";
 
 export function CTASection() {
