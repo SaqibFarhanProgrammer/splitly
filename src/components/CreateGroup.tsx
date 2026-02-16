@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, Plus, Loader2 } from "lucide-react";
+import axios from "axios";
 
 interface CreateGroupData {
   groupName: string;
@@ -47,13 +48,22 @@ export function CreateGroupModal({
 
   const handleCreateGroup = async (data: CreateGroupData) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    await onSubmit?.(data);
+    const resposne = await axios.post("/api/group/create", {
+      name: data.groupName,
+      totalAmount: data.totalExpense,
+    });
     setIsLoading(false);
     onClose();
+    data.groupName = "";
+    data.totalExpense = "";
+    console.log(resposne);
   };
 
   if (!isOpen) return null;
+
+  async function GetGroups() {
+    
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -97,7 +107,9 @@ export function CreateGroupModal({
                 })}
               />
               {errors.groupName && (
-                <p className="text-xs text-red-400">{errors.groupName.message}</p>
+                <p className="text-xs text-red-400">
+                  {errors.groupName.message}
+                </p>
               )}
             </div>
 
@@ -121,52 +133,13 @@ export function CreateGroupModal({
                 />
               </div>
               {errors.totalExpense && (
-                <p className="text-xs text-red-400">{errors.totalExpense.message}</p>
+                <p className="text-xs text-red-400">
+                  {errors.totalExpense.message}
+                </p>
               )}
             </div>
 
             {/* Members */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label className="text-white text-sm font-medium">Members</Label>
-                <span className="text-xs text-zinc-500">{fields.length}</span>
-              </div>
-
-              <div className="space-y-2">
-                {fields.map((field, index) => (
-                  <div key={field.id} className="flex gap-2">
-                    <Input
-                      placeholder="Username"
-                      className="flex-1 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 h-10"
-                      {...register(`members.${index}.username` as const, {
-                        required: "Required",
-                        minLength: { value: 3, message: "Min 3 chars" },
-                      })}
-                    />
-                    {fields.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="w-10 h-10 rounded-lg bg-red-500/10 hover:bg-red-500/20 flex items-center justify-center"
-                      >
-                        <X className="w-4 h-4 text-red-400" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => append({ username: "" })}
-                className="w-full border-dashed border-white/20 text-zinc-400 hover:text-white hover:bg-white/5"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Member
-              </Button>
-            </div>
           </form>
         </div>
 
@@ -186,7 +159,11 @@ export function CreateGroupModal({
             className="flex-1 bg-white text-black hover:bg-zinc-200"
             disabled={isLoading}
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create"}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Create"
+            )}
           </Button>
         </div>
       </div>
