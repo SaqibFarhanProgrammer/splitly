@@ -55,6 +55,8 @@ import {
   Edit3,
 } from "lucide-react";
 import Link from "next/link";
+import axios, { AxiosRequestConfig } from "axios";
+import { number } from "zod";
 
 // Form Types
 interface SettlementFormValues {
@@ -143,7 +145,7 @@ export default function GroupPage() {
   const params = useParams();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
-
+  
   // Settlement Form
   const settlementForm = useForm<SettlementFormValues>({
     defaultValues: {
@@ -251,6 +253,16 @@ export default function GroupPage() {
     return "text-zinc-400";
   };
 
+
+  async function delteGroup() {
+    axios.get<AxiosRequestConfig>("/api/group/delete",{
+      id: Number(params.groupID)
+    }).then((res)=>{
+      console.log(res);
+      
+    })
+  }
+
   return (
     <div className="min-h-screen bg-black flex flex-col">
       {/* Header with Dropdown */}
@@ -306,7 +318,7 @@ export default function GroupPage() {
                     Manage Members
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
+                  <DropdownMenuItem  onClick={delteGroup} className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete Group
                   </DropdownMenuItem>

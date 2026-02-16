@@ -1,6 +1,7 @@
 // components/HeroSection.tsx
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "./Navbar";
+import Link from "next/link";
 
 export function HeroSection() {
   return (
@@ -33,10 +34,12 @@ export function HeroSection() {
 
           {/* Buttons */}
           <div className="flex items-center gap-4">
+            <Link href="/profile">
             <button className="group flex items-center gap-2 bg-white text-black px-6 py-3 rounded-full font-medium hover:bg-gray-100 transition-all">
               Get Started
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
+            </Link>
             <button className="px-6 py-3 rounded-full font-medium text-white border border-white/20 hover:bg-white/5 transition-all">
               Learn More
             </button>
