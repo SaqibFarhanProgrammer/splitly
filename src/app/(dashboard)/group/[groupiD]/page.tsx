@@ -145,7 +145,7 @@ export default function GroupPage() {
   const params = useParams();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
-  
+
   // Settlement Form
   const settlementForm = useForm<SettlementFormValues>({
     defaultValues: {
@@ -253,14 +253,15 @@ export default function GroupPage() {
     return "text-zinc-400";
   };
 
-
-  async function delteGroup() {
-    axios.get<AxiosRequestConfig>("/api/group/delete",{
-      id: Number(params.groupID)
-    }).then((res)=>{
-      console.log(res);
-      
-    })
+  async function deleteGroup() {
+    try {
+      const res = await axios.delete(
+        `/api/group/delete?groupId=699182525ea73d718f59f9bd`,
+      );
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -318,7 +319,10 @@ export default function GroupPage() {
                     Manage Members
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem  onClick={delteGroup} className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
+                  <DropdownMenuItem
+                    onClick={deleteGroup}
+                    className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20"
+                  >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete Group
                   </DropdownMenuItem>
