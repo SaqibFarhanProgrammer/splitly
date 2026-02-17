@@ -115,7 +115,7 @@ export default function Page() {
   }, []);
 
   return (
-    <section className="min-h-screen py-14 px-6  text-white">
+    <section className="min-h-screen py-14 px-6 ]  text-white">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">

@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 
 //a
 export default function DashboardLayout({ children }: { children: ReactNode }) {
-  return <div className="bg-[#070709]">
+  return <div className="bg-[#08080B]">
     <TopNavbar/>
     <SidebarProvider>
     {children}

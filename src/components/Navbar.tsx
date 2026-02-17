@@ -42,14 +42,16 @@ export function Navbar() {
         {/* Right Side */}
         <div className="flex items-center gap-4">
           <Link
-            href="#"
+            href="/auth"
             className="text-gray-300 hover:text-white text-sm font-medium transition-colors"
           >
             Login
           </Link>
-          <button className="bg-white text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
-            Try for free
-          </button>
+          <Link href="/auth">
+            <button className="bg-white text-black px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+              Try for free
+            </button>
+          </Link>
         </div>
       </div>
     </nav>
