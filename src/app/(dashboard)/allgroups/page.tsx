@@ -104,7 +104,6 @@ export default function GroupsPage() {
 
   return (
     <div className="space-y-6 mt-15 w-[85vw] mr-20   ] mx-auto ">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">All Groups</h1>

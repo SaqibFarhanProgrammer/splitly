@@ -73,7 +73,6 @@ export function CreateGroupModal({
 
       {/* Modal */}
       <div className="relative w-[450px] h-[70vh] bg-zinc-950 border border-white/10 rounded-xl flex flex-col">
-        {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h2 className="text-lg font-bold text-white">Create New Group</h2>
           <button

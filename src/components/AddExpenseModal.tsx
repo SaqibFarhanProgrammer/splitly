@@ -59,7 +59,6 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
       
       {/* Modal Content */}
       <div className="relative w-full max-w-[80%] h-[80vh] bg-zinc-950 border border-white/10 rounded-2xl overflow-hidden flex flex-col font-inter-reguler">
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
