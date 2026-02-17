@@ -27,11 +27,9 @@ import {
 } from "lucide-react";
 import React from "react";
 import Link from "next/link";
-import { AuthToken } from "@/lib/auth";
 import axios from "axios";
 
 // Dummy Group Data
-const groups = [];
 
 // Dummy Recent Expenses
 const recentExpenses = [
