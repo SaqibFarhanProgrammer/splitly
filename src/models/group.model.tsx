@@ -16,7 +16,7 @@ const GroupSchema = new Schema<IGroup>(
     totalAmount: { type: Number, required: true },
     isActive: {
       type: Boolean,
-      defult: true,
+      default: true,
     },
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },

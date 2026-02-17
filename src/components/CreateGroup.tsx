@@ -38,6 +38,7 @@ export function CreateGroupModal({
       groupName: "",
       totalExpense: "",
       members: [{ username: "" }],
+      
     },
   });
 
@@ -51,6 +52,7 @@ export function CreateGroupModal({
     const resposne = await axios.post("/api/group/create", {
       name: data.groupName,
       totalAmount: data.totalExpense,
+      
     });
     setIsLoading(false);
     onClose();
@@ -60,10 +62,6 @@ export function CreateGroupModal({
   };
 
   if (!isOpen) return null;
-
-  async function GetGroups() {
-    
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

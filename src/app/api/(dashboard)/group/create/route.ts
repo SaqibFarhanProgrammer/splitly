@@ -4,13 +4,12 @@ import { Group } from "@/models/group.model";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 export async function POST(request: NextRequest) {
-  
   try {
     interface Token {
       userId: string;
     }
     await ConnectDB();
-    
+
     const body = await request.json();
     const { name, totalAmount } = body;
     const cookieStore = await cookies(); // ✅ important
@@ -25,7 +24,7 @@ export async function POST(request: NextRequest) {
     const decode = jwt.verify(token, process.env.JWT_SECRET!);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    const id:string = decode.userId;
+    const id: string = decode.userId;
 
     if (name === undefined || totalAmount === undefined) {
       return NextResponse.json(
@@ -62,6 +61,7 @@ export async function POST(request: NextRequest) {
     const newGroup = await Group.create({
       name: name.trim().toString(),
       totalAmount: parsedAmount,
+      isActive: true,
       createdBy: id,
     });
 

@@ -1,7 +1,7 @@
 // components/ProfileSection.tsx
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CreateGroupModal } from "@/components/CreateGroup";
 import { AddExpenseModal } from "@/components/AddExpenseModal";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,11 +27,11 @@ import {
 } from "lucide-react";
 import React from "react";
 import Link from "next/link";
+import { AuthToken } from "@/lib/auth";
+import axios from "axios";
 
 // Dummy Group Data
-const groups = [
-
-];
+const groups = [];
 
 // Dummy Recent Expenses
 const recentExpenses = [
@@ -71,15 +71,22 @@ const balances = [
   { name: "Ali", amount: 1500, type: "owe" },
 ];
 
+interface GroupData {
+  _id: string;
+  name: string;
+  totalAmount: number;
+  isActive: boolean;
+}
+
 export default function Page() {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [gdata, setgdata] = useState<GroupData[]>([]);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
 
   const handleCreateGroup = async (data: {
     groupName: string;
     members: { username: string }[];
   }) => {
-    
     console.log("Creating group:", data);
     // API call yahan karo
     // await createGroupAPI(data);
@@ -95,6 +102,19 @@ export default function Page() {
     // API call yahan karo
     // await addExpenseAPI(data);
   };
+
+  useEffect(() => {
+    axios.get("/api/group/getallgroups").then((res) => {
+      if (res.data) {
+        const data = res?.data?.data;
+        console.log(data);
+
+        setgdata(data);
+      }
+
+      console.log(gdata);
+    });
+  }, []);
 
   return (
     <section className="min-h-screen py-14 px-6  text-white">
@@ -181,21 +201,22 @@ export default function Page() {
                 Create Group
               </Button>
             </div>
+            {}
             <div className="grid md:grid-cols-2 gap-4">
-              {groups.map((group) => (
+              {gdata.map((group) => (
                 <Card
-                  key={group.id}
+                  key={group.totalAmount * 2 + 1 - 100 * 10}
                   className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
                 >
-                  <Link href={`/group/${group.id}`}>
+                  <Link href={`/group/${group._id}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between">
+                        <Avatar className="w-8 h-8">
+                          <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
+                            {group.name.split("")[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="flex items-center gap-4">
-                          <Avatar className="w-14 h-14 bg-zinc-800">
-                            <AvatarFallback className="bg-zinc-800 text-white text-xl font-bold">
-                              {group.avatar}
-                            </AvatarFallback>
-                          </Avatar>
                           <div>
                             <h3 className="text-lg font-semibold text-white mb-1">
                               {group.name}
@@ -203,27 +224,26 @@ export default function Page() {
                             <div className="flex items-center gap-3 text-sm text-zinc-400">
                               <span className="flex items-center gap-1">
                                 <Users className="w-4 h-4" />
-                                {group.members} members
+                                12 members
                               </span>
                               <span>•</span>
                               <span className="flex items-center gap-1">
                                 <Clock className="w-4 h-4" />
-                                {group.lastActivity}
                               </span>
                             </div>
                           </div>
                         </div>
                         <Badge
                           variant={
-                            group.status === "active" ? "default" : "secondary"
+                            group.isActive === true ? "default" : "secondary"
                           }
                           className={
-                            group.status === "active"
+                            group.isActive === true
                               ? "bg-white/10 text-white"
                               : "bg-zinc-800 text-zinc-400"
                           }
                         >
-                          {group.status === "active" ? "Active" : "Settled"}
+                          {group.isActive === true ? "Active" : "Settled"}
                         </Badge>
                       </div>
 
@@ -234,23 +254,8 @@ export default function Page() {
                               Total Expenses
                             </p>
                             <p className="text-xl font-semibold text-white">
-                              ₹{group.totalExpenses.toLocaleString()}
+                              ₹{group.totalAmount}
                             </p>
-                          </div>
-                          <div className="text-right">
-                            {group.youOwe > 0 ? (
-                              <p className="text-red-400 font-medium">
-                                You owe ₹{group.youOwe}
-                              </p>
-                            ) : group.youAreOwed > 0 ? (
-                              <p className="text-emerald-400 font-medium">
-                                You are owed ₹{group.youAreOwed}
-                              </p>
-                            ) : (
-                              <p className="text-zinc-500 font-medium">
-                                All settled
-                              </p>
-                            )}
                           </div>
                         </div>
                       </div>
