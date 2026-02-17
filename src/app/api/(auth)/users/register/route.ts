@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     if (!username || !email || !password) {
       return NextResponse.json(
         { error: "All fields are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -20,19 +20,21 @@ export async function POST(req: Request) {
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
-      username:username,
+      username: username,
       email,
       password: hashedPassword,
       Groups: [],
     });
 
+    if (newUser) {
+    }
     return NextResponse.json(
       {
         message: "User registered successfully",
@@ -42,7 +44,7 @@ export async function POST(req: Request) {
           email: newUser.email,
         },
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error(error);

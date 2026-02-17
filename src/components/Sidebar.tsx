@@ -44,7 +44,7 @@ export function Sidebar() {
     <div className="z-20">
       <button
         onClick={() => setIsOpen(true)}
-        className="lg:hidden fixed top-3 left-4 z-50 p-2 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
+        className="lg:hidden fixed top-3 left-4 z-100 p-2 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 transition-all"
       >
         <Menu className="w-5 h-5" />
       </button>

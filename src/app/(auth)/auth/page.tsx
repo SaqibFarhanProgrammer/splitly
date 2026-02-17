@@ -77,9 +77,10 @@ export default function AuthPage() {
         password: data.password,
       });
 
-      if (res.status >= 400)
-        throw new Error(res.data.error || "Registration failed");
-      router.push("/profile");
+      setServerError("User Created Success Please Login")
+
+
+
     } catch (error: any) {
       setServerError(error.response?.data?.error || error.message);
     } finally {
@@ -116,9 +117,9 @@ export default function AuthPage() {
             </TabsList>
 
             {serverError && (
-              <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 animate-in fade-in slide-in-from-top-2">
-                <p className="text-sm text-red-400 text-center font-medium">
-                  {serverError}
+              <div className={`mb-6 p-4 rounded-xl ${serverError === "User Created Success Please Login" ?   "bg-green-500/10" : "bg-red-600" } border border-red-500/20 animate-in fade-in slide-in-from-top-2`}>
+                <p className={` text-sm ${serverError === "User Created Success Please Login" ? "text-green-500" : "text-red-400" } text-center font-medium`}>
+                  {serverError === "User Created Success Please Login" ? serverError : serverError}
                 </p>
               </div>
             )}

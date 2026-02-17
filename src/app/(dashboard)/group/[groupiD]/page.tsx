@@ -57,6 +57,7 @@ import {
 import Link from "next/link";
 import axios, { AxiosRequestConfig } from "axios";
 import { number } from "zod";
+import AddMembers from "@/components/dashboard/group/AddMemebers";
 
 // Form Types
 interface SettlementFormValues {
@@ -77,75 +78,19 @@ const groupData = {
   id: "1",
   name: "Hunza Trip 2024",
   isAdmin: true, // Change to false to see non-admin view
-  members: [
-    { id: "1", name: "You", avatar: "Y", balance: 5200 },
-    { id: "2", name: "Ahmed", avatar: "A", balance: -3200 },
-    { id: "3", name: "Saqib", avatar: "S", balance: -2000 },
-    { id: "4", name: "Ali", avatar: "A", balance: 0 },
-  ],
+  members: [],
   totalExpenses: 45800,
 };
 
 // Dummy Expenses (Chat style)
-const expenses = [
-  {
-    id: 1,
-    type: "expense",
-    user: { name: "Ahmed", avatar: "A" },
-    title: "Hotel Booking - Serena Inn",
-    amount: 24000,
-    date: "Dec 15, 10:30 AM",
-    split: "Split equally • ₹6,000 each",
-    youPaid: false,
-    yourShare: 6000,
-  },
-  {
-    id: 2,
-    type: "settlement",
-    user: { name: "Saqib", avatar: "S" },
-    to: "Ahmed",
-    amount: 3000,
-    date: "Dec 15, 9:15 AM",
-    note: "For petrol and dinner",
-  },
-  {
-    id: 3,
-    type: "expense",
-    user: { name: "You", avatar: "Y" },
-    title: "Petrol - Day 1",
-    amount: 8500,
-    date: "Dec 14, 4:20 PM",
-    split: "Split equally • ₹2,125 each",
-    youPaid: true,
-    yourShare: 2125,
-  },
-  {
-    id: 4,
-    type: "expense",
-    user: { name: "Ali", avatar: "A" },
-    title: "Dinner at Monal Restaurant",
-    amount: 6200,
-    date: "Dec 14, 8:45 PM",
-    split: "Split equally • ₹1,550 each",
-    youPaid: false,
-    yourShare: 1550,
-  },
-  {
-    id: 5,
-    type: "settlement",
-    user: { name: "You", avatar: "Y" },
-    to: "Saqib",
-    amount: 1500,
-    date: "Dec 14, 2:30 PM",
-    note: "Lunch settlement",
-  },
-];
+const expenses = [];
 
 export default function GroupPage() {
   const params = useParams();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
 
+  const [ShowAddmember, setShowAddmember] = useState(false);
   // Settlement Form
   const settlementForm = useForm<SettlementFormValues>({
     defaultValues: {
@@ -267,7 +212,11 @@ export default function GroupPage() {
   return (
     <div className="min-h-screen bg-black flex flex-col">
       {/* Header with Dropdown */}
-      <header className="sticky top-0 z-50   ">
+      {ShowAddmember ? <AddMembers
+        isOpen={ShowAddmember} 
+        onClose={() => setShowAddmember(false)} 
+      /> : null}
+      <header className="sticky top-0 z-30   ">
         <div className="w-full px-25 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
@@ -310,7 +259,7 @@ export default function GroupPage() {
                     <Edit3 className="w-4 h-4 mr-2" />
                     Edit Group
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                  <DropdownMenuItem onClick={()=>setShowAddmember(!ShowAddmember)} className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
                     <UserPlus className="w-4 h-4 mr-2" />
                     Add Member
                   </DropdownMenuItem>
@@ -486,7 +435,7 @@ export default function GroupPage() {
       </div>
 
       {/* Bottom Action Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-50">
+      <div className="fixed bottom-0  left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           {/* Add Expense Dialog */}
           <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
