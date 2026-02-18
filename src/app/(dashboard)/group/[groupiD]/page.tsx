@@ -1,7 +1,7 @@
 // app/group/[id]/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -58,6 +58,8 @@ import Link from "next/link";
 import axios, { AxiosRequestConfig } from "axios";
 import { number } from "zod";
 import AddMembers from "@/components/dashboard/group/AddMemebers";
+import { useRouter } from "next/navigation";
+import mongoose from "mongoose";
 
 // Form Types
 interface SettlementFormValues {
@@ -73,13 +75,30 @@ interface ExpenseFormValues {
   splitWith: string[];
 }
 
+interface Imemeber {
+  username: string;
+  isadmin: boolean;
+}
+
+interface IgroupData {
+  name: string;
+  totalAmount: number;
+  isActive: boolean;
+  members: Imemeber[];
+  createdBy: string;
+  createdAt: number;
+  upnumberdAt: number;
+}
+
 // Dummy Group Data - isAdmin flag added
-const groupData = {
-  id: "1",
+const GroupdataDefault: IgroupData = {
   name: "Hunza Trip 2024",
-  isAdmin: true, // Change to false to see non-admin view
+  isActive: true, // Change to false to see non-admin view
   members: [],
-  totalExpenses: 45800,
+  totalAmount: 45800,
+  createdBy: "",
+  createdAt: 100,
+  upnumberdAt: 100,
 };
 
 // Dummy Expenses (Chat style)
@@ -87,8 +106,10 @@ const expenses = [];
 
 export default function GroupPage() {
   const params = useParams();
+  const router = useRouter();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
+  const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);
 
   const [ShowAddmember, setShowAddmember] = useState(false);
   // Settlement Form
@@ -201,21 +222,39 @@ export default function GroupPage() {
   async function deleteGroup() {
     try {
       const res = await axios.delete(
-        `/api/group/delete?groupId=699182525ea73d718f59f9bd`,
+        `/api/group/delete?groupId=${params.groupID}`,
       );
       console.log(res.data);
+      router.push("/profile");
     } catch (error) {
       console.error(error);
     }
   }
 
+  async function GetGroupData() {
+    const { groupID } = params;
+
+    const res = await axios.post("/api/group/getgroupdatabyid", {
+      groupid: groupID,
+    });
+
+    console.log(res);
+    return res.data?.data;
+  }
+
+  useEffect(() => {
+    GetGroupData().then((data) => setgroupData(data));
+  }, []);
+
   return (
     <div className="min-h-screen bg-black flex flex-col">
       {/* Header with Dropdown */}
-      {ShowAddmember ? <AddMembers
-        isOpen={ShowAddmember} 
-        onClose={() => setShowAddmember(false)} 
-      /> : null}
+      {ShowAddmember ? (
+        <AddMembers
+          isOpen={ShowAddmember}
+          onClose={() => setShowAddmember(false)}
+        />
+      ) : null}
       <header className="sticky top-0 z-30   ">
         <div className="w-full px-25 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -232,9 +271,7 @@ export default function GroupPage() {
               <h1 className="text-lg font-semibold text-white">
                 {groupData.name}
               </h1>
-              <p className="text-xs text-zinc-400">
-                {groupData.members.length} members
-              </p>
+              <p className="text-xs text-zinc-400">0 members</p>
             </div>
           </div>
 
@@ -253,13 +290,16 @@ export default function GroupPage() {
               align="end"
               className="w-56 bg-zinc-950 border-white/10 text-white"
             >
-              {groupData.isAdmin ? (
+              {groupData.isActive ? (
                 <>
                   <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
                     <Edit3 className="w-4 h-4 mr-2" />
                     Edit Group
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={()=>setShowAddmember(!ShowAddmember)} className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                  <DropdownMenuItem
+                    onClick={() => setShowAddmember(!ShowAddmember)}
+                    className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white"
+                  >
                     <UserPlus className="w-4 h-4 mr-2" />
                     Add Member
                   </DropdownMenuItem>
@@ -313,16 +353,16 @@ export default function GroupPage() {
               <div className="text-center">
                 <p className="text-xs text-zinc-400 mb-1">Total</p>
                 <p className="text-lg font-bold text-white">
-                  ₹{groupData.totalExpenses.toLocaleString()}
+                  PKR,{groupData.totalAmount.toLocaleString()}
                 </p>
               </div>
               <div className="text-center border-x border-white/10">
                 <p className="text-xs text-zinc-400 mb-1">You Get</p>
-                <p className="text-lg font-bold text-emerald-400">₹5,200</p>
+                <p className="text-lg font-bold text-emerald-400">PKR,5,200</p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-zinc-400 mb-1">You Owe</p>
-                <p className="text-lg font-bold text-red-400">₹0</p>
+                <p className="text-lg font-bold text-red-400">PKR,0</p>
               </div>
             </div>
           </CardContent>
@@ -332,19 +372,19 @@ export default function GroupPage() {
       {/* Members Quick View */}
       <div className="max-w-3xl mx-auto w-full px-4 pb-4">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {groupData.members.map((member) => (
+          {groupData.members?.map((member) => (
             <div
-              key={member.id}
+              key={member.username}
               className="flex items-center gap-2 bg-zinc-950 border border-white/10 rounded-[10px] px-3 pr-5 py-2 min-w-fit"
             >
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.avatar}
+                  {member.username.split("")[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm text-white font-medium">
-                  {member.name}
+                  {member.username}
                 </span>
                 <span className={getBalanceColor(member.balance)}>
                   {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}

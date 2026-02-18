@@ -203,7 +203,7 @@ export default function Page() {
             <div className="grid md:grid-cols-2 gap-4">
               {gdata.map((group) => (
                 <Card
-                  key={group.totalAmount * 2 + 1 - 100 * 10}
+                  key={group.name}
                   className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
                 >
                   <Link href={`/group/${group._id}`}>

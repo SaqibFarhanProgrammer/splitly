@@ -28,6 +28,7 @@ export function CreateGroupModal({
 }: CreateGroupModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
+  const [FormErrors, setFormErrors] = useState<string>("");
   const {
     register,
     control,
@@ -37,8 +38,6 @@ export function CreateGroupModal({
     defaultValues: {
       groupName: "",
       totalExpense: "",
-      members: [{ username: "" }],
-      
     },
   });
 
@@ -48,19 +47,23 @@ export function CreateGroupModal({
   });
 
   const handleCreateGroup = async (data: CreateGroupData) => {
-    setIsLoading(true);
-    const resposne = await axios.post("/api/group/create", {
-      name: data.groupName,
-      totalAmount: data.totalExpense,
-      
-    });
-    setIsLoading(false);
-    onClose();
-    data.groupName = "";
-    data.totalExpense = "";
-    console.log(resposne);
-  };
+    try {
+      setIsLoading(true);
 
+      const resposne = await axios.post("/api/group/create", {
+        name: data.groupName,
+        totalAmount: data.totalExpense,
+      });
+      setIsLoading(false);
+      onClose();
+      data.groupName = "";
+      data.totalExpense = "";
+      console.log(resposne);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
   if (!isOpen) return null;
 
   return (
