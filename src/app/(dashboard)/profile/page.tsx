@@ -200,68 +200,68 @@ export default function Page() {
               </Button>
             </div>
             {}
-            <div className="grid md:grid-cols-2 gap-4">
-              {gdata.map((group) => (
-                <Card
-                  key={group.name}
-                  className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
-                >
-                  <Link href={`/group/${group._id}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                            {group.name.split("")[0].toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex items-center gap-4">
-                          <div>
-                            <h3 className="text-lg font-semibold text-white mb-1">
-                              {group.name}
-                            </h3>
-                            <div className="flex items-center gap-3 text-sm text-zinc-400">
-                              <span className="flex items-center gap-1">
-                                <Users className="w-4 h-4" />
-                                12 members
-                              </span>
-                              <span>•</span>
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                              </span>
+              <div className="grid md:grid-cols-2 gap-4">
+                {gdata.map((group) => (
+                  <Card
+                    key={group.name}
+                    className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
+                  >
+                    <Link href={`/group/${group._id}`}>
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <Avatar className="w-8 h-8">
+                            <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
+                              {group.name.split("")[0].toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex items-center gap-4">
+                            <div>
+                              <h3 className="text-lg font-semibold text-white mb-1">
+                                {group.name}
+                              </h3>
+                              <div className="flex items-center gap-3 text-sm text-zinc-400">
+                                <span className="flex items-center gap-1">
+                                  <Users className="w-4 h-4" />
+                                  12 members
+                                </span>
+                                <span>•</span>
+                                <span className="flex items-center gap-1">
+                                  <Clock className="w-4 h-4" />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <Badge
+                            variant={
+                              group.isActive === true ? "default" : "secondary"
+                            }
+                            className={
+                              group.isActive === true
+                                ? "bg-white/10 text-white"
+                                : "bg-zinc-800 text-zinc-400"
+                            }
+                          >
+                            {group.isActive === true ? "Active" : "Settled"}
+                          </Badge>
+                        </div>
+
+                        <div className="mt-6 pt-6 border-t border-white/5">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-zinc-400 text-sm mb-1">
+                                Total Expenses
+                              </p>
+                              <p className="text-xl font-semibold text-white">
+                                ₹{group.totalAmount}
+                              </p>
                             </div>
                           </div>
                         </div>
-                        <Badge
-                          variant={
-                            group.isActive === true ? "default" : "secondary"
-                          }
-                          className={
-                            group.isActive === true
-                              ? "bg-white/10 text-white"
-                              : "bg-zinc-800 text-zinc-400"
-                          }
-                        >
-                          {group.isActive === true ? "Active" : "Settled"}
-                        </Badge>
-                      </div>
-
-                      <div className="mt-6 pt-6 border-t border-white/5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-zinc-400 text-sm mb-1">
-                              Total Expenses
-                            </p>
-                            <p className="text-xl font-semibold text-white">
-                              ₹{group.totalAmount}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Link>
-                </Card>
-              ))}
-            </div>
+                      </CardContent>
+                    </Link>
+                  </Card>
+                ))}
+              </div>
           </TabsContent>
 
           {/* Expenses Tab */}

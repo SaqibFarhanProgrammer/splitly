@@ -15,10 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { X, Plus, UserPlus, Check } from "lucide-react";
+import axios from "axios";
+import { useParams } from "next/navigation";
 
 // Dummy existing members
 const existingMembers = [
-  { id: "1", name: "You", username: "you", avatar: "Y", added: true },
   { id: "2", name: "Ahmed", username: "ahmed123", avatar: "A", added: true },
   { id: "3", name: "Saqib", username: "saqib_khan", avatar: "S", added: true },
 ];
@@ -41,9 +42,14 @@ interface AddMembersProps {
 }
 
 export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
-  const [searchResults, setSearchResults] = useState<typeof searchableUsers>([]);
+  const [searchResults, setSearchResults] = useState<typeof searchableUsers>(
+    [],
+  );
   const [addedMembers, setAddedMembers] = useState<string[]>([]);
-  const [showResults, setShowResults] = useState(false);
+  const [showResults,
+   setShowResults] = useState(false);
+  const params = useParams();
+  const { groupID } = params;
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -51,18 +57,22 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    const results = searchableUsers.filter(
-      (user) =>
-        user.username.toLowerCase().includes(data.username.toLowerCase()) ||
-        user.name.toLowerCase().includes(data.username.toLowerCase())
-    );
-    setSearchResults(results);
+  const onSubmit = async (data: FormValues) => {
     setShowResults(true);
+    console.log(data);
+    
+
+    const res = await axios.post("/api/group/addmemeber", {
+      username: data.username.trim().toLowerCase(),
+      groupiD: groupID,
+    });
+
+    console.log(res);
+    
   };
 
   const addMember = (userId: string) => {
-    setAddedMembers([...addedMembers, userId]);
+
   };
 
   const removeMember = (userId: string) => {
@@ -80,13 +90,12 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
   return (
     // Backdrop with blur
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       onClick={handleBackdropClick}
     >
       {/* Dialog Box */}
       <div className="relative w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl">
-        
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h1 className="text-xl font-bold text-white">Add Members</h1>
@@ -102,19 +111,17 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
         {/* Scrollable Content */}
         <div className="overflow-y-auto max-h-[calc(85vh-80px)] p-6">
-          
           {/* Search Form */}
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4"
-            >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-zinc-400 text-sm">Username</FormLabel>
+                    <FormLabel className="text-zinc-400 text-sm">
+                      Username
+                    </FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
                         <Input
@@ -157,8 +164,12 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-white text-sm font-medium">{user.name}</p>
-                          <p className="text-zinc-500 text-xs">@{user.username}</p>
+                          <p className="text-white text-sm font-medium">
+                            {user.name}
+                          </p>
+                          <p className="text-zinc-500 text-xs">
+                            @{user.username}
+                          </p>
                         </div>
                       </div>
                       {addedMembers.includes(user.id) ? (
@@ -174,8 +185,8 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
                       ) : (
                         <Button
                           size="sm"
+                          type="submit"
                           className="bg-white text-black hover:bg-zinc-200 h-8 text-xs"
-                          onClick={() => addMember(user.id)}
                         >
                           <Plus className="w-3 h-3 mr-1" />
                           Add
@@ -210,8 +221,12 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-white text-sm font-medium">{member.name}</p>
-                      <p className="text-zinc-500 text-xs">@{member.username}</p>
+                      <p className="text-white text-sm font-medium">
+                        {member.name}
+                      </p>
+                      <p className="text-zinc-500 text-xs">
+                        @{member.username}
+                      </p>
                     </div>
                   </div>
                   <span className="text-xs text-zinc-500 bg-zinc-900 px-2 py-1 rounded-full">
@@ -225,7 +240,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
         {/* Footer */}
         <div className="p-4 border-t border-white/10 bg-zinc-950">
-          <Button 
+          <Button
             className="w-full bg-white text-black hover:bg-zinc-200 h-11"
             onClick={onClose}
           >

@@ -384,10 +384,7 @@ export default function GroupPage() {
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm text-white font-medium">
-                  {member.username}
-                </span>
-                <span className={getBalanceColor(member.balance)}>
-                  {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}
+                  {groupData.createdBy === member._id ? "You" : member.username}
                 </span>
               </div>
             </div>

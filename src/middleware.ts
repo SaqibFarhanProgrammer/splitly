@@ -9,9 +9,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/profile", request.url));
   }
 
-  
-
-
   const protectedRoutes = ["/dashboard", "/profile", "/admin", "/allgroups"];
 
   const isProtected = protectedRoutes.some((route) =>

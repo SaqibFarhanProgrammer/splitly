@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,7 @@ const navLinks = [
 export function TopNavbar() {
   const pathname = usePathname();
   const [notifications] = useState(3);
+  const router = useRouter()
 
   const isActive = (href: string) => pathname === href;
 
@@ -40,6 +41,8 @@ export function TopNavbar() {
   async function handleLogout() {
       const response  = await axios.get("/api/users/logout")
       console.log(response);
+
+      router.push("/auth")
       
   }
 
