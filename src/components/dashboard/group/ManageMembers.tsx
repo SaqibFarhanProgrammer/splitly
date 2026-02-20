@@ -21,12 +21,6 @@ import {
 import { X, Shield, Crown, Trash2, UserMinus } from "lucide-react";
 
 // Dummy members data
-const initialMembers = [
-  { id: "1", name: "You", username: "you", avatar: "Y", role: "admin", balance: 5200 },
-  { id: "2", name: "Ahmed", username: "ahmed123", avatar: "A", role: "member", balance: -3200 },
-  { id: "3", name: "Saqib", username: "saqib_khan", avatar: "S", role: "member", balance: -2000 },
-  { id: "4", name: "Ali", username: "ali_01", avatar: "A", role: "member", balance: 0 },
-];
 
 type Role = "admin" | "member";
 
@@ -45,19 +39,24 @@ interface ManageMembersProps {
   isAdmin?: boolean;
 }
 
-export default function ManageMembers({ isOpen, onClose, isAdmin = true }: ManageMembersProps) {
+export default function ManageMembers({
+  isOpen,
+  onClose,
+  isAdmin = true,
+  data
+}: ManageMembersProps) {
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const handleRoleChange = (memberId: string, newRole: Role) => {
-    setMembers(members.map(m => 
-      m.id === memberId ? { ...m, role: newRole } : m
-    ));
+    setMembers(
+      members.map((m) => (m.id === memberId ? { ...m, role: newRole } : m)),
+    );
   };
 
   const handleDelete = (memberId: string) => {
     if (deleteConfirm === memberId) {
-      setMembers(members.filter(m => m.id !== memberId));
+      setMembers(members.filter((m) => m.id !== memberId));
       setDeleteConfirm(null);
     } else {
       setDeleteConfirm(memberId);
@@ -74,12 +73,12 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
 
   return (
     // Backdrop with blur
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       {/* Modal */}
-      <div 
+      <div
         className="relative w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
@@ -88,7 +87,8 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
           <div>
             <h2 className="text-lg font-bold text-white">Manage Members</h2>
             <p className="text-xs text-zinc-500 mt-0.5">
-              {members.length} members • {members.filter(m => m.role === "admin").length} admins
+              {members.length} members •{" "}
+              {members.filter((m) => m.role === "admin").length} admins
             </p>
           </div>
           <Button
@@ -117,13 +117,14 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
                 </Avatar>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-white text-sm font-medium">{member.name}</p>
-                    {member.role === "admin" && (
-                      <Crown className="w-3.5 h-3.5 text-yellow-500" />
-                    )}
+                    <p className="text-white text-sm font-medium">
+                      {member.name}
+                    </p>
                   </div>
                   <p className="text-zinc-500 text-xs">@{member.username}</p>
-                  <p className={`text-xs mt-0.5 ${getBalanceColor(member.balance)}`}>
+                  <p
+                    className={`text-xs mt-0.5 ${getBalanceColor(member.balance)}`}
+                  >
                     {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}
                   </p>
                 </div>
@@ -133,11 +134,11 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
               <div className="flex items-center gap-2">
                 {/* Role Badge (non-admin view) */}
                 {!isAdmin && (
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className={`text-xs border-0 ${
-                      member.role === "admin" 
-                        ? "bg-yellow-500/10 text-yellow-500" 
+                      member.role === "admin"
+                        ? "bg-yellow-500/10 text-yellow-500"
                         : "bg-zinc-800 text-zinc-400"
                     }`}
                   >
@@ -149,34 +150,6 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
                 {isAdmin && member.id !== "1" && (
                   <>
                     {/* Role Select */}
-                    <Select
-                      value={member.role}
-                      onValueChange={(value: Role) => handleRoleChange(member.id, value)}
-                    >
-                      <SelectTrigger className="w-28 h-8 bg-zinc-900 border-white/10 text-white text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-white/10">
-                        <SelectItem 
-                          value="admin" 
-                          className="text-white text-xs focus:bg-white/10 focus:text-white"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Shield className="w-3 h-3" />
-                            Admin
-                          </div>
-                        </SelectItem>
-                        <SelectItem 
-                          value="member"
-                          className="text-white text-xs focus:bg-white/10 focus:text-white"
-                        >
-                          <div className="flex items-center gap-2">
-                            <UserMinus className="w-3 h-3" />
-                            Member
-                          </div>
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
 
                     {/* Delete Button */}
                     <Button
@@ -211,7 +184,7 @@ export default function ManageMembers({ isOpen, onClose, isAdmin = true }: Manag
 
         {/* Footer */}
         <div className="p-4 border-t border-white/10 bg-zinc-950">
-          <Button 
+          <Button
             className="w-full bg-white text-black hover:bg-zinc-200 h-10"
             onClick={onClose}
           >

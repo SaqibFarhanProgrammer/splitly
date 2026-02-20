@@ -60,6 +60,7 @@ import { number } from "zod";
 import AddMembers from "@/components/dashboard/group/AddMemebers";
 import { useRouter } from "next/navigation";
 import mongoose from "mongoose";
+import ManageMembers from "@/components/dashboard/group/ManageMembers";
 
 // Form Types
 interface SettlementFormValues {
@@ -112,6 +113,7 @@ export default function GroupPage() {
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);
+  const [isManageOpen, setIsManageOpen] = useState(false);
 
   const [ShowAddmember, setShowAddmember] = useState(false);
   // Settlement Form
@@ -305,7 +307,10 @@ export default function GroupPage() {
                     <UserPlus className="w-4 h-4 mr-2" />
                     Add Member
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                  <DropdownMenuItem
+                    onClick={() => setIsManageOpen(true)}
+                    className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white"
+                  >
                     <UserMinus className="w-4 h-4 mr-2" />
                     Manage Members
                   </DropdownMenuItem>
@@ -381,7 +386,9 @@ export default function GroupPage() {
             >
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.isadmin ? "Y" : member.username.split("")[0].toUpperCase()}
+                  {member.isadmin
+                    ? "Y"
+                    : member.username.split("")[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
@@ -560,17 +567,17 @@ export default function GroupPage() {
                           <SelectContent className="bg-zinc-900 border-white/10">
                             {groupData.members.map((member) => (
                               <SelectItem
-                                key={member.id}
-                                value={member.id}
+                                key={member.username}
+                                value={member.username}
                                 className="text-white focus:bg-white/10 focus:text-white"
                               >
                                 <div className="flex items-center gap-2">
                                   <Avatar className="w-6 h-6">
                                     <AvatarFallback className="bg-zinc-800 text-xs">
-                                      {member.avatar}
+                                      {member.username.split("")[0].toUpperCase()}
                                     </AvatarFallback>
                                   </Avatar>
-                                  {member.name}
+                                  {member.username\}
                                 </div>
                               </SelectItem>
                             ))}
@@ -803,6 +810,11 @@ export default function GroupPage() {
           </Dialog>
         </div>
       </div>
+      <ManageMembers
+        isOpen={isManageOpen}
+        onClose={() => setIsManageOpen(false)}
+        isAdmin={true} // false for non-admin view
+      />
     </div>
   );
 }

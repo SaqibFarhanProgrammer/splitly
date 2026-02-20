@@ -400,6 +400,8 @@ export default function Page() {
           onClose={() => setIsAddExpenseOpen(false)}
           onSubmit={handleAddExpense}
         />
+
+        
       </div>
     </section>
   );
