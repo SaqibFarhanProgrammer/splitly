@@ -55,11 +55,9 @@ import {
   Edit3,
 } from "lucide-react";
 import Link from "next/link";
-import axios, { AxiosRequestConfig } from "axios";
-import { number } from "zod";
+import axios from "axios";
 import AddMembers from "@/components/dashboard/group/AddMemebers";
 import { useRouter } from "next/navigation";
-import mongoose from "mongoose";
 import ManageMembers from "@/components/dashboard/group/ManageMembers";
 
 // Form Types
@@ -92,10 +90,9 @@ interface IgroupData {
   _id: string;
 }
 
-// Dummy Group Data - isAdmin flag added
 const GroupdataDefault: IgroupData = {
   name: "Hunza Trip 2024",
-  isActive: true, // Change to false to see non-admin view
+  isActive: true,
   members: [],
   totalAmount: 45800,
   createdBy: "",
@@ -104,8 +101,7 @@ const GroupdataDefault: IgroupData = {
   _id: "",
 };
 
-// Dummy Expenses (Chat style)
-const expenses = [];
+const expenses: any[] = [];
 
 export default function GroupPage() {
   const params = useParams();
@@ -114,18 +110,9 @@ export default function GroupPage() {
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);
   const [isManageOpen, setIsManageOpen] = useState(false);
-
   const [ShowAddmember, setShowAddmember] = useState(false);
-  // Settlement Form
-  const settlementForm = useForm<SettlementFormValues>({
-    defaultValues: {
-      memberId: "",
-      amount: "",
-      note: "",
-    },
-  });
 
-  // Expense Form
+  // Simple React Hook Form - NO ZOD
   const expenseForm = useForm<ExpenseFormValues>({
     defaultValues: {
       amount: "",
@@ -135,86 +122,89 @@ export default function GroupPage() {
     },
   });
 
-  // Settlement Validation
-  const validateSettlement = (data: SettlementFormValues) => {
-    const errors: Partial<Record<keyof SettlementFormValues, string>> = {};
+  const settlementForm = useForm<SettlementFormValues>({
+    defaultValues: {
+      memberId: "",
+      amount: "",
+      note: "",
+    },
+  });
 
-    if (!data.memberId) {
-      errors.memberId = "Please select a member";
-    }
+  // Manual Validation Functions
+  const validateExpense = (data: ExpenseFormValues): boolean => {
+    let isValid = true;
 
-    if (!data.amount) {
-      errors.amount = "Amount is required";
-    } else if (parseFloat(data.amount) <= 0) {
-      errors.amount = "Amount must be greater than 0";
-    } else if (isNaN(parseFloat(data.amount))) {
-      errors.amount = "Please enter a valid number";
-    }
-
-    return errors;
-  };
-
-  // Expense Validation
-  const validateExpense = (data: ExpenseFormValues) => {
-    const errors: Partial<Record<keyof ExpenseFormValues, string>> = {};
-
-    if (!data.amount) {
-      errors.amount = "Amount is required";
-    } else if (parseFloat(data.amount) <= 0) {
-      errors.amount = "Amount must be greater than 0";
-    } else if (isNaN(parseFloat(data.amount))) {
-      errors.amount = "Please enter a valid number";
+    if (!data.amount || parseFloat(data.amount) <= 0) {
+      expenseForm.setError("amount", {
+        type: "manual",
+        message: "Valid amount required",
+      });
+      isValid = false;
     }
 
     if (!data.description.trim()) {
-      errors.description = "Description is required";
+      expenseForm.setError("description", {
+        type: "manual",
+        message: "Description required",
+      });
+      isValid = false;
     }
 
     if (!data.paidBy) {
-      errors.paidBy = "Select who paid";
+      expenseForm.setError("paidBy", {
+        type: "manual",
+        message: "Select who paid",
+      });
+      isValid = false;
     }
 
     if (!data.splitWith || data.splitWith.length === 0) {
-      errors.splitWith = "Select at least one member to split with";
+      expenseForm.setError("splitWith", {
+        type: "manual",
+        message: "Select at least one member",
+      });
+      isValid = false;
     }
 
-    return errors;
+    return isValid;
   };
 
-  const onSettlementSubmit = (data: SettlementFormValues) => {
-    const errors = validateSettlement(data);
+  const validateSettlement = (data: SettlementFormValues): boolean => {
+    let isValid = true;
 
-    if (Object.keys(errors).length > 0) {
-      Object.entries(errors).forEach(([key, message]) => {
-        settlementForm.setError(key as keyof SettlementFormValues, {
-          type: "manual",
-          message: message,
-        });
+    if (!data.memberId) {
+      settlementForm.setError("memberId", {
+        type: "manual",
+        message: "Select a member",
       });
-      return;
+      isValid = false;
     }
 
-    console.log("Settlement:", data);
-    setIsSettlementOpen(false);
-    settlementForm.reset();
+    if (!data.amount || parseFloat(data.amount) <= 0) {
+      settlementForm.setError("amount", {
+        type: "manual",
+        message: "Valid amount required",
+      });
+      isValid = false;
+    }
+
+    return isValid;
   };
 
   const onExpenseSubmit = (data: ExpenseFormValues) => {
-    const errors = validateExpense(data);
-
-    if (Object.keys(errors).length > 0) {
-      Object.entries(errors).forEach(([key, message]) => {
-        expenseForm.setError(key as keyof ExpenseFormValues, {
-          type: "manual",
-          message: message,
-        });
-      });
-      return;
-    }
+    if (!validateExpense(data)) return;
 
     console.log("Expense:", data);
     setIsExpenseOpen(false);
     expenseForm.reset();
+  };
+
+  const onSettlementSubmit = (data: SettlementFormValues) => {
+    if (!validateSettlement(data)) return;
+
+    console.log("Settlement:", data);
+    setIsSettlementOpen(false);
+    settlementForm.reset();
   };
 
   const getBalanceColor = (balance: number) => {
@@ -237,12 +227,9 @@ export default function GroupPage() {
 
   async function GetGroupData() {
     const { groupID } = params;
-
     const res = await axios.post("/api/group/getgroupdatabyid", {
       groupid: groupID,
     });
-
-    console.log(res);
     return res.data?.data;
   }
 
@@ -252,15 +239,16 @@ export default function GroupPage() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col">
-      {/* Header with Dropdown */}
       {ShowAddmember ? (
         <AddMembers
           isOpen={ShowAddmember}
           onClose={() => setShowAddmember(false)}
         />
       ) : null}
-      <header className="sticky top-0 z-30   ">
-        <div className="w-full px-25 mx-auto h-16 flex items-center justify-between">
+
+      {/* Header */}
+      <header className="sticky top-0 z-30">
+        <div className="w-full px-4 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
               <Button
@@ -275,11 +263,12 @@ export default function GroupPage() {
               <h1 className="text-lg font-semibold text-white">
                 {groupData.name}
               </h1>
-              <p className="text-xs text-zinc-400">0 members</p>
+              <p className="text-xs text-zinc-400">
+                {groupData.members?.length || 0} members
+              </p>
             </div>
           </div>
 
-          {/* Dropdown Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -296,20 +285,20 @@ export default function GroupPage() {
             >
               {groupData.isActive ? (
                 <>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer">
                     <Edit3 className="w-4 h-4 mr-2" />
                     Edit Group
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setShowAddmember(!ShowAddmember)}
-                    className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white"
+                    className="hover:bg-white/10 cursor-pointer"
                   >
                     <UserPlus className="w-4 h-4 mr-2" />
                     Add Member
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setIsManageOpen(true)}
-                    className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white"
+                    className="hover:bg-white/10 cursor-pointer"
                   >
                     <UserMinus className="w-4 h-4 mr-2" />
                     Manage Members
@@ -317,7 +306,7 @@ export default function GroupPage() {
                   <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem
                     onClick={deleteGroup}
-                    className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20"
+                    className="hover:bg-red-500/20 text-red-400 cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Delete Group
@@ -325,12 +314,12 @@ export default function GroupPage() {
                 </>
               ) : (
                 <>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer focus:bg-white/10 focus:text-white">
+                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer">
                     <Settings className="w-4 h-4 mr-2" />
                     Group Info
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem className="hover:bg-red-500/20 text-red-400 cursor-pointer focus:text-red-400 focus:bg-red-500/20">
+                  <DropdownMenuItem className="hover:bg-red-500/20 text-red-400 cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
                     Leave Group
                   </DropdownMenuItem>
@@ -360,16 +349,16 @@ export default function GroupPage() {
               <div className="text-center">
                 <p className="text-xs text-zinc-400 mb-1">Total</p>
                 <p className="text-lg font-bold text-white">
-                  PKR,{groupData.totalAmount.toLocaleString()}
+                  PKR {groupData.totalAmount.toLocaleString()}
                 </p>
               </div>
               <div className="text-center border-x border-white/10">
                 <p className="text-xs text-zinc-400 mb-1">You Get</p>
-                <p className="text-lg font-bold text-emerald-400">PKR,5,200</p>
+                <p className="text-lg font-bold text-emerald-400">PKR 5,200</p>
               </div>
               <div className="text-center">
                 <p className="text-xs text-zinc-400 mb-1">You Owe</p>
-                <p className="text-lg font-bold text-red-400">PKR,0</p>
+                <p className="text-lg font-bold text-red-400">PKR 0</p>
               </div>
             </div>
           </CardContent>
@@ -386,9 +375,7 @@ export default function GroupPage() {
             >
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.isadmin
-                    ? "Y"
-                    : member.username.split("")[0].toUpperCase()}
+                  {member.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
@@ -403,85 +390,22 @@ export default function GroupPage() {
 
       {/* Chat-style Expense List */}
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-24 space-y-4">
-        {expenses.map((expense) => (
-          <div key={expense.id} className="flex gap-3">
-            <Avatar className="w-10 h-10 mt-1">
-              <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
-                {expense.user.avatar}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1">
-              {expense.type === "expense" ? (
-                <Card className="bg-zinc-950 border-white/10">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <div>
-                        <p className="text-sm text-zinc-400 mb-1">
-                          {expense.user.name}
-                        </p>
-                        <h3 className="text-white font-medium">
-                          {expense.title}
-                        </h3>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white font-bold">
-                          ₹{expense.amount.toLocaleString()}
-                        </p>
-                        <p className="text-xs text-zinc-500">{expense.date}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                      <p className="text-xs text-zinc-400">{expense.split}</p>
-                      {expense.youPaid ? (
-                        <Badge className="bg-emerald-500/10 text-emerald-400 border-0 text-xs">
-                          You paid
-                        </Badge>
-                      ) : (
-                        <p className="text-xs text-red-400">
-                          You owe ₹{expense.yourShare}
-                        </p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card className="bg-zinc-900/50 border-white/5">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                      <p className="text-sm text-zinc-300">
-                        <span className="text-white font-medium">
-                          {expense.user.name}
-                        </span>{" "}
-                        paid{" "}
-                        <span className="text-white font-medium">
-                          ₹{expense.amount}
-                        </span>{" "}
-                        to{" "}
-                        <span className="text-white font-medium">
-                          {expense.to}
-                        </span>
-                      </p>
-                    </div>
-                    {expense.note && (
-                      <p className="text-xs text-zinc-500 mt-2 ml-6">
-                        {expense.note}
-                      </p>
-                    )}
-                    <p className="text-xs text-zinc-600 mt-2 ml-6">
-                      {expense.date}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+        {expenses.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-zinc-500 text-sm">No expenses yet</p>
+            <p className="text-zinc-600 text-xs mt-1">Add your first expense</p>
           </div>
-        ))}
+        ) : (
+          expenses.map((expense) => (
+            <div key={expense.id} className="flex gap-3">
+              {/* Expense card content */}
+            </div>
+          ))
+        )}
       </div>
 
       {/* Bottom Action Bar */}
-      <div className="fixed bottom-0  left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           {/* Add Expense Dialog */}
           <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
@@ -503,64 +427,63 @@ export default function GroupPage() {
               <Form {...expenseForm}>
                 <form
                   onSubmit={expenseForm.handleSubmit(onExpenseSubmit)}
-                  className="space-y-6 mt-4"
+                  className="space-y-5 mt-4"
                 >
-                  {/* Amount */}
                   <FormField
                     control={expenseForm.control}
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">
-                          Amount (₹)
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Amount (PKR)
                         </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             placeholder="0.00"
-                            className="bg-zinc-900 border-white/10 text-white h-12 text-lg"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  {/* Description */}
                   <FormField
                     control={expenseForm.control}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">
+                        <FormLabel className="text-zinc-400 text-sm">
                           Description
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="What was this for?"
-                            className="bg-zinc-900 border-white/10 text-white h-12"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  {/* Paid By */}
                   <FormField
                     control={expenseForm.control}
                     name="paidBy"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">Paid By</FormLabel>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Paid By
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-12">
+                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
                               <SelectValue placeholder="Who paid?" />
                             </SelectTrigger>
                           </FormControl>
@@ -569,14 +492,12 @@ export default function GroupPage() {
                               <SelectItem
                                 key={member.username}
                                 value={member.username}
-                                className="text-white focus:bg-white/10 focus:text-white"
+                                className="text-white text-sm"
                               >
                                 <div className="flex items-center gap-2">
                                   <Avatar className="w-6 h-6">
                                     <AvatarFallback className="bg-zinc-800 text-xs">
-                                      {member.username
-                                        .split("")[0]
-                                        .toUpperCase()}
+                                      {member.username.charAt(0).toUpperCase()}
                                     </AvatarFallback>
                                   </Avatar>
                                   {member.username}
@@ -585,88 +506,81 @@ export default function GroupPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  {/* Split With */}
                   <FormField
                     control={expenseForm.control}
                     name="splitWith"
                     render={() => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">
+                        <FormLabel className="text-zinc-400 text-sm">
                           Split With
                         </FormLabel>
-                        <div className="space-y-3 mt-2">
+                        <div className="space-y-2 mt-2">
                           {groupData.members.map((member) => (
                             <FormField
                               key={member.username}
                               control={expenseForm.control}
                               name="splitWith"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem
-                                    key={member._id}
-                                    className="flex flex-row items-start space-x-3 space-y-0"
-                                  >
-                                    <FormControl>
-                                      <Checkbox
-                                        checked={field.value?.includes(
-                                          member.id,
-                                        )}
-                                        onCheckedChange={(checked) => {
-                                          return checked
-                                            ? field.onChange([
-                                                ...field.value,
-                                                member.id,
-                                              ])
-                                            : field.onChange(
-                                                field.value?.filter(
-                                                  (value) =>
-                                                    value !== member.id,
-                                                ),
-                                              );
-                                        }}
-                                        className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
-                                      />
-                                    </FormControl>
-                                    <FormLabel className="font-normal text-white flex items-center gap-2 cursor-pointer">
-                                      <Avatar className="w-6 h-6">
-                                        <AvatarFallback className="bg-zinc-800 text-xs text-white">
-                                          {member.avatar}
-                                        </AvatarFallback>
-                                      </Avatar>
-                                      {member.name}
-                                    </FormLabel>
-                                  </FormItem>
-                                );
-                              }}
+                              render={({ field }) => (
+                                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(
+                                        member.username
+                                      )}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              member.username,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) =>
+                                                  value !== member.username
+                                              )
+                                            );
+                                      }}
+                                      className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal text-white text-sm flex items-center gap-2 cursor-pointer">
+                                    <Avatar className="w-6 h-6">
+                                      <AvatarFallback className="bg-zinc-800 text-xs text-white">
+                                        {member.username.charAt(0).toUpperCase()}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    {member.username}
+                                  </FormLabel>
+                                </FormItem>
+                              )}
                             />
                           ))}
                         </div>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  {/* Buttons */}
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-2 pt-2">
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1 border-white/20 text-white hover:bg-white/10 h-12"
+                      className="flex-1 border-white/20 text-white hover:bg-white/10 h-10 text-sm"
                       onClick={() => setIsExpenseOpen(false)}
                     >
                       Cancel
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-white text-black hover:bg-zinc-200 h-12"
+                      className="flex-1 bg-white text-black hover:bg-zinc-200 h-10 text-sm"
                     >
                       <Plus className="w-4 h-4 mr-2" />
-                      Add Expense
+                      Add
                     </Button>
                   </div>
                 </form>
@@ -697,55 +611,47 @@ export default function GroupPage() {
               <Form {...settlementForm}>
                 <form
                   onSubmit={settlementForm.handleSubmit(onSettlementSubmit)}
-                  className="space-y-6 mt-4"
+                  className="space-y-5 mt-4"
                 >
                   <FormField
                     control={settlementForm.control}
                     name="memberId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">Pay To</FormLabel>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Pay To
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-12">
+                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
                               <SelectValue placeholder="Select member" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="bg-zinc-900 border-white/10">
                             {groupData.members
-                              .filter((m) => m.id !== "1")
+                              .filter((m) => !m.isadmin)
                               .map((member) => (
                                 <SelectItem
                                   key={member.username}
                                   value={member.username}
-                                  className="text-white focus:bg-white/10 focus:text-white"
+                                  className="text-white text-sm"
                                 >
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
                                       <AvatarFallback className="bg-zinc-800 text-xs">
-                                        {member.username
-                                          .split("")[0]
-                                          .toUpperCase()}
+                                        {member.username.charAt(0).toUpperCase()}
                                       </AvatarFallback>
                                     </Avatar>
                                     {member.username}
-                                    <span
-                                      className={getBalanceColor(
-                                        member.balance,
-                                      )}
-                                    >
-                                      ({member.balance > 0 ? "gets" : "owes"} ₹
-                                      {Math.abs(member.balance)})
-                                    </span>
                                   </div>
                                 </SelectItem>
                               ))}
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
@@ -755,18 +661,18 @@ export default function GroupPage() {
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">
-                          Amount (₹)
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Amount (PKR)
                         </FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             placeholder="0.00"
-                            className="bg-zinc-900 border-white/10 text-white h-12 text-lg"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
@@ -776,36 +682,36 @@ export default function GroupPage() {
                     name="note"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-zinc-400">
+                        <FormLabel className="text-zinc-400 text-sm">
                           Note (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="What's this for?"
-                            className="bg-zinc-900 border-white/10 text-white h-12"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage className="text-red-400" />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}
                   />
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-2 pt-2">
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1 border-white/20 text-white hover:bg-white/10 h-12"
+                      className="flex-1 border-white/20 text-white hover:bg-white/10 h-10 text-sm"
                       onClick={() => setIsSettlementOpen(false)}
                     >
                       Cancel
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-white text-black hover:bg-zinc-200 h-12"
+                      className="flex-1 bg-white text-black hover:bg-zinc-200 h-10 text-sm"
                     >
                       <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Confirm Payment
+                      Confirm
                     </Button>
                   </div>
                 </form>
@@ -814,12 +720,21 @@ export default function GroupPage() {
           </Dialog>
         </div>
       </div>
+
+      {/* Manage Members Modal */}
       <ManageMembers
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        members={members}
-        onDelete={handleDelete}
-        currentUserId="1"
+        isOpen={isManageOpen}
+        onClose={() => setIsManageOpen(false)}
+        members={groupData.members.map((m) => ({
+          id: m.username,
+          name: m.isadmin ? "You" : m.username,
+          username: m.username,
+          avatar: m.username.charAt(0).toUpperCase(),
+          role: m.isadmin ? "admin" : "member",
+          balance: 0,
+        }))}
+        onDelete={(id) => console.log("Delete:", id)}
+        currentUserId="you"
       />
     </div>
   );
