@@ -88,6 +88,7 @@ interface IgroupData {
   createdBy: string;
   createdAt: number;
   upnumberdAt: number;
+  _id: string;
 }
 
 // Dummy Group Data - isAdmin flag added
@@ -99,6 +100,7 @@ const GroupdataDefault: IgroupData = {
   createdBy: "",
   createdAt: 100,
   upnumberdAt: 100,
+  _id: "",
 };
 
 // Dummy Expenses (Chat style)
@@ -379,12 +381,12 @@ export default function GroupPage() {
             >
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.username.split("")[0]}
+                  {member.isadmin ? "Y" : member.username.split("")[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm text-white font-medium">
-                  {groupData.createdBy === member._id ? "You" : member.username}
+                  {member.isadmin ? "You" : member.username}
                 </span>
               </div>
             </div>
