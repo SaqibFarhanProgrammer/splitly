@@ -574,10 +574,12 @@ export default function GroupPage() {
                                 <div className="flex items-center gap-2">
                                   <Avatar className="w-6 h-6">
                                     <AvatarFallback className="bg-zinc-800 text-xs">
-                                      {member.username.split("")[0].toUpperCase()}
+                                      {member.username
+                                        .split("")[0]
+                                        .toUpperCase()}
                                     </AvatarFallback>
                                   </Avatar>
-                                  {member.username\}
+                                  {member.username}
                                 </div>
                               </SelectItem>
                             ))}
@@ -600,13 +602,13 @@ export default function GroupPage() {
                         <div className="space-y-3 mt-2">
                           {groupData.members.map((member) => (
                             <FormField
-                              key={member.id}
+                              key={member.username}
                               control={expenseForm.control}
                               name="splitWith"
                               render={({ field }) => {
                                 return (
                                   <FormItem
-                                    key={member.id}
+                                    key={member._id}
                                     className="flex flex-row items-start space-x-3 space-y-0"
                                   >
                                     <FormControl>
@@ -717,17 +719,19 @@ export default function GroupPage() {
                               .filter((m) => m.id !== "1")
                               .map((member) => (
                                 <SelectItem
-                                  key={member.id}
-                                  value={member.id}
+                                  key={member.username}
+                                  value={member.username}
                                   className="text-white focus:bg-white/10 focus:text-white"
                                 >
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
                                       <AvatarFallback className="bg-zinc-800 text-xs">
-                                        {member.avatar}
+                                        {member.username
+                                          .split("")[0]
+                                          .toUpperCase()}
                                       </AvatarFallback>
                                     </Avatar>
-                                    {member.name}
+                                    {member.username}
                                     <span
                                       className={getBalanceColor(
                                         member.balance,
@@ -811,9 +815,11 @@ export default function GroupPage() {
         </div>
       </div>
       <ManageMembers
-        isOpen={isManageOpen}
-        onClose={() => setIsManageOpen(false)}
-        isAdmin={true} // false for non-admin view
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        members={members}
+        onDelete={handleDelete}
+        currentUserId="1"
       />
     </div>
   );

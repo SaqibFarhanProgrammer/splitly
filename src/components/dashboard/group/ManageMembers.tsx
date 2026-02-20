@@ -5,58 +5,37 @@ import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { X, Shield, Crown, Trash2, UserMinus } from "lucide-react";
-
-// Dummy members data
-
-type Role = "admin" | "member";
+import { X, Crown, Trash2 } from "lucide-react";
 
 interface Member {
   id: string;
   name: string;
   username: string;
   avatar: string;
-  role: Role;
+  role: "admin" | "member";
   balance: number;
 }
 
 interface ManageMembersProps {
   isOpen: boolean;
   onClose: () => void;
-  isAdmin?: boolean;
+  members: Member[];
+  onDelete?: (memberId: string) => void;
+  currentUserId?: string;
 }
 
 export default function ManageMembers({
   isOpen,
   onClose,
-  isAdmin = true,
-  data
+  members,
+  onDelete,
+  currentUserId = "1",
 }: ManageMembersProps) {
-  const [members, setMembers] = useState<Member[]>(initialMembers);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const handleRoleChange = (memberId: string, newRole: Role) => {
-    setMembers(
-      members.map((m) => (m.id === memberId ? { ...m, role: newRole } : m)),
-    );
-  };
-
-  const handleDelete = (memberId: string) => {
+  const handleDeleteClick = (memberId: string) => {
     if (deleteConfirm === memberId) {
-      setMembers(members.filter((m) => m.id !== memberId));
+      onDelete?.(memberId);
       setDeleteConfirm(null);
     } else {
       setDeleteConfirm(memberId);
@@ -72,23 +51,20 @@ export default function ManageMembers({
   if (!isOpen) return null;
 
   return (
-    // Backdrop with blur
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       onClick={onClose}
     >
-      {/* Modal */}
       <div
-        className="relative w-full max-w-md max-h-[85vh] overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl"
+        className="relative w-full max-w-sm max-h-[85vh] overflow-hidden rounded-2xl bg-zinc-950 border border-white/10 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-white/10">
+        <div className="flex items-center justify-between p-4 border-b border-white/10">
           <div>
-            <h2 className="text-lg font-bold text-white">Manage Members</h2>
+            <h2 className="text-base font-semibold text-white">Manage Members</h2>
             <p className="text-xs text-zinc-500 mt-0.5">
-              {members.length} members •{" "}
-              {members.filter((m) => m.role === "admin").length} admins
+              {members.length} members
             </p>
           </div>
           <Button
@@ -102,7 +78,7 @@ export default function ManageMembers({
         </div>
 
         {/* Members List */}
-        <div className="overflow-y-auto max-h-[calc(85vh-140px)] p-5 space-y-3">
+        <div className="overflow-y-auto max-h-[calc(85vh-120px)] p-4 space-y-2">
           {members.map((member) => (
             <div
               key={member.id}
@@ -110,71 +86,60 @@ export default function ManageMembers({
             >
               {/* Left - Avatar & Info */}
               <div className="flex items-center gap-3">
-                <Avatar className="w-10 h-10">
-                  <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
+                <Avatar className="w-9 h-9">
+                  <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
                     {member.avatar}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <p className="text-white text-sm font-medium">
-                      {member.name}
-                    </p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-white text-sm font-medium">{member.name}</p>
+                    {member.role === "admin" && (
+                      <Crown className="w-3 h-3 text-yellow-500" />
+                    )}
                   </div>
                   <p className="text-zinc-500 text-xs">@{member.username}</p>
-                  <p
-                    className={`text-xs mt-0.5 ${getBalanceColor(member.balance)}`}
-                  >
-                    {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}
-                  </p>
                 </div>
               </div>
 
               {/* Right - Actions */}
               <div className="flex items-center gap-2">
-                {/* Role Badge (non-admin view) */}
-                {!isAdmin && (
-                  <Badge
-                    variant="outline"
-                    className={`text-xs border-0 ${
-                      member.role === "admin"
-                        ? "bg-yellow-500/10 text-yellow-500"
-                        : "bg-zinc-800 text-zinc-400"
+                {/* Balance */}
+                <span className={`text-xs font-medium ${getBalanceColor(member.balance)}`}>
+                  {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}
+                </span>
+
+                {/* Delete Button - Only for non-admin, non-self */}
+                {member.role !== "admin" && member.id !== currentUserId && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-7 w-7 ${
+                      deleteConfirm === member.id
+                        ? "bg-red-500/20 text-red-400"
+                        : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
                     }`}
+                    onClick={() => handleDeleteClick(member.id)}
                   >
-                    {member.role === "admin" ? "Admin" : "Member"}
+                    {deleteConfirm === member.id ? (
+                      <Trash2 className="w-3.5 h-3.5" />
+                    ) : (
+                      <X className="w-3.5 h-3.5" />
+                    )}
+                  </Button>
+                )}
+
+                {/* Self Badge */}
+                {member.id === currentUserId && (
+                  <Badge className="bg-white/10 text-white text-[10px] border-0 px-2 py-0.5">
+                    You
                   </Badge>
                 )}
 
-                {/* Admin Controls */}
-                {isAdmin && member.id !== "1" && (
-                  <>
-                    {/* Role Select */}
-
-                    {/* Delete Button */}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={`h-8 w-8 ${
-                        deleteConfirm === member.id
-                          ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                          : "text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
-                      }`}
-                      onClick={() => handleDelete(member.id)}
-                    >
-                      {deleteConfirm === member.id ? (
-                        <Trash2 className="w-4 h-4" />
-                      ) : (
-                        <X className="w-4 h-4" />
-                      )}
-                    </Button>
-                  </>
-                )}
-
-                {/* Self indicator */}
-                {member.id === "1" && (
-                  <Badge className="bg-white/10 text-white text-xs border-0">
-                    You
+                {/* Admin Badge */}
+                {member.role === "admin" && member.id !== currentUserId && (
+                  <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0 px-2 py-0.5">
+                    Admin
                   </Badge>
                 )}
               </div>
@@ -183,9 +148,9 @@ export default function ManageMembers({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-white/10 bg-zinc-950">
+        <div className="p-3 border-t border-white/10 bg-zinc-950">
           <Button
-            className="w-full bg-white text-black hover:bg-zinc-200 h-10"
+            className="w-full bg-white text-black hover:bg-zinc-200 h-9 text-sm"
             onClick={onClose}
           >
             Done
