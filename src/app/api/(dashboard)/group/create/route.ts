@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       totalAmount: parsedAmount,
       isActive: true,
       createdBy: userId,
-      members: [{ username: user.username, isadmin: true }],
+      members: [{ userId: user._id, isAdmin: true }],
     });
 
     return NextResponse.json(

@@ -75,8 +75,8 @@ interface ExpenseFormValues {
 }
 
 interface Imemeber {
-  username: string;
   isadmin: boolean;
+  id: string;
 }
 
 interface IgroupData {
@@ -218,7 +218,7 @@ export default function GroupPage() {
       const res = await axios.delete(
         `/api/group/delete?groupId=${params.groupID}`,
       );
-      console.log(res.data);
+      console.log(res);
       router.push("/profile");
     } catch (error) {
       console.error(error);
@@ -230,6 +230,9 @@ export default function GroupPage() {
     const res = await axios.post("/api/group/getgroupdatabyid", {
       groupid: groupID,
     });
+
+    console.log(res.data);
+
     return res.data?.data;
   }
 
@@ -246,7 +249,6 @@ export default function GroupPage() {
         />
       ) : null}
 
-      {/* Header */}
       <header className="sticky top-0 z-30">
         <div className="w-full px-4 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -330,7 +332,6 @@ export default function GroupPage() {
         </div>
       </header>
 
-      {/* Settlement Summary Card */}
       <div className="max-w-3xl mx-auto w-full px-4 py-4">
         <Card className="bg-zinc-950 border-white/10">
           <CardContent className="p-4">
@@ -365,12 +366,11 @@ export default function GroupPage() {
         </Card>
       </div>
 
-      {/* Members Quick View */}
       <div className="max-w-3xl mx-auto w-full px-4 pb-4">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {groupData.members?.map((member) => (
+          {groupData.members?.map((member, index) => (
             <div
-              key={member.username}
+              key={index}
               className="flex items-center gap-2 bg-zinc-950 border border-white/10 rounded-[10px] px-3 pr-5 py-2 min-w-fit"
             >
               <Avatar className="w-8 h-8">
@@ -388,7 +388,6 @@ export default function GroupPage() {
         </div>
       </div>
 
-      {/* Chat-style Expense List */}
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-24 space-y-4">
         {expenses.length === 0 ? (
           <div className="text-center py-12">
@@ -397,17 +396,13 @@ export default function GroupPage() {
           </div>
         ) : (
           expenses.map((expense) => (
-            <div key={expense.id} className="flex gap-3">
-              {/* Expense card content */}
-            </div>
+            <div key={expense.id} className="flex gap-3"></div>
           ))
         )}
       </div>
 
-      {/* Bottom Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
-          {/* Add Expense Dialog */}
           <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
             <DialogTrigger asChild>
               <Button className="flex-1 bg-white text-black hover:bg-zinc-200 h-10 text-sm font-medium">
@@ -530,7 +525,7 @@ export default function GroupPage() {
                                   <FormControl>
                                     <Checkbox
                                       checked={field.value?.includes(
-                                        member.username
+                                        member.username,
                                       )}
                                       onCheckedChange={(checked) => {
                                         return checked
@@ -541,8 +536,8 @@ export default function GroupPage() {
                                           : field.onChange(
                                               field.value?.filter(
                                                 (value) =>
-                                                  value !== member.username
-                                              )
+                                                  value !== member.username,
+                                              ),
                                             );
                                       }}
                                       className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
@@ -551,7 +546,9 @@ export default function GroupPage() {
                                   <FormLabel className="font-normal text-white text-sm flex items-center gap-2 cursor-pointer">
                                     <Avatar className="w-6 h-6">
                                       <AvatarFallback className="bg-zinc-800 text-xs text-white">
-                                        {member.username.charAt(0).toUpperCase()}
+                                        {member.username
+                                          .charAt(0)
+                                          .toUpperCase()}
                                       </AvatarFallback>
                                     </Avatar>
                                     {member.username}
@@ -588,7 +585,6 @@ export default function GroupPage() {
             </DialogContent>
           </Dialog>
 
-          {/* Settlement Dialog */}
           <Dialog open={isSettlementOpen} onOpenChange={setIsSettlementOpen}>
             <DialogTrigger asChild>
               <Button
@@ -642,7 +638,9 @@ export default function GroupPage() {
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
                                       <AvatarFallback className="bg-zinc-800 text-xs">
-                                        {member.username.charAt(0).toUpperCase()}
+                                        {member.username
+                                          .charAt(0)
+                                          .toUpperCase()}
                                       </AvatarFallback>
                                     </Avatar>
                                     {member.username}
@@ -721,12 +719,11 @@ export default function GroupPage() {
         </div>
       </div>
 
-      {/* Manage Members Modal */}
       <ManageMembers
         isOpen={isManageOpen}
         onClose={() => setIsManageOpen(false)}
         members={groupData.members.map((m) => ({
-          id: m.username,
+          id: m.id,
           name: m.isadmin ? "You" : m.username,
           username: m.username,
           avatar: m.username.charAt(0).toUpperCase(),

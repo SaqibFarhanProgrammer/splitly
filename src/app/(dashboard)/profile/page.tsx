@@ -74,7 +74,7 @@ interface GroupData {
   name: string;
   totalAmount: number;
   isActive: boolean;
-  members:[]
+  members: [];
 }
 
 export default function Page() {
@@ -105,7 +105,6 @@ export default function Page() {
   useEffect(() => {
     axios.get("/api/group/getallgroups").then((res) => {
       if (res.data) {
-
         setgdata(res.data.data);
       }
 
@@ -221,7 +220,7 @@ export default function Page() {
                             <div className="flex items-center gap-3 text-sm text-zinc-400">
                               <span className="flex items-center gap-1">
                                 <Users className="w-4 h-4" />
-                               {group.members.length} members
+                                {group.members.length} members
                               </span>
                               <span>•</span>
                               <span className="flex items-center gap-1">
@@ -400,8 +399,6 @@ export default function Page() {
           onClose={() => setIsAddExpenseOpen(false)}
           onSubmit={handleAddExpense}
         />
-
-        
       </div>
     </section>
   );

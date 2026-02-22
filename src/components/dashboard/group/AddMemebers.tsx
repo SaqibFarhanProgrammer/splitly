@@ -19,7 +19,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { X, UserPlus } from "lucide-react";
 
 interface IUser {
-  _id: string;
+  id: string;
   username: string;
   name?: string;
 }

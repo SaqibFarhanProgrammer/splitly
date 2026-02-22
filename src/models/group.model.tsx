@@ -1,42 +1,37 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
-import { boolean } from "zod";
+import mongoose, { Schema, Model, Document } from "mongoose";
 
-interface Imemeber {
-  username: string;
-  isadmin: boolean;
+export interface IMember {
+  userId: mongoose.Types.ObjectId;
+  isAdmin: boolean;
+  username:string
 }
 
-export interface IGroup extends Document {
+export interface IGroup {
   name: string;
   totalAmount: number;
   isActive: boolean;
-  members: Imemeber[];
+  members: IMember[];
   createdBy: mongoose.Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
-const GroupSchema = new Schema<IGroup>(
+export interface IGroupDocument extends IGroup, Document {}
+
+const GroupSchema = new Schema<IGroupDocument>(
   {
-    name: { type: String, unique:true,  required: true },
+    name: { type: String, unique: true, required: true },
     totalAmount: { type: Number, required: true },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-    members: {
-      type: [
-        {
-          username: { type: String, required: true },
-          isadmin: { type: Boolean, default: false },
-        },
-      ],
-      default: [],
-    },
+    isActive: { type: Boolean, default: true },
+    members: [
+      {
+        userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        isAdmin: { type: Boolean, default: false },
+        username:type:Strings
+      },
+    ],
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true },
 );
 
-export const Group: Model<IGroup> =
-  mongoose.models.Group || mongoose.model<IGroup>("Group", GroupSchema);
+export const Group: Model<IGroupDocument> =
+  mongoose.models.Group || mongoose.model<IGroupDocument>("Group", GroupSchema);

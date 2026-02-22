@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     group.members.push({
       username,
       isadmin: false,
+      id: user._id,
     });
 
     await group.save();
