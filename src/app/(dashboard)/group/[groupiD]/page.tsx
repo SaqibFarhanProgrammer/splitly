@@ -1,4 +1,4 @@
-      // app/group/[id]/page.tsx
+// app/group/[id]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -76,8 +76,8 @@ interface ExpenseFormValues {
 
 interface Imemeber {
   isAdmin: boolean;
-  userid: string;
-  username:string
+  userId: string;
+  username: string;
 }
 
 interface IgroupData {
@@ -250,7 +250,7 @@ export default function GroupPage() {
         />
       ) : null}
 
-      <header className="sticky top-0 z-30">
+      <header className="sticky top-0 z-30 px-20">
         <div className="w-full px-4 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
@@ -629,7 +629,7 @@ export default function GroupPage() {
                           </FormControl>
                           <SelectContent className="bg-zinc-900 border-white/10">
                             {groupData.members
-                              .filter((m) => !m.isadmin)
+                              .filter((m) => !m.isAdmin)
                               .map((member) => (
                                 <SelectItem
                                   key={member.username}
@@ -724,10 +724,15 @@ export default function GroupPage() {
         isOpen={isManageOpen}
         onClose={() => setIsManageOpen(false)}
         members={groupData.members}
-        onDelete={(id) => console.log("Delete:", id)}
-        currentUserId={groupData.createdBy}
-
+        currentUserId="your-user-id"
+        onMemberDeleted={(deletedMemberId) => {
+          // Group data se woh member hata do
+          setgroupData((prev) => ({
+            ...prev,
+            members: prev.members.filter((m) => m.userId !== deletedMemberId),
+          }));
+        }}
       />
     </div>
   );
-}    
+}

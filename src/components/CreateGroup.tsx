@@ -14,16 +14,24 @@ interface CreateGroupData {
   totalExpense: string;
 }
 
+interface GroupData {
+  _id: string;
+  name: string;
+  totalAmount: number;
+  isActive: boolean;
+  members: [];
+}
+
 interface CreateGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit?: (data: CreateGroupData) => Promise<void>;
+  onGroupCreated: (group: GroupData) => void; 
 }
 
 export function CreateGroupModal({
   isOpen,
   onClose,
-  onSubmit,
+  onGroupCreated, // Yeh lo
 }: CreateGroupModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,10 +54,15 @@ export function CreateGroupModal({
         name: data.groupName,
         totalAmount: data.totalExpense,
       });
+      
+      // Response se naya group nikalo aur parent ko bhejo
+      if (response.data && response.data.data) {
+        onGroupCreated(response.data.data); // Yeh line add ki
+      }
+      
       setIsLoading(false);
       reset();
       onClose();
-      console.log(response);
     } catch (error) {
       console.log(error);
       setIsLoading(false);

@@ -19,10 +19,14 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { X, UserPlus } from "lucide-react";
 
 interface IUser {
-  id: string;
+  userId: string;
   username: string;
-  name?: string;
+  isAdmin?: boolean;
 }
+
+type ChildProps = {
+  handleAddmanualMember: (data: IUser) => void;
+};
 
 interface FormValues {
   username: string;
@@ -31,6 +35,7 @@ interface FormValues {
 interface AddMembersProps {
   isOpen: boolean;
   onClose: () => void;
+  handleAddmanualMember: (data: any) => void;
 }
 
 export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
@@ -145,9 +150,9 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
               <p className="text-zinc-500 text-sm">No members yet</p>
             ) : (
               <div className="space-y-2">
-                {members.map((user) => (
+                {members.map((user, i) => (
                   <div
-                    key={user._id}
+                    key={i}
                     className="flex items-center justify-between bg-zinc-900/30 border border-white/5 rounded-xl p-3"
                   >
                     <div className="flex items-center gap-3">
@@ -159,7 +164,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
                       <div>
                         <p className="text-white text-sm font-medium">
-                          {user.name || user.username}
+                          {user.username || user.username}
                         </p>
                         <p className="text-zinc-500 text-xs">
                           @{user.username}

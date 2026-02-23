@@ -4,6 +4,7 @@ export interface IMember {
   userId: mongoose.Types.ObjectId;
   isAdmin: boolean;
   username: string;
+  avatarUrl: string;
 }
 
 export interface IGroup {
@@ -26,7 +27,11 @@ const GroupSchema = new Schema<IGroupDocument>(
         userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
         isAdmin: { type: Boolean, default: false },
         username: {
-          type: String
+          type: String,
+        },
+        avatarUrl: {
+          type: String,
+          default: "",
         },
       },
     ],

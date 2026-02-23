@@ -12,7 +12,7 @@ import { useParams } from "next/navigation";
 interface Member {
   userId: string;
   username: string;
-  isAdmin: boolean
+  isAdmin: boolean;
 }
 
 interface ManageMembersProps {
@@ -21,6 +21,7 @@ interface ManageMembersProps {
   members: Member[];
   onDelete?: (memberId: string) => void;
   currentUserId?: string;
+  onMemberDeleted?: (memberId: string) => void;
 }
 
 export default function ManageMembers({
@@ -29,24 +30,27 @@ export default function ManageMembers({
   members,
   onDelete,
   currentUserId = "1",
+  onMemberDeleted,
 }: ManageMembersProps) {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const params = useParams()
+  const params = useParams();
+  const giD = params.groupID;
 
-  const giD = params.groupID
-  const handleDeleteClick = async (id: string) => { 
-    console.log(id);
+  const handleDeleteClick = async (id: string) => {
+    try {
+      const res = await axios.post("/api/group/deleteMemeber", {
+        groupId: giD,
+        memberId: id,
+      });
 
-    const res = await axios.post("/api/group/deleteMemeber", {
-      groupId:giD,
-      memberId: id,
-    });
-
-    console.log(res);
+      if (res.data) {
+        onMemberDeleted?.(id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-
 
   const getBalanceColor = (balance: number) => {
     if (balance > 0) return "text-emerald-400";
@@ -87,13 +91,13 @@ export default function ManageMembers({
         <div className="overflow-y-auto max-h-[calc(85vh-120px)] p-4 space-y-2">
           {members.map((member, index) => (
             <div
-              key={index}
+              key={member.userId || index}
               className="flex items-center justify-between bg-zinc-900/50 border border-white/5 rounded-xl p-3"
             >
               <div className="flex items-center gap-3">
                 <Avatar className="w-9 h-9">
                   <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                    {member.username}
+                    {member.username[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -110,10 +114,7 @@ export default function ManageMembers({
               </div>
 
               <div className="flex items-center gap-2">
-                <span
-                  className={`text-xs font-medium ${getBalanceColor(0)}`}
-                >
-                  {/* {member. > 0 ? "+" : ""}₹{Math.abs(member.)} */}
+                <span className={`text-xs font-medium ${getBalanceColor(0)}`}>
                 </span>
 
                 {member.isAdmin !== true && member.userId !== currentUserId && (
@@ -121,13 +122,20 @@ export default function ManageMembers({
                     variant="ghost"
                     size="icon"
                     className={`h-7 w-7 ${
-                      deleteConfirm == index
+                      deleteConfirm === member.userId
                         ? "bg-red-500/20 text-red-400"
                         : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
                     }`}
-                    onClick={() => handleDeleteClick(member.userId)}
+                    onClick={() => {
+                      if (deleteConfirm === member.userId) {
+                        handleDeleteClick(member.userId);
+                        setDeleteConfirm(null);
+                      } else {
+                        setDeleteConfirm(member.userId);
+                      }
+                    }}
                   >
-                    {deleteConfirm == index ? (
+                    {deleteConfirm === member.userId ? (
                       <Trash2 className="w-3.5 h-3.5" />
                     ) : (
                       <X className="w-3.5 h-3.5" />
@@ -135,13 +143,13 @@ export default function ManageMembers({
                   </Button>
                 )}
 
-                {member.userid === currentUserId && (
+                {member.userId === currentUserId && (
                   <Badge className="bg-white/10 text-white text-[10px] border-0 px-2 py-0.5">
                     You
                   </Badge>
                 )}
 
-                {member.isAdmin === true && member.userid !== currentUserId && (
+                {member.isAdmin === true && member.userId !== currentUserId && (
                   <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0 px-2 py-0.5">
                     Admin
                   </Badge>

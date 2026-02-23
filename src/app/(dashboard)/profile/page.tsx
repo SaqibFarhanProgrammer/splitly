@@ -1,4 +1,3 @@
-// components/ProfileSection.tsx
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -29,9 +28,6 @@ import React from "react";
 import Link from "next/link";
 import axios from "axios";
 
-// Dummy Group Data
-
-// Dummy Recent Expenses
 const recentExpenses = [
   {
     id: 1,
@@ -62,7 +58,6 @@ const recentExpenses = [
   },
 ];
 
-// Dummy Balances
 const balances = [
   { name: "Ahmed", amount: 3200, type: "owed" },
   { name: "Saqib", amount: 2000, type: "owed" },
@@ -79,17 +74,8 @@ interface GroupData {
 
 export default function Page() {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [gdata, setgdata] = useState<GroupData[]>([]);
+  const [groupData, setgroupData] = useState<GroupData[]>([]);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-
-  const handleCreateGroup = async (data: {
-    groupName: string;
-    members: { username: string }[];
-  }) => {
-    console.log("Creating group:", data);
-    // API call yahan karo
-    // await createGroupAPI(data);
-  };
 
   const handleAddExpense = async (data: {
     description: string;
@@ -98,17 +84,14 @@ export default function Page() {
     notes?: string;
   }) => {
     console.log("Adding expense:", data);
-    // API call yahan karo
-    // await addExpenseAPI(data);
   };
 
   useEffect(() => {
     axios.get("/api/group/getallgroups").then((res) => {
       if (res.data) {
-        setgdata(res.data.data);
+        setgroupData(res.data.data);
       }
-
-      console.log(gdata);
+      console.log(groupData);
     });
   }, []);
 
@@ -128,12 +111,6 @@ export default function Page() {
               <h1 className="text-3xl font-bold mb-1">John Doe</h1>
               <p className="text-zinc-400">john.doe@example.com</p>
               <div className="flex items-center gap-2 mt-2">
-                <Badge
-                  variant="secondary"
-                  className="bg-white/10 text-white border-0"
-                >
-                  Pro Member
-                </Badge>
                 <Badge
                   variant="outline"
                   className="border-white/20 text-zinc-400"
@@ -199,7 +176,7 @@ export default function Page() {
             </div>
             {}
             <div className="grid md:grid-cols-2 gap-4">
-              {gdata.map((group) => (
+              {groupData.map((group) => (
                 <Card
                   key={group.name}
                   className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
@@ -391,7 +368,9 @@ export default function Page() {
         <CreateGroupModal
           isOpen={isCreateGroupOpen}
           onClose={() => setIsCreateGroupOpen(false)}
-          onSubmit={handleCreateGroup}
+          onGroupCreated={(newGroup) =>
+            setgroupData((prev) => [...prev, newGroup])
+          }
         />
 
         <AddExpenseModal
