@@ -1,4 +1,4 @@
-// app/group/[id]/page.tsx
+      // app/group/[id]/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -75,8 +75,9 @@ interface ExpenseFormValues {
 }
 
 interface Imemeber {
-  isadmin: boolean;
-  id: string;
+  isAdmin: boolean;
+  userid: string;
+  username:string
 }
 
 interface IgroupData {
@@ -375,12 +376,12 @@ export default function GroupPage() {
             >
               <Avatar className="w-8 h-8">
                 <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.username.charAt(0).toUpperCase()}
+                  {member.username.split("")[0].toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm text-white font-medium">
-                  {member.isadmin ? "You" : member.username}
+                  {member.isAdmin ? "You" : member.username}
                 </span>
               </div>
             </div>
@@ -722,17 +723,11 @@ export default function GroupPage() {
       <ManageMembers
         isOpen={isManageOpen}
         onClose={() => setIsManageOpen(false)}
-        members={groupData.members.map((m) => ({
-          id: m.id,
-          name: m.isadmin ? "You" : m.username,
-          username: m.username,
-          avatar: m.username.charAt(0).toUpperCase(),
-          role: m.isadmin ? "admin" : "member",
-          balance: 0,
-        }))}
+        members={groupData.members}
         onDelete={(id) => console.log("Delete:", id)}
-        currentUserId="you"
+        currentUserId={groupData.createdBy}
+
       />
     </div>
   );
-}
+}    

@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, Crown, Trash2 } from "lucide-react";
 import axios from "axios";
+import { useParams } from "next/navigation";
 
 interface Member {
-  _id: string;
-  name: string;
+  userId: string;
   username: string;
-  avatar: string;
-  role: "admin" | "member";
-  balance: number;
+  isAdmin: boolean
 }
 
 interface ManageMembersProps {
@@ -34,15 +32,21 @@ export default function ManageMembers({
 }: ManageMembersProps) {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
-  const handleDeleteClick = async (id: string) => {
+  const params = useParams()
+
+  const giD = params.groupID
+  const handleDeleteClick = async (id: string) => { 
     console.log(id);
 
     const res = await axios.post("/api/group/deleteMemeber", {
-      memeberid: id,
+      groupId:giD,
+      memberId: id,
     });
 
     console.log(res);
   };
+
+
 
   const getBalanceColor = (balance: number) => {
     if (balance > 0) return "text-emerald-400";
@@ -89,15 +93,15 @@ export default function ManageMembers({
               <div className="flex items-center gap-3">
                 <Avatar className="w-9 h-9">
                   <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                    {member.avatar}
+                    {member.username}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <p className="text-white text-sm font-medium">
-                      {member.name}
+                      {member.username}
                     </p>
-                    {member.role === "admin" && (
+                    {member.isAdmin === true && (
                       <Crown className="w-3 h-3 text-yellow-500" />
                     )}
                   </div>
@@ -107,12 +111,12 @@ export default function ManageMembers({
 
               <div className="flex items-center gap-2">
                 <span
-                  className={`text-xs font-medium ${getBalanceColor(member.balance)}`}
+                  className={`text-xs font-medium ${getBalanceColor(0)}`}
                 >
-                  {member.balance > 0 ? "+" : ""}₹{Math.abs(member.balance)}
+                  {/* {member. > 0 ? "+" : ""}₹{Math.abs(member.)} */}
                 </span>
 
-                {member.role !== "admin" && member._id !== currentUserId && (
+                {member.isAdmin !== true && member.userId !== currentUserId && (
                   <Button
                     variant="ghost"
                     size="icon"
@@ -121,7 +125,7 @@ export default function ManageMembers({
                         ? "bg-red-500/20 text-red-400"
                         : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
                     }`}
-                    onClick={() => handleDeleteClick(member.id)}
+                    onClick={() => handleDeleteClick(member.userId)}
                   >
                     {deleteConfirm == index ? (
                       <Trash2 className="w-3.5 h-3.5" />
@@ -131,13 +135,13 @@ export default function ManageMembers({
                   </Button>
                 )}
 
-                {member.id === currentUserId && (
+                {member.userid === currentUserId && (
                   <Badge className="bg-white/10 text-white text-[10px] border-0 px-2 py-0.5">
                     You
                   </Badge>
                 )}
 
-                {member.role === "admin" && member.id !== currentUserId && (
+                {member.isAdmin === true && member.userid !== currentUserId && (
                   <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0 px-2 py-0.5">
                     Admin
                   </Badge>

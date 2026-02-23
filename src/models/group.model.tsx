@@ -3,7 +3,7 @@ import mongoose, { Schema, Model, Document } from "mongoose";
 export interface IMember {
   userId: mongoose.Types.ObjectId;
   isAdmin: boolean;
-  username:string
+  username: string;
 }
 
 export interface IGroup {
@@ -25,7 +25,9 @@ const GroupSchema = new Schema<IGroupDocument>(
       {
         userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
         isAdmin: { type: Boolean, default: false },
-        username:type:Strings
+        username: {
+          type: String
+        },
       },
     ],
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
