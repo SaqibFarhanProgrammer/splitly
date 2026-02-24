@@ -1,10 +1,12 @@
 // context/AuthContext.tsx
+"use client";
 import {
   createContext,
   useContext,
   useEffect,
   useState,
   ReactNode,
+  useRef,
 } from "react";
 import axios from "axios";
 
@@ -24,14 +26,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const userdatachache = useRef<User>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
+    
+
+    let userdatacache;
+
+    
     axios
       .get("/api/users/me")
-      .then((res) => {setUser(res.data.data)
+      .then((res) => {
+        setUser(res.data.data);
+        userdatacache = res.data.data;
         console.log(res);
-        
       })
       .catch(() => setUser(null)) // Error handling add ki
       .finally(() => setLoading(false));
