@@ -27,7 +27,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Group not found" }, { status: 404 });
     }
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).select([
+      "-password",
+      "-updatedAt",
+      "-createdAt",
+      "-email",
+    ]);
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }

@@ -1,11 +1,5 @@
+import { IMember } from "@/types/member";
 import mongoose, { Schema, Model, Document } from "mongoose";
-
-export interface IMember {
-  userId: mongoose.Types.ObjectId;
-  isAdmin: boolean;
-  username: string;
-  avatarUrl: string;
-}
 
 export interface IGroup {
   name: string;

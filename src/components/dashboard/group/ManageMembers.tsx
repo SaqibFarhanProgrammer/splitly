@@ -8,17 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { X, Crown, Trash2 } from "lucide-react";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { IMember } from "@/types/member";
 
-interface Member {
-  userId: string;
-  username: string;
-  isAdmin: boolean;
-}
 
 interface ManageMembersProps {
   isOpen: boolean;
   onClose: () => void;
-  members: Member[];
+  members: IMember[];
   onDelete?: (memberId: string) => void;
   currentUserId?: string;
   onMemberDeleted?: (memberId: string) => void;

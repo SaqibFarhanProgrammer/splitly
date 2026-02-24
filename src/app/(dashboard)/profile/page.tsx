@@ -27,6 +27,8 @@ import {
 import React from "react";
 import Link from "next/link";
 import axios from "axios";
+import ProfileHeader from "@/components/dashboard/profile/ProfileHeader";
+import { AuthProvider } from "@/context/AuthContext";
 
 const recentExpenses = [
   {
@@ -99,39 +101,10 @@ export default function Page() {
     <section className="min-h-screen py-14 px-6 ]  text-white">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
-          <div className="flex items-center gap-4">
-            <Avatar className="w-20 h-20 border-2 border-white/10">
-              <AvatarImage src="" />
-              <AvatarFallback className="bg-white text-black text-2xl font-bold">
-                JD
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-3xl font-bold mb-1">John Doe</h1>
-              <p className="text-zinc-400">john.doe@example.com</p>
-              <div className="flex items-center gap-2 mt-2">
-                <Badge
-                  variant="outline"
-                  className="border-white/20 text-zinc-400"
-                >
-                  Since 2023
-                </Badge>
-              </div>
-            </div>
-          </div>
+        <AuthProvider>
 
-          <div className="flex gap-3">
-            <Button variant="outline">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
-            <Button onClick={() => setIsCreateGroupOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              New Group
-            </Button>
-          </div>
-        </div>
+        <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
+        </AuthProvider>
 
         {/* Stats Overview */}
 
@@ -178,58 +151,56 @@ export default function Page() {
             <div className="grid md:grid-cols-2 gap-4">
               {groupData.map((group) => (
                 <Card
-                  key={group.name}
-                  className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors"
+                  key={group._id} // _id use karo name ki jagah for key
+                  className="bg-zinc-950 border-white/10 hover:border-white/20 transition-all hover:shadow-lg hover:shadow-white/5"
                 >
-                  <Link href={`/group/${group._id}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                            {group.name.split("")[0].toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex items-center gap-4">
+                  <Link href={`/group/${group._id}`} className="block">
+                    <CardContent className="p-5">
+                      {/* Header Row */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-10 h-10">
+                            <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
+                              {group.name.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
                           <div>
-                            <h3 className="text-lg font-semibold text-white mb-1">
+                            <h3 className="text-base font-semibold text-white leading-tight">
                               {group.name}
                             </h3>
-                            <div className="flex items-center gap-3 text-sm text-zinc-400">
-                              <span className="flex items-center gap-1">
-                                <Users className="w-4 h-4" />
-                                {group.members.length} members
-                              </span>
-                              <span>•</span>
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                              </span>
+                            <div className="flex items-center gap-2 text-xs text-zinc-400 mt-0.5">
+                              <Users className="w-3 h-3" />
+                              <span>{group.members.length} members</span>
                             </div>
                           </div>
                         </div>
+
                         <Badge
-                          variant={
-                            group.isActive === true ? "default" : "secondary"
-                          }
+                          variant={group.isActive ? "default" : "secondary"}
                           className={
-                            group.isActive === true
-                              ? "bg-white/10 text-white"
-                              : "bg-zinc-800 text-zinc-400"
+                            group.isActive
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs"
+                              : "bg-zinc-800 text-zinc-400 border-zinc-700 text-xs"
                           }
                         >
-                          {group.isActive === true ? "Active" : "Settled"}
+                          {group.isActive ? "Active" : "Settled"}
                         </Badge>
                       </div>
 
-                      <div className="mt-6 pt-6 border-t border-white/5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-zinc-400 text-sm mb-1">
-                              Total Expenses
-                            </p>
-                            <p className="text-xl font-semibold text-white">
-                              ₹{group.totalAmount}
-                            </p>
-                          </div>
+                      {/* Stats Row */}
+                      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div>
+                          <p className="text-zinc-500 text-xs mb-0.5">
+                            Total Expenses
+                          </p>
+                          <p className="text-lg font-bold text-white">
+                            ₹{group.totalAmount.toLocaleString()}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-1 text-zinc-500 text-xs">
+                          <Clock className="w-3 h-3" />
+                          <span>Active</span>
                         </div>
                       </div>
                     </CardContent>

@@ -17,42 +17,28 @@ import {
 } from "@/components/ui/form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { X, UserPlus } from "lucide-react";
-
-interface IUser {
-  userId: string;
-  username: string;
-  isAdmin?: boolean;
-}
-
-type ChildProps = {
-  handleAddmanualMember: (data: IUser) => void;
-};
-
-interface FormValues {
-  username: string;
-}
+import { IMember } from "@/types/member";
 
 interface AddMembersProps {
   isOpen: boolean;
   onClose: () => void;
-  handleAddmanualMember: (data: any) => void;
 }
 
 export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
   const params = useParams();
   const groupID = params?.groupID as string;
 
-  const [members, setMembers] = useState<IUser[]>([]);
+  const [members, setMembers] = useState<IMember[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const form = useForm<FormValues>({
+  const form = useForm<IMember>({
     defaultValues: {
       username: "",
     },
   });
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: IMember) => {
     try {
       setLoading(true);
       setError(null);
@@ -62,9 +48,13 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
         groupId: groupID,
       });
 
-      const newUser: IUser = res.data.data;
-
+      const newUser: IMember = res.data?.data;
+      if (!newUser) {
+        return;
+      }
       setMembers((prev) => [...prev, newUser]);
+
+      console.log(newUser);
 
       form.reset();
     } catch (err: any) {
@@ -158,7 +148,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
                     <div className="flex items-center gap-3">
                       <Avatar className="w-9 h-9">
                         <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
-                          {user.username?.charAt(0).toUpperCase()}
+                          {user.username.split("")[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
 

@@ -59,6 +59,8 @@ import axios from "axios";
 import AddMembers from "@/components/dashboard/group/AddMemebers";
 import { useRouter } from "next/navigation";
 import ManageMembers from "@/components/dashboard/group/ManageMembers";
+import { IMember } from "@/types/member";
+import MembersList from "@/components/dashboard/group/MembersList";
 
 // Form Types
 interface SettlementFormValues {
@@ -74,17 +76,11 @@ interface ExpenseFormValues {
   splitWith: string[];
 }
 
-interface Imemeber {
-  isAdmin: boolean;
-  userId: string;
-  username: string;
-}
-
 interface IgroupData {
   name: string;
   totalAmount: number;
   isActive: boolean;
-  members: Imemeber[];
+  members: IMember[];
   createdBy: string;
   createdAt: number;
   upnumberdAt: number;
@@ -206,12 +202,6 @@ export default function GroupPage() {
     console.log("Settlement:", data);
     setIsSettlementOpen(false);
     settlementForm.reset();
-  };
-
-  const getBalanceColor = (balance: number) => {
-    if (balance > 0) return "text-emerald-400";
-    if (balance < 0) return "text-red-400";
-    return "text-zinc-400";
   };
 
   async function deleteGroup() {
@@ -515,50 +505,8 @@ export default function GroupPage() {
                         <FormLabel className="text-zinc-400 text-sm">
                           Split With
                         </FormLabel>
-                        <div className="space-y-2 mt-2">
-                          {groupData.members.map((member) => (
-                            <FormField
-                              key={member.username}
-                              control={expenseForm.control}
-                              name="splitWith"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value?.includes(
-                                        member.username,
-                                      )}
-                                      onCheckedChange={(checked) => {
-                                        return checked
-                                          ? field.onChange([
-                                              ...field.value,
-                                              member.username,
-                                            ])
-                                          : field.onChange(
-                                              field.value?.filter(
-                                                (value) =>
-                                                  value !== member.username,
-                                              ),
-                                            );
-                                      }}
-                                      className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-normal text-white text-sm flex items-center gap-2 cursor-pointer">
-                                    <Avatar className="w-6 h-6">
-                                      <AvatarFallback className="bg-zinc-800 text-xs text-white">
-                                        {member.username
-                                          .charAt(0)
-                                          .toUpperCase()}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    {member.username}
-                                  </FormLabel>
-                                </FormItem>
-                              )}
-                            />
-                          ))}
-                        </div>
+                        {/* add memebr list comp here */}
+                        <MembersList groupData={groupData} />
                         <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}

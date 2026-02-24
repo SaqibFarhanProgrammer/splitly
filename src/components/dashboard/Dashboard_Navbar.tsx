@@ -33,19 +33,14 @@ const navLinks = [
 export function TopNavbar() {
   const pathname = usePathname();
   const [notifications] = useState(3);
-  const router = useRouter()
+  const router = useRouter();
 
   const isActive = (href: string) => pathname === href;
 
-
   async function handleLogout() {
-      const response  = await axios.get("/api/users/logout")
-      console.log(response);
-
-      router.push("/auth")
-      
+    const response = await axios.get("/api/users/logout");
+    router.push("/auth");
   }
-
 
   return (
     <header className="  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
@@ -144,7 +139,10 @@ export function TopNavbar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-zinc-800" />
-              <DropdownMenuItem onClick={handleLogout} className="text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer"
+              >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </DropdownMenuItem>
