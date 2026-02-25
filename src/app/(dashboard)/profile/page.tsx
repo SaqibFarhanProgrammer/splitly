@@ -31,6 +31,7 @@ import axios from "axios";
 import ProfileHeader from "@/components/dashboard/profile/ProfileHeader";
 import { AuthProvider } from "@/context/AuthContext";
 import { UploadImageModal } from "@/components/dashboard/profile/UploadProfileImage";
+import { ProfileProvider, useProfileContext } from "@/context/Profile.Context";
 
 const recentExpenses = [
   {
@@ -110,9 +111,12 @@ export default function Page() {
     <section className="min-h-screen py-14 px-6 text-white font-['inter-reguler']">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
-        <AuthProvider>
-          <ProfileHeader  setIsCreateGroupOpen={setIsCreateGroupOpen} />
-        </AuthProvider>
+        <ProfileProvider>
+          <AuthProvider>
+            <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
+          </AuthProvider>
+          <UploadImageModal />
+        </ProfileProvider>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="groups" className="w-full">
@@ -427,11 +431,6 @@ export default function Page() {
           isOpen={isAddExpenseOpen}
           onClose={() => setIsAddExpenseOpen(false)}
           onSubmit={handleAddExpense}
-        />
-
-        <UploadImageModal
-          isOpen={IsImageUploadShow}
-          onClose={() => setIsImageUploadShow(!IsImageUploadShow)}
         />
       </div>
     </section>

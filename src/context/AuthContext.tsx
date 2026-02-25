@@ -30,12 +30,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    
-
     let userdatacache;
 
-    
     axios
       .get("/api/users/me")
       .then((res) => {
