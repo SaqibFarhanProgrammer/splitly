@@ -84,11 +84,19 @@ export function Sidebar() {
         >
           {!isCollapsed && !loading && (
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 shrink-0">
-                <span className="text-black font-bold text-base font-['inter-bold']">
-                  S
-                </span>
-              </div>
+              {user?.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt={user?.username || "User"}
+                  className="w-8 h-8 rounded-lg object-cover shrink-0 shadow-lg shadow-white/5"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 shrink-0">
+                  <span className="text-black font-bold text-base font-['inter-bold']">
+                    {user?.username ? getInitials(user.username).charAt(0) : "U"}
+                  </span>
+                </div>
+              )}
               <div className="whitespace-nowrap">
                 <h1 className="text-white font-bold text-base tracking-tight font-['inter-bold']">
                   {user?.username}
@@ -111,10 +119,18 @@ export function Sidebar() {
           )}
 
           {isCollapsed && (
-            <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 mx-auto">
-              <span className="text-black font-bold text-base font-['inter-bold']">
-                S
-              </span>
+            <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 mx-auto overflow-hidden">
+              {user?.avatar ? (
+                <img 
+                  src={user.avatar} 
+                  alt={user?.username || "User"}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-black font-bold text-base font-['inter-bold']">
+                  {user?.username ? getInitials(user.username).charAt(0) : "U"}
+                </span>
+              )}
             </div>
           )}
 
@@ -297,13 +313,7 @@ export function Sidebar() {
             ) : (
               // Actual User
               <>
-                <Avatar
-                  className={`border-2 border-zinc-800 shrink-0 ${isCollapsed ? "w-8 h-8" : "w-8 h-8"}`}
-                >
-                  <AvatarFallback className="bg-zinc-800 text-zinc-200 text-xs font-bold font-['inter-bold']">
-                    {user?.username ? getInitials(user.username) : "U"}
-                  </AvatarFallback>
-                </Avatar>
+              
                 {!isCollapsed && (
                   <>
                     <div className="flex-1 min-w-0">

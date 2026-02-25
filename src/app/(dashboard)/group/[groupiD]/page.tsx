@@ -359,23 +359,7 @@ export default function GroupPage() {
 
       <div className="max-w-3xl mx-auto w-full px-4 pb-4">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {groupData.members?.map((member, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-2 bg-zinc-950 border border-white/10 rounded-[10px] px-3 pr-5 py-2 min-w-fit"
-            >
-              <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                  {member.username.split("")[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-col">
-                <span className="text-sm text-white font-medium">
-                  {member.isAdmin ? "You" : member.username}
-                </span>
-              </div>
-            </div>
-          ))}
+          <MembersList groupData={groupData} />
         </div>
       </div>
 

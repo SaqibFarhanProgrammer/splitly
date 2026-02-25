@@ -1,64 +1,51 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
+import { IMember } from "@/types/member";
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
-
-// Interface define karo props ke liye
-interface Member {
-  username: string;
-}
 
 interface MembersListProps {
   groupData: {
-    members: Member[];
+    members: IMember[];
   };
 }
 
 function MembersList({ groupData }: MembersListProps) {
-
-    
-
   return (
-    <div className="space-y-2 mt-2">
-      {groupData.members.map((member) => (
-        <FormField
-          key={member.username}
-          name="splitWith"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value?.includes(member.username)}
-                  onCheckedChange={(checked) => {
-                    return checked
-                      ? field.onChange([...field.value, member.username])
-                      : field.onChange(
-                          field.value?.filter(
-                            (value: string) => value !== member.username,
-                          ),
-                        );
-                  }}
-                  className="border-white/20 data-[state=checked]:bg-white data-[state=checked]:text-black"
+    <div className="flex flex-row gap-4 mt-2 overflow-x-auto">
+      {groupData.members.map((member) => {
+        const avatar = member.avatar;
+
+        // Check if valid image URL exists
+        const hasAvatar =
+          typeof avatar === "string" &&
+          avatar.trim().length > 0 &&
+          avatar.startsWith("http");
+
+        return (
+          <div
+            key={member.username}
+            className="flex flex-col items-center gap-1 min-w-[60px]"
+          >
+            {/* Avatar Circle */}
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 flex items-center justify-center">
+              {hasAvatar ? (
+                <img
+                  src={avatar}
+                  alt={member.username}
+                  className="w-full h-full object-cover"
                 />
-              </FormControl>
-              <FormLabel className="font-normal text-white text-sm flex items-center gap-2 cursor-pointer">
-                <Avatar className="w-6 h-6">
-                  <AvatarFallback className="bg-zinc-800 text-xs text-white">
-                    {member.username.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                {member.username}
-              </FormLabel>
-            </FormItem>
-          )}
-        />
-      ))}
+              ) : (
+                <span className="text-sm text-white font-medium">
+                  {member.username?.charAt(0).toUpperCase()}
+                </span>
+              )}
+            </div>
+
+            {/* Username */}
+            <span className="text-white text-xs text-center truncate max-w-[60px]">
+              {member.username}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

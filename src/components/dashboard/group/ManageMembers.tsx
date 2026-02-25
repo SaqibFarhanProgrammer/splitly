@@ -10,7 +10,6 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 import { IMember } from "@/types/member";
 
-
 interface ManageMembersProps {
   isOpen: boolean;
   onClose: () => void;
@@ -87,15 +86,25 @@ export default function ManageMembers({
         <div className="overflow-y-auto max-h-[calc(85vh-120px)] p-4 space-y-2">
           {members.map((member, index) => (
             <div
-              key={member.userId || index}
+              key={ index}
               className="flex items-center justify-between bg-zinc-900/50 border border-white/5 rounded-xl p-3"
             >
               <div className="flex items-center gap-3">
-                <Avatar className="w-9 h-9">
-                  <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-                    {member.username[0]?.toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
+            <Avatar className="w-9 h-9">
+  {typeof member.avatar === "string" &&
+  member.avatar.trim().length > 0 &&
+  member.avatar.startsWith("http") ? (
+    <img
+      src={member.avatar}
+      alt={member.username}
+      className="w-full h-full object-cover rounded-full"
+    />
+  ) : (
+    <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
+      {member.username[0]?.toUpperCase()}
+    </AvatarFallback>
+  )}
+</Avatar>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <p className="text-white text-sm font-medium">
@@ -110,8 +119,9 @@ export default function ManageMembers({
               </div>
 
               <div className="flex items-center gap-2">
-                <span className={`text-xs font-medium ${getBalanceColor(0)}`}>
-                </span>
+                <span
+                  className={`text-xs font-medium ${getBalanceColor(0)}`}
+                ></span>
 
                 {member.isAdmin !== true && member.userId !== currentUserId && (
                   <Button
