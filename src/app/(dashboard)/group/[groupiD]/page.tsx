@@ -661,7 +661,7 @@ export default function GroupPage() {
           // Group data se woh member hata do
           setgroupData((prev) => ({
             ...prev,
-            members: prev.members.filter((m) => m.userId !== deletedMemberId),
+            members: prev.members.filter((m) => m.userId?.toString() as string !== deletedMemberId),
           }));
         }}
       />

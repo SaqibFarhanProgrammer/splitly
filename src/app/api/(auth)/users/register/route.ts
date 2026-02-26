@@ -30,7 +30,6 @@ export async function POST(req: Request) {
       username: username,
       email,
       password: hashedPassword,
-      Groups: [],
     });
 
     if (newUser) {

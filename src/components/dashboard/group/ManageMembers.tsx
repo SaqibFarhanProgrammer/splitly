@@ -86,25 +86,25 @@ export default function ManageMembers({
         <div className="overflow-y-auto max-h-[calc(85vh-120px)] p-4 space-y-2">
           {members.map((member, index) => (
             <div
-              key={ index}
+              key={index}
               className="flex items-center justify-between bg-zinc-900/50 border border-white/5 rounded-xl p-3"
             >
               <div className="flex items-center gap-3">
-            <Avatar className="w-9 h-9">
-  {typeof member.avatar === "string" &&
-  member.avatar.trim().length > 0 &&
-  member.avatar.startsWith("http") ? (
-    <img
-      src={member.avatar}
-      alt={member.username}
-      className="w-full h-full object-cover rounded-full"
-    />
-  ) : (
-    <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
-      {member.username[0]?.toUpperCase()}
-    </AvatarFallback>
-  )}
-</Avatar>
+                <Avatar className="w-9 h-9">
+                  {typeof member.avatar === "string" &&
+                  member.avatar.trim().length > 0 &&
+                  member.avatar.startsWith("http") ? (
+                    <img
+                      src={member.avatar}
+                      alt={member.username}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
+                      {member.username[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <p className="text-white text-sm font-medium">
@@ -123,43 +123,46 @@ export default function ManageMembers({
                   className={`text-xs font-medium ${getBalanceColor(0)}`}
                 ></span>
 
-                {member.isAdmin !== true && member.userId !== currentUserId && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`h-7 w-7 ${
-                      deleteConfirm === member.userId
-                        ? "bg-red-500/20 text-red-400"
-                        : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
-                    }`}
-                    onClick={() => {
-                      if (deleteConfirm === member.userId) {
-                        handleDeleteClick(member.userId);
-                        setDeleteConfirm(null);
-                      } else {
-                        setDeleteConfirm(member.userId);
-                      }
-                    }}
-                  >
-                    {deleteConfirm === member.userId ? (
-                      <Trash2 className="w-3.5 h-3.5" />
-                    ) : (
-                      <X className="w-3.5 h-3.5" />
-                    )}
-                  </Button>
-                )}
+                {member.isAdmin !== true &&
+                  member.userId?.toString() !== currentUserId && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-7 w-7 ${
+                        deleteConfirm === member.userId?.toString()
+                          ? "bg-red-500/20 text-red-400"
+                          : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
+                      }`}
+                      onClick={() => {
+                        if (deleteConfirm === member.userId?.toString()) {
+                          handleDeleteClick(member.userId?.toString());
+                          setDeleteConfirm(null);
+                        } else {
+                          setDeleteConfirm(member.userId?.toString() as string);
+                        }
+                      }}
+                    >
+                      {deleteConfirm === member.userId?.toString() ? (
+                        <Trash2 className="w-3.5 h-3.5" />
+                      ) : (
+                        <X className="w-3.5 h-3.5" />
+                      )}
+                    </Button>
+                  )}
 
-                {member.userId === currentUserId && (
+                {member.userId?.toString()?.toString() ===
+                  currentUserId?.toString() && (
                   <Badge className="bg-white/10 text-white text-[10px] border-0 px-2 py-0.5">
                     You
                   </Badge>
                 )}
 
-                {member.isAdmin === true && member.userId !== currentUserId && (
-                  <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0 px-2 py-0.5">
-                    Admin
-                  </Badge>
-                )}
+                {member.isAdmin === true &&
+                  member.userId?.toString() !== currentUserId?.toString() && (
+                    <Badge className="bg-yellow-500/10 text-yellow-500 text-[10px] border-0 px-2 py-0.5">
+                      Admin
+                    </Badge>
+                  )}
               </div>
             </div>
           ))}

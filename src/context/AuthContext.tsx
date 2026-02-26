@@ -1,52 +1,33 @@
-// context/AuthContext.tsx
 "use client";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-  useRef,
-} from "react";
-import axios from "axios";
+
+import { createContext, useContext, ReactNode, useEffect } from "react";
 
 interface User {
   username: string;
   email: string;
   avatar?: string;
-  createdAt: string; // Yeh add kiya
+  createdAt: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const userdatachache = useRef<User>(null);
-  const [loading, setLoading] = useState(true);
-
+export const AuthProvider = ({
+  children,
+  user,
+}: {
+  children: ReactNode;
+  user: User | null;
+}) => {
   useEffect(() => {
-    let userdatacache;
-
-    axios
-      .get("/api/users/me")
-      .then((res) => {
-        setUser(res.data.data);
-        userdatacache = res.data.data;
-        console.log(res);
-      })
-      .catch(() => setUser(null)) // Error handling add ki
-      .finally(() => setLoading(false));
-  }, []);
+    console.log("AuthProvider hydrated user:", user);
+  }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );
 };
 

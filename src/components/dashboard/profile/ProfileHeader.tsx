@@ -1,42 +1,32 @@
-// components/dashboard/profile/ProfileHeader.tsx
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit2Icon } from "lucide-react";
-import React from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useProfileContext } from "@/context/Profile.Context";
+import { useState, useEffect } from "react";
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
 }
 
-function ProfileHeader({ setIsCreateGroupOpen }: ProfileHeaderProps) {
-  const { user, loading } = useAuth();
-  const { setisUploadImageShow,isUploadImageShow } = useProfileContext();
+export default function ProfileHeader({
+  setIsCreateGroupOpen,
+}: ProfileHeaderProps) {
+  const { user } = useAuth();
 
-  console.log("profile header" , isUploadImageShow);
-  
-  console.log("usere", user);
-
-  // User ke initials nikaalne ke liye
-  const getInitials = (name: string) => {
-    return name
+  console.log(user);
+  const getInitials = (name: string) =>
+    name
       .split(" ")
       .map((n) => n[0])
       .join("")
       .toUpperCase();
-  };
 
-  // Join date format karne ke liye
-  const formatJoinDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.getFullYear().toString();
-  };
-
-  // Loading skeleton layout - exact same structure
-  if (loading) {
+  if (!user) {
+    // fallback while client hydrates
     return (
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
         <div className="flex items-center gap-4">
@@ -47,7 +37,6 @@ function ProfileHeader({ setIsCreateGroupOpen }: ProfileHeaderProps) {
             <Skeleton className="h-5 w-24 bg-zinc-800 mt-2" />
           </div>
         </div>
-
         <div className="flex gap-3">
           <Skeleton className="h-9 w-28 bg-zinc-800" />
           <Skeleton className="h-9 w-28 bg-zinc-800" />
@@ -60,24 +49,22 @@ function ProfileHeader({ setIsCreateGroupOpen }: ProfileHeaderProps) {
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
       <div className="flex items-center gap-4">
         <Avatar className="w-20 h-20 border-2 border-white/10">
-          <AvatarImage src={user?.avatar || ""} />
+          <AvatarImage src={user.avatar || ""} />
           <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
-            {user?.username ? getInitials(user.username) : "U"}
+            {user.username ? getInitials(user.username) : "U"}
           </AvatarFallback>
         </Avatar>
         <div>
           <h1 className="text-3xl font-bold mb-1 font-['inter-bold']">
-            {user?.username || "User"}
+            {user.username}
           </h1>
-          <p className="text-zinc-400 font-['inter-beta']">
-            {user?.email || "user@example.com"}
-          </p>
+          <p className="text-zinc-400 font-['inter-beta']">{user.email}</p>
           <div className="flex items-center gap-2 mt-2">
             <Badge
               variant="outline"
               className="border-white/20 text-zinc-400 font-['inter-beta']"
             >
-              Since {user?.createdAt ? formatJoinDate(user.createdAt) : "2023"}
+              Since {new Date(user.createdAt).getFullYear()}
             </Badge>
           </div>
         </div>
@@ -85,7 +72,7 @@ function ProfileHeader({ setIsCreateGroupOpen }: ProfileHeaderProps) {
 
       <div className="flex gap-3">
         <Button
-          onClick={() =>setisUploadImageShow(true)}
+          onClick={() => console.log("Upload Image clicked")} // replace with setisUploadImageShow
           variant="outline"
           className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
         >
@@ -103,5 +90,3 @@ function ProfileHeader({ setIsCreateGroupOpen }: ProfileHeaderProps) {
     </div>
   );
 }
-
-export default ProfileHeader;
