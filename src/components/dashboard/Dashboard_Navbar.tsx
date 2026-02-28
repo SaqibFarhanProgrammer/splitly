@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -24,6 +24,7 @@ import {
   Bell,
 } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -36,6 +37,8 @@ export function TopNavbar() {
   const router = useRouter();
 
   const isActive = (href: string) => pathname === href;
+
+  const { user } = useAuth();
 
   async function handleLogout() {
     const response = await axios.get("/api/users/logout");
@@ -101,13 +104,14 @@ export function TopNavbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-colors">
-                <Avatar className="w-8 h-8 border border-zinc-700">
-                  <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
-                    JD
+                <Avatar className="w-10 h-10 border-2 border-white/10">
+                  <AvatarImage src={user?.avatar || ""} className="object-cover" />
+                  <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
+                    {user?.username ? user.username.charAt(0) : "U"}
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium text-white hidden sm:block">
-                  John Doe
+                  {user?.username}
                 </span>
                 <ChevronDown className="w-4 h-4 text-zinc-500 hidden sm:block" />
               </button>
@@ -117,8 +121,10 @@ export function TopNavbar() {
               className="w-56 bg-zinc-950 border-zinc-800 text-white"
             >
               <div className="px-3 py-2 border-b border-zinc-800">
-                <p className="text-sm font-medium text-white">John Doe</p>
-                <p className="text-xs text-zinc-500">john@example.com</p>
+                <p className="text-sm font-medium text-white">
+                  {user?.username}
+                </p>
+                <p className="text-xs text-zinc-500">{user?.email}</p>
               </div>
               <DropdownMenuItem
                 asChild

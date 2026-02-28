@@ -9,9 +9,6 @@ interface TokenPayload extends JwtPayload {
   userId: string;
 }
 
-interface MemeberInterface {
-  Memebers: [];
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -80,7 +77,14 @@ export async function POST(request: NextRequest) {
       totalAmount: parsedAmount,
       isActive: true,
       createdBy: userId,
-      members: [{ userId: user._id, isAdmin: true, username: user.username }],
+      members: [
+        {
+          userId: user._id,
+          isAdmin: true,
+          username: user.username,
+          avatar: user.avatar,
+        },
+      ],
     });
 
     return NextResponse.json(

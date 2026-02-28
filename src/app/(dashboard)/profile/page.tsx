@@ -111,8 +111,11 @@ export default function Page() {
     <section className="min-h-screen py-14 px-6 text-white font-['inter-reguler']">
       <div className="max-w-6xl mx-auto">
         {/* Profile Header */}
-        <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
-        <UploadImageModal />
+
+        <ProfileProvider>
+          <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
+          <UploadImageModal />
+        </ProfileProvider>
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="groups" className="w-full">

@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
       username,
       isAdmin: false,
       userId: user._id,
+      avatar: user.avatar,
     });
 
     await group.save();

@@ -23,7 +23,7 @@ const GroupSchema = new Schema<IGroupDocument>(
         username: {
           type: String,
         },
-        avatarUrl: {
+        avatar: {
           type: String,
           default: "",
         },

@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Edit2Icon } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useState, useEffect } from "react";
+import { useProfileContext } from "@/context/Profile.Context";
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
@@ -16,6 +17,7 @@ export default function ProfileHeader({
   setIsCreateGroupOpen,
 }: ProfileHeaderProps) {
   const { user } = useAuth();
+  const { isUploadImageShow, setisUploadImageShow } = useProfileContext();
 
   const getInitials = (name: string) =>
     name
@@ -25,7 +27,6 @@ export default function ProfileHeader({
       .toUpperCase();
 
   if (!user) {
-    // fallback while client hydrates
     return (
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
         <div className="flex items-center gap-4">
@@ -48,7 +49,7 @@ export default function ProfileHeader({
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
       <div className="flex items-center gap-4">
         <Avatar className="w-20 h-20 border-2 border-white/10">
-          <AvatarImage src={user.avatar || ""} />
+          <AvatarImage src={user.avatar || ""} className="object-cover" />
           <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
             {user.username ? getInitials(user.username) : "U"}
           </AvatarFallback>
@@ -71,7 +72,7 @@ export default function ProfileHeader({
 
       <div className="flex gap-3">
         <Button
-          onClick={() => console.log("Upload Image clicked")} // replace with setisUploadImageShow
+          onClick={() => setisUploadImageShow(true)}
           variant="outline"
           className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
         >
