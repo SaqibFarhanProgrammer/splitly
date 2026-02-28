@@ -27,6 +27,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import { useGroupContext } from "@/context/GroupContext";
 
 // Dummy data
 const groups: Group[] = [
@@ -115,6 +116,9 @@ const balances: Balance[] = [
 ];
 
 export default function DashboardPage() {
+
+  const {groups} = useGroupContext()
+
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white">
       <div className="max-w-7xl mx-auto">
@@ -190,7 +194,7 @@ export default function DashboardPage() {
               <TabsContent value="groups" className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   {groups.map((group) => (
-                    <GroupCard key={group.id} group={group} />
+                    <GroupCard key={group._id} group={group} />
                   ))}
                 </div>
               </TabsContent>
