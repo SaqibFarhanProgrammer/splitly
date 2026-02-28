@@ -1,7 +1,5 @@
 import { TopNavbar } from "@/components/dashboard/Dashboard_Navbar";
-import { Navbar } from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
-import { AuthProvider } from "@/context/AuthContext";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ReactNode } from "react";
 
@@ -11,10 +9,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <div className="bg-[#08080B]">
       <TopNavbar />
       <SidebarProvider>
-        <AuthProvider>
-          {children}
-          <Sidebar />
-        </AuthProvider>
+        {children}
+        <Sidebar />
       </SidebarProvider>
     </div>
   );

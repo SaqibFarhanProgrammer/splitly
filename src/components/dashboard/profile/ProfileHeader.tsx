@@ -17,7 +17,6 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   const { user } = useAuth();
 
-  console.log(user);
   const getInitials = (name: string) =>
     name
       .split(" ")

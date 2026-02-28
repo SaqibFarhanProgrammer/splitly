@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 import { ConnectDB } from "@/lib/ConnectDB";
 import { User } from "@/models/user.model";
 import mongoose from "mongoose";
-
+export const dynamic = "force-dynamic";
 interface JwtPayload {
-  userId: mongoose.Types.ObjectId;
+  userId: string;
 }
 
 export async function getUser() {

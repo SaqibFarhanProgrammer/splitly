@@ -40,8 +40,8 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const pathname = usePathname();
 
-  const { user, loading } = useAuth();
-
+  const { user } = useAuth();
+  const loading = false; // user is undefined while loading, null if no user, object if logged in
   const isActive = (href: string) => pathname === href;
 
   // User initials nikaalne ke liye
@@ -85,15 +85,17 @@ export function Sidebar() {
           {!isCollapsed && !loading && (
             <div className="flex items-center gap-2.5 overflow-hidden">
               {user?.avatar ? (
-                <img 
-                  src={user.avatar} 
+                <img
+                  src={user.avatar}
                   alt={user?.username || "User"}
                   className="w-8 h-8 rounded-lg object-cover shrink-0 shadow-lg shadow-white/5"
                 />
               ) : (
                 <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 shrink-0">
                   <span className="text-black font-bold text-base font-['inter-bold']">
-                    {user?.username ? getInitials(user.username).charAt(0) : "U"}
+                    {user?.username
+                      ? getInitials(user.username).charAt(0)
+                      : "U"}
                   </span>
                 </div>
               )}
@@ -121,8 +123,8 @@ export function Sidebar() {
           {isCollapsed && (
             <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shadow-lg shadow-white/5 mx-auto overflow-hidden">
               {user?.avatar ? (
-                <img 
-                  src={user.avatar} 
+                <img
+                  src={user.avatar}
                   alt={user?.username || "User"}
                   className="w-full h-full object-cover"
                 />
@@ -313,7 +315,6 @@ export function Sidebar() {
             ) : (
               // Actual User
               <>
-              
                 {!isCollapsed && (
                   <>
                     <div className="flex-1 min-w-0">
