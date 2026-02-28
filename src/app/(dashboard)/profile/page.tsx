@@ -32,6 +32,7 @@ import ProfileHeader from "@/components/dashboard/profile/ProfileHeader";
 import { AuthProvider } from "@/context/AuthContext";
 import { UploadImageModal } from "@/components/dashboard/profile/UploadProfileImage";
 import { ProfileProvider, useProfileContext } from "@/context/Profile.Context";
+import { useGroupContext } from "@/context/GroupContext";
 
 const recentExpenses = [
   {
@@ -79,7 +80,6 @@ interface GroupData {
 
 export default function Page() {
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [groupData, setgroupData] = useState<GroupData[]>([]);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [IsImageUploadShow, setIsImageUploadShow] = useState(false);
@@ -93,19 +93,13 @@ export default function Page() {
     console.log("Adding expense:", data);
   };
 
+  const { groups } = useGroupContext();
+
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get("/api/group/getallgroups")
-      .then((res) => {
-        if (res.data) {
-          setgroupData(res.data.data);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    if (groups.length > 0) {
+      setLoading(false);
+    }
+  }, [groups]);
 
   return (
     <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
@@ -184,7 +178,7 @@ export default function Page() {
                       </CardContent>
                     </Card>
                   ))
-                : groupData.map((group) => (
+                : groups.map((group) => (
                     <Card
                       key={group._id}
                       className="bg-zinc-950 border-white/10 hover:border-white/20 transition-all hover:shadow-lg hover:shadow-white/5"

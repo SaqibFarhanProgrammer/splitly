@@ -232,7 +232,7 @@ export default function GroupPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
+    <div className="min-h-screen bg-black flex flex-col mt-15">
       {ShowAddmember ? (
         <AddMembers
           isOpen={ShowAddmember}
