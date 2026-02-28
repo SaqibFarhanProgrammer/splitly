@@ -6,7 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Users, Clock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { IMember } from "@/types/member";
+
+interface IMember {
+  userId?: string;
+  username: string;
+  avatar?: string;
+  isAdmin?: boolean;
+}
 
 export interface Group {
   _id: string;

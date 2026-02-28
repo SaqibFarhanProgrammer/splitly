@@ -32,7 +32,7 @@ import ProfileHeader from "@/components/dashboard/profile/ProfileHeader";
 import { AuthProvider } from "@/context/AuthContext";
 import { UploadImageModal } from "@/components/dashboard/profile/UploadProfileImage";
 import { ProfileProvider, useProfileContext } from "@/context/Profile.Context";
-import { useGroupContext } from "@/context/GroupContext";
+import { Group, useGroupContext } from "@/context/GroupContext";
 
 const recentExpenses = [
   {
@@ -70,18 +70,15 @@ const balances = [
   { name: "Ali", amount: 1500, type: "owe" },
 ];
 
-interface GroupData {
-  _id: string;
-  name: string;
-  totalAmount: number;
-  isActive: boolean;
-  members: [];
-}
+
 
 export default function Page() {
+  const { groups } = useGroupContext();
+
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [groupData, setgroupData] = useState<Group[]>(groups || []);
   const [IsImageUploadShow, setIsImageUploadShow] = useState(false);
 
   const handleAddExpense = async (data: {
@@ -93,7 +90,6 @@ export default function Page() {
     console.log("Adding expense:", data);
   };
 
-  const { groups } = useGroupContext();
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -178,7 +174,7 @@ export default function Page() {
                       </CardContent>
                     </Card>
                   ))
-                : groups.map((group) => (
+                : groupData.map((group) => (
                     <Card
                       key={group._id}
                       className="bg-zinc-950 border-white/10 hover:border-white/20 transition-all hover:shadow-lg hover:shadow-white/5"

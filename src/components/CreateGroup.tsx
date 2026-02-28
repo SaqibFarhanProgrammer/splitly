@@ -8,24 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, Loader2 } from "lucide-react";
 import axios from "axios";
+import { Group } from "@/context/GroupContext";
 
 interface CreateGroupData {
   groupName: string;
   totalExpense: string;
 }
 
-interface GroupData {
-  _id: string;
-  name: string;
-  totalAmount: number;
-  isActive: boolean;
-  members: [];
-}
 
 interface CreateGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGroupCreated: (group: GroupData) => void; 
+  onGroupCreated: (group: Group) => void; 
 }
 
 export function CreateGroupModal({

@@ -14,9 +14,6 @@ export default async function RootLayout({
 }) {
   const user = await getUser();
   const groups = await GetAllGroups();
-  console.log(groups);
-
-  console.log(user);
 
   return (
     <html lang="en">

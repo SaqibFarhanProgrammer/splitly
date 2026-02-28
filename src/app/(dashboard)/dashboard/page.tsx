@@ -30,52 +30,7 @@ import {
 import { useGroupContext } from "@/context/GroupContext";
 
 // Dummy data
-const groups: Group[] = [
-  {
-    id: 1,
-    name: "Hunza Trip 2024",
-    members: 4,
-    totalExpenses: 45800,
-    youOwe: 0,
-    youAreOwed: 5200,
-    status: "active",
-    lastActivity: "2 days ago",
-    avatar: "H",
-  },
-  {
-    id: 2,
-    name: "Office Lunch Group",
-    members: 8,
-    totalExpenses: 12500,
-    youOwe: 1500,
-    youAreOwed: 0,
-    status: "active",
-    lastActivity: "5 hours ago",
-    avatar: "O",
-  },
-  {
-    id: 3,
-    name: "Flatmates - Karachi",
-    members: 3,
-    totalExpenses: 89000,
-    youOwe: 4200,
-    youAreOwed: 8000,
-    status: "active",
-    lastActivity: "1 week ago",
-    avatar: "F",
-  },
-  {
-    id: 4,
-    name: "College Reunion",
-    members: 12,
-    totalExpenses: 0,
-    youOwe: 0,
-    youAreOwed: 0,
-    status: "settled",
-    lastActivity: "2 months ago",
-    avatar: "C",
-  },
-];
+
 
 const recentExpenses: Expense[] = [
   {
