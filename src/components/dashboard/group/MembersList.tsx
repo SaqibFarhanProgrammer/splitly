@@ -14,7 +14,9 @@ export default function MembersList({ groupData }: MembersListProps) {
   if (!groupData?.members?.length) return null;
 
   return (
-    <div className="flex f gap-4 mt-2"> {/* flex-col for vertical stacking */}
+    <div className="flex f gap-4 mt-2">
+      {" "}
+      {/* flex-col for vertical stacking */}
       {groupData.members.map((member) => {
         const avatar = member.avatar;
         const hasAvatar =
@@ -25,14 +27,16 @@ export default function MembersList({ groupData }: MembersListProps) {
         return (
           <div
             key={member.userId?.toString() || member.username} // prefer _id if available
-            className="flex items-center gap-3 bg-zinc-950 p-2 rounded-[10px] border  border-zinc-800" 
+            className="flex items-center gap-3 bg-zinc-950 p-2 rounded-[10px] border  border-zinc-800"
           >
             <Avatar className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 flex items-center justify-center">
               {hasAvatar ? (
                 <AvatarImage src={member.avatar} className="object-cover" />
               ) : (
                 <AvatarFallback className="bg-white text-black text-sm font-bold font-['inter-bold']">
-                  {member.username ? member.username.charAt(0).toUpperCase() : "U"}
+                  {member.username
+                    ? member.username.charAt(0).toUpperCase()
+                    : "U"}
                 </AvatarFallback>
               )}
             </Avatar>

@@ -46,7 +46,7 @@ export function TopNavbar() {
   }
 
   return (
-    <header className="  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
+    <header className=" fixed top-0  z-30  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
       <div className="w-[85%] mx-auto h-16 flex items-center justify-between">
         {/* Left - Logo & Nav */}
         <div className="flex items-center gap-8">
@@ -105,7 +105,10 @@ export function TopNavbar() {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-colors">
                 <Avatar className="w-10 h-10 border-2 border-white/10">
-                  <AvatarImage src={user?.avatar || ""} className="object-cover" />
+                  <AvatarImage
+                    src={user?.avatar || ""}
+                    className="object-cover"
+                  />
                   <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
                     {user?.username ? user.username.charAt(0) : "U"}
                   </AvatarFallback>
