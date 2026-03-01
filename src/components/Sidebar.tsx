@@ -79,7 +79,7 @@ export function Sidebar() {
           <div className="flex items-center gap-2">
             <Avatar className="w-8 h-8">
               {user?.avatar ? (
-                <AvatarImage src={user.avatar} />
+                <AvatarImage src={user.avatar} className="object-cover" />
               ) : (
                 <AvatarFallback>
                   {user?.username ? getInitials(user.username).charAt(0) : "U"}
@@ -166,7 +166,7 @@ export function Sidebar() {
         >
           <Avatar className="w-8 h-8">
             {user?.avatar ? (
-              <AvatarImage src={user.avatar} />
+              <AvatarImage src={user.avatar} className="object-cover" />
             ) : (
               <AvatarFallback>
                 {user?.username?.charAt(0) ?? "U"}

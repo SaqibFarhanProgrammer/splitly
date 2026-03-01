@@ -408,7 +408,7 @@ export default function Page() {
         </Tabs>
 
         {/* Modals */}
-        <CreateGroupModal
+        <CreateGro upModal
           isOpen={isCreateGroupOpen}
           onClose={() => setIsCreateGroupOpen(false)}
           onGroupCreated={(newGroup) =>

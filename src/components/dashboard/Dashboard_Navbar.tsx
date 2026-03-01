@@ -56,7 +56,7 @@ export function TopNavbar() {
               <span className="text-black font-bold text-lg">S</span>
             </div>
             <span className="text-white font-bold text-xl hidden sm:block">
-              Splitwise
+              Splitly
             </span>
           </Link>
 

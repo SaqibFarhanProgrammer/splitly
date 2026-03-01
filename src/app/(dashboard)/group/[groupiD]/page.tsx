@@ -232,7 +232,7 @@ export default function GroupPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black flex flex-col mt-15">
+    <div className="min-h-screen bg-[#08080B] flex flex-col mt-15">
       {ShowAddmember ? (
         <AddMembers
           isOpen={ShowAddmember}
@@ -376,7 +376,7 @@ export default function GroupPage() {
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#08080B] backdrop-blur-xl border-t border-white/10 z-40">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
           <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
             <DialogTrigger asChild>
@@ -661,7 +661,9 @@ export default function GroupPage() {
           // Group data se woh member hata do
           setgroupData((prev) => ({
             ...prev,
-            members: prev.members.filter((m) => m.userId?.toString() as string !== deletedMemberId),
+            members: prev.members.filter(
+              (m) => (m.userId?.toString() as string) !== deletedMemberId,
+            ),
           }));
         }}
       />

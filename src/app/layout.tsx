@@ -4,8 +4,15 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ProfileProvider } from "@/context/Profile.Context";
 import { GetAllGroups } from "@/lib/Getallgroups";
 import { getUser } from "@/lib/getUser";
+import fav from "@/assets/images/favicon.jpg";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Splitly",
+  description: "Track and split expenses",
+
+};
 
 export default async function RootLayout({
   children,
@@ -17,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="antialiased bg-black" cz-shortcut-listen="true">
+      <body className="antialiased bg-[#08080B]">
         <AuthProvider user={user}>
           <GroupProvider groups={groups}>
             <ProfileProvider>{children}</ProfileProvider>

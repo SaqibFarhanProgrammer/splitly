@@ -31,7 +31,6 @@ import { useGroupContext } from "@/context/GroupContext";
 
 // Dummy data
 
-
 const recentExpenses: Expense[] = [
   {
     id: 1,
@@ -71,11 +70,10 @@ const balances: Balance[] = [
 ];
 
 export default function DashboardPage() {
-
-  const {groups} = useGroupContext()
+  const { groups } = useGroupContext();
 
   return (
-    <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white">
+    <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler']">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatCard
