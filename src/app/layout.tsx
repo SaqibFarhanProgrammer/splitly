@@ -24,7 +24,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className="antialiased bg-[#08080B]">
+      <body className="antialiased bg-[#08080B]"  cz-shortcut-listen="true">
         <AuthProvider user={user}>
           <GroupProvider groups={groups}>
             <ProfileProvider>{children}</ProfileProvider>

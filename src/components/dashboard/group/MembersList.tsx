@@ -19,7 +19,7 @@ export default function MembersList({ groupData }: MembersListProps) {
   );
 
   return (
-    <div className="flex flex-col gap-3 mt-3">
+    <div className="flex f gap-3 mt-3">
       {members.map((member) => {
         const avatar = member.avatar;
 
@@ -31,7 +31,7 @@ export default function MembersList({ groupData }: MembersListProps) {
         return (
           <div
             key={member.userId?.toString() || member.username}
-            className="flex items-center gap-3 bg-zinc-950 p-3 rounded-[12px] border border-zinc-800 hover:bg-zinc-900 transition"
+            className="flex  items-center gap-3 bg-zinc-950 p-3 rounded-[12px] border border-zinc-800 hover:bg-zinc-900 transition"
           >
             <Avatar className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 flex items-center justify-center">
               {hasAvatar ? (

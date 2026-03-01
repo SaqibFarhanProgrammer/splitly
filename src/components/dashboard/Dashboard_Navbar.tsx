@@ -1,7 +1,7 @@
 // components/TopNavbar.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -44,6 +44,10 @@ export function TopNavbar() {
     const response = await axios.get("/api/users/logout");
     router.push("/auth");
   }
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null; // Server-side render nothing
 
   return (
     <header className=" fixed top-0  z-30  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">

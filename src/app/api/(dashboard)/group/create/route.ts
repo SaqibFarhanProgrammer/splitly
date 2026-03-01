@@ -9,7 +9,6 @@ interface TokenPayload extends JwtPayload {
   userId: string;
 }
 
-
 export async function POST(request: NextRequest) {
   try {
     await ConnectDB();

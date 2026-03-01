@@ -20,9 +20,9 @@ export async function GetAllGroups() {
     if (!payload.userId) return null;
 
     const groups = await Group.find({
-      createdBy: payload.userId,
+      $or: [{ createdBy: payload.userId }, { "members.userId": payload.userId }],
     });
-    console.log(groups);
+
 
     return JSON.parse(JSON.stringify(groups));
   } catch (error: any) {

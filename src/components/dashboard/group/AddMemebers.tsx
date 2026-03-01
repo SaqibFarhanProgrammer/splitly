@@ -54,8 +54,6 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
       }
       setMembers((prev) => [...prev, newUser]);
 
-      console.log(newUser);
-
       form.reset();
     } catch (err: any) {
       setError(err?.response?.data?.message || "Something went wrong");

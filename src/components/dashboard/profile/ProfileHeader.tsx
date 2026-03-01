@@ -79,6 +79,7 @@ export default function ProfileHeader({
           <Edit2Icon className="w-4 h-4 mr-2" />
           Edit Profile
         </Button>
+        
         <Button
           onClick={() => setIsCreateGroupOpen(true)}
           className="font-['inter-bold']"
