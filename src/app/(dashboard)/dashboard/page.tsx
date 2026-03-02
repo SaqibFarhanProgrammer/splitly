@@ -72,6 +72,8 @@ const balances: Balance[] = [
 export default function DashboardPage() {
   const { groups } = useGroupContext();
 
+  
+
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler']">
       <div className="max-w-7xl mx-auto">

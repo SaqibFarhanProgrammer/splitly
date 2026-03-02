@@ -331,7 +331,7 @@ export default function GroupPage() {
         />
       )}
 
-      <header className="sticky top-0 z-30 px-20">
+      <header className="sticky backdrop-blur-[10px] top-15 z-30 px-20">
         <div className="w-full px-4 mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
