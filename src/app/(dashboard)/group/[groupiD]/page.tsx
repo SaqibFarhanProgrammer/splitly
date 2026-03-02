@@ -290,6 +290,34 @@ export default function GroupPage() {
     }
   }
 
+  function calculateYouOwe() {
+    const totalAmount = expense.reduce((sum, exp) => sum + exp.totalAmount, 0);
+    const membersCount = groupData.members.length;
+    if (membersCount === 0) return 0;
+
+    const share = totalAmount / membersCount;
+
+    const youPaid = expense
+      .filter((exp) => exp.paidBy.toString() === user?._id)
+      .reduce((sum, exp) => sum + exp.totalAmount, 0);
+
+    return Math.max(0, Math.floor(share - youPaid));
+  }
+
+  function calculateYouGet() {
+    const totalAmount = expense.reduce((sum, exp) => sum + exp.totalAmount, 0);
+    const membersCount = groupData.members.length;
+    if (membersCount === 0) return 0;
+
+    const share = totalAmount / membersCount;
+
+    const youPaid = expense
+      .filter((exp) => exp.paidBy.toString() === user?._id)
+      .reduce((sum, exp) => sum + exp.totalAmount, 0);
+
+    return Math.max(0, Math.floor(youPaid - share));
+  }
+
   useEffect(() => {
     getExpenses();
   }, [params.groupID]);
@@ -410,7 +438,10 @@ export default function GroupPage() {
                   Total
                 </p>
                 <p className="text-lg font-['inter-bold'] text-white">
-                  PKR {groupData.totalAmount.toLocaleString()}
+                  PKR{" "}
+                  {expense
+                    .reduce((sum, exp) => sum + exp.totalAmount, 0)
+                    .toLocaleString()}
                 </p>
               </div>
               <div className="text-center border-x border-white/10">
@@ -418,7 +449,7 @@ export default function GroupPage() {
                   You Get
                 </p>
                 <p className="text-lg font-['inter-bold'] text-emerald-400">
-                  PKR 0
+                  PKR {calculateYouGet().toLocaleString()}
                 </p>
               </div>
               <div className="text-center">
@@ -426,7 +457,7 @@ export default function GroupPage() {
                   You Owe
                 </p>
                 <p className="text-lg font-['inter-bold'] text-red-400">
-                  PKR 0
+                  PKR {calculateYouOwe().toLocaleString()}
                 </p>
               </div>
             </div>
@@ -440,80 +471,99 @@ export default function GroupPage() {
         </div>
       </div>
 
-  <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
-  {expense.length === 0 ? (
-    <div className="text-center py-12">
-      <p className="text-zinc-500 text-sm">No expenses yet</p>
-      <p className="text-zinc-600 text-xs mt-1">Add your first expense</p>
-    </div>
-  ) : (
-    expense.map((exp, index) => (
-      <div key={index} className="flex gap-3 items-start">
-        <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
-          <AvatarImage src={exp.paidmemberAvatar} alt={exp.paidmemberUsername} />
-          <AvatarFallback className="bg-gradient-to-br from-zinc-700 to-zinc-900 text-white text-sm font-bold font-['inter-bold']">
-            {exp.paidmemberUsername.charAt(0).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
+      <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
+        {expense.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-zinc-500 text-sm">No expenses yet</p>
+            <p className="text-zinc-600 text-xs mt-1">Add your first expense</p>
+          </div>
+        ) : (
+          expense.map((exp, index) => (
+            <div key={index} className="flex gap-3 items-start">
+              <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
+                <AvatarImage
+                  src={exp.paidmemberAvatar}
+                  alt={exp.paidmemberUsername}
+                />
+                <AvatarFallback className="bg-gradient-to-br from-zinc-700 to-zinc-900 text-white text-sm font-bold font-['inter-bold']">
+                  {exp.paidmemberUsername.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
 
-        <div className="flex-1 min-w-0">
-          <Card className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors">
-            <CardContent className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-white font-semibold text-base font-['inter-bold'] truncate leading-tight">
-                      {exp.title}
-                    </h3>
-                    {user?._id && exp.paidBy.toString() === user._id && (
-                      <span className="flex-shrink-0 text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-['inter-bold'] border border-emerald-500/20">
-                        You
+              <div className="flex-1 min-w-0">
+                <Card className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="text-white font-semibold text-base font-['inter-bold'] truncate leading-tight">
+                            {exp.title}
+                          </h3>
+                          {user?._id && exp.paidBy.toString() === user._id && (
+                            <span className="flex-shrink-0 text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-['inter-bold'] border border-emerald-500/20">
+                              You
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-sm text-zinc-400 font-['inter-light-betaa'] flex items-center gap-1.5">
+                          <span className="text-zinc-300">Paid by</span>
+                          <span className="text-white font-medium">
+                            {exp.paidmemberUsername}
+                          </span>
+                          <span className="text-zinc-600">•</span>
+                          <span className="text-zinc-500 text-xs">
+                            {new Date(exp.createdAt).toLocaleDateString(
+                              "en-US",
+                              { month: "short", day: "numeric" },
+                            )}
+                          </span>
+                        </p>
+                      </div>
+
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-white font-bold text-lg font-['inter-bold'] tracking-tight">
+                          PKR {exp.totalAmount.toLocaleString()}
+                        </p>
+                        <p className="text-xs text-zinc-500 font-['inter-light-betaa'] mt-0.5">
+                          {new Date(exp.createdAt).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex -space-x-2">
+                          <div className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
+                            <span className="text-[10px] text-zinc-400 font-bold">
+                              {exp.paidmemberUsername.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <div className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950 flex items-center justify-center">
+                            <span className="text-[10px] text-zinc-300 font-bold">
+                              +2
+                            </span>
+                          </div>
+                        </div>
+                        <span className="text-xs text-zinc-500 font-['inter-light-betaa']">
+                          Split equally
+                        </span>
+                      </div>
+
+                      <span className="text-xs text-zinc-400 font-['inter-light-betaa'] bg-zinc-900/50 px-2 py-1 rounded-md">
+                        #{exp.groupId.toString().slice(-4).toUpperCase()}
                       </span>
-                    )}
-                  </div>
-                  
-                  <p className="text-sm text-zinc-400 font-['inter-light-betaa'] flex items-center gap-1.5">
-                    <span className="text-zinc-300">Paid by</span>
-                    <span className="text-white font-medium">{exp.paidmemberUsername}</span>
-                    <span className="text-zinc-600">•</span>
-                    <span className="text-zinc-500 text-xs">{new Date(exp.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                  </p>
-                </div>
-                
-                <div className="text-right flex-shrink-0">
-                  <p className="text-white font-bold text-lg font-['inter-bold'] tracking-tight">
-                    PKR {exp.totalAmount.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-zinc-500 font-['inter-light-betaa'] mt-0.5">
-                    {new Date(exp.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
-                      <span className="text-[10px] text-zinc-400 font-bold">{exp.paidmemberUsername.charAt(0).toUpperCase()}</span>
                     </div>
-                    <div className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950 flex items-center justify-center">
-                      <span className="text-[10px] text-zinc-300 font-bold">+2</span>
-                    </div>
-                  </div>
-                  <span className="text-xs text-zinc-500 font-['inter-light-betaa']">Split equally</span>
-                </div>
-                
-                <span className="text-xs text-zinc-400 font-['inter-light-betaa'] bg-zinc-900/50 px-2 py-1 rounded-md">
-                  #{exp.groupId.toString().slice(-4).toUpperCase()}
-                </span>
+                  </CardContent>
+                </Card>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          ))
+        )}
       </div>
-    ))
-  )}
-</div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">
         <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">

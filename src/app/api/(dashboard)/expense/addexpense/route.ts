@@ -1,5 +1,6 @@
 import { ExpenseFormValues } from "@/app/(dashboard)/group/[groupID]/page";
 import { Expense } from "@/models/expense.model";
+import { Group } from "@/models/group.model";
 import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -27,6 +28,11 @@ export async function POST(request: NextRequest) {
   );
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  const group = await Group.findById(groupid);
+  if (!group) {
+    return NextResponse.json({ error: "Group not found" }, { status: 404 });
   }
 
   const expense = await Expense.create({
