@@ -107,6 +107,14 @@ const GroupdataDefault: IgroupData = {
   _id: "",
 };
 
+interface SettlementType {
+  groupId: string;
+  paidBy: string;
+  paidTo: string;
+  amount: number | string;
+  note: string;
+}
+
 export default function GroupPage() {
   const params = useParams();
   const router = useRouter();
@@ -116,6 +124,7 @@ export default function GroupPage() {
   const [isManageOpen, setIsManageOpen] = useState(false);
   const [ShowAddmember, setShowAddmember] = useState(false);
   const [expense, setexpense] = useState<ExpenseType[]>([]);
+  const [settlements, setsettlements] = useState<SettlementType[]>([]);
 
   const { user } = useAuth();
 
@@ -217,15 +226,38 @@ export default function GroupPage() {
     }
   };
 
-  const onSettlementSubmit = (data: SettlementFormValues) => {
-    if (!validateSettlement(data)) return;
+const onSettlementSubmit = async (data: SettlementFormValues) => {
+  if (!validateSettlement(data)) return;
 
-    console.log("Settlement:", data);
+  const groupid = params.groupID;
 
-    setIsSettlementOpen(false);
-    settlementForm.reset();
-  };
+  const selectedMember = groupData.members.find(
+    (m) => m.userId === data.memberId
+  );
 
+  if (!selectedMember) return;
+
+  try {
+    const res = await axios.post("/api/settlement/adddsettlement", {
+      paidBy: user?._id,
+      paidTo: data.memberId, // now actual userId
+      amount: data.amount,
+      note: data.note,
+      paidByUserAvatar: user?.avatar || "",
+      paidByUserName: user?.username || "",
+      paidToUserAvatar: selectedMember.avatar || "",
+      paidToUserName: selectedMember.username || "",
+      groupid: groupid as string,
+    });
+
+    console.log(res);
+  } catch (error) {
+    console.error(error);
+  }
+
+  setIsSettlementOpen(false);
+  settlementForm.reset();
+};
   async function deleteGroup() {
     try {
       const res = await axios.delete(
@@ -269,10 +301,25 @@ export default function GroupPage() {
     }
   }
 
+  async function getallSettlement() {
+    try {
+      const res = await axios.post("/api/settlement/getallexpensesbygroupid", {
+        groupId: params.groupID,
+      });
+      console.log(res.data, "settlement");
+      if (res.data) setsettlements(res?.data);
+    } catch (error) {
+      console.error("Error fetching settlements:", error);
+    }
+  }
+
   useEffect(() => {
     GetGroupData().then((data) => {
       if (data) setgroupData(data);
     });
+
+    getallSettlement();
+    console.log(settlements);
   }, [params.groupID]);
 
   async function getExpenses() {
@@ -283,7 +330,7 @@ export default function GroupPage() {
       const res = await axios.post("/api/expense/getallexpensesbygroupid", {
         groupId: groupid,
       });
-      console.log(res.data.expenses);
+      console.log(res.data);
       setexpense(res.data.expenses);
     } catch (error) {
       console.error("Error fetching expenses:", error);

@@ -5,6 +5,11 @@ export interface ISettlement extends Document {
   paidBy: mongoose.Types.ObjectId;
   paidTo: mongoose.Types.ObjectId;
   amount: number;
+  paidByUserAvatar: string;
+  paidByUserName: string;
+  paidToUserAvatar: string;
+  paidToUserName: string;
+  note: string;
   createdAt: Date;
 }
 
@@ -12,7 +17,12 @@ const SettlementSchema = new Schema<ISettlement>({
   groupId: { type: Schema.Types.ObjectId, ref: "Group", required: true },
   paidBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   paidTo: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  paidByUserAvatar: { type: String },
+  paidByUserName: { type: String },
+  paidToUserAvatar: { type: String },
+  paidToUserName: { type: String },
   amount: { type: Number, required: true },
+  note: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 
