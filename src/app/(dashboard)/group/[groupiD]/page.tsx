@@ -63,6 +63,7 @@ import mongoose from "mongoose";
 import ExpensesList from "@/components/dashboard/group/ExpensesList";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExpenseSkeleton } from "@/components/Skeliton/ExpenseListSkeliton";
+import { MembersListSkeleton } from "@/components/Skeliton/MembersListSkeleton";
 
 interface SettlementFormValues {
   memberId: string;
@@ -521,7 +522,13 @@ export default function GroupPage() {
 
       <div className="max-w-3xl mx-auto w-full px-4 pb-4">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          <MembersList groupData={groupData} />
+          {
+            groupData.members.length === 0 ? (
+              <MembersListSkeleton />
+            ) : ( 
+              <MembersList groupData={groupData} />
+              )
+          }
         </div>
       </div>
 

@@ -1,6 +1,5 @@
 import { ConnectDB } from "@/lib/ConnectDB";
 import { Expense } from "@/models/expense.model";
-import { User } from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
