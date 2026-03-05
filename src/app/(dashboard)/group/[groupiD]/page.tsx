@@ -62,6 +62,7 @@ import { useAuth } from "@/context/AuthContext";
 import mongoose from "mongoose";
 import ExpensesList from "@/components/dashboard/group/ExpensesList";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ExpenseSkeleton } from "@/components/Skeliton/ExpenseListSkeliton";
 
 interface SettlementFormValues {
   memberId: string;
@@ -526,10 +527,7 @@ export default function GroupPage() {
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
         {expense.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-zinc-500 text-sm">No expenses yet</p>
-            <p className="text-zinc-600 text-xs mt-1">Add your first expense</p>
-          </div>
+          <ExpenseSkeleton />
         ) : (
           <ExpensesList expense={expense} />
         )}
