@@ -48,6 +48,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (group.members.length > 10) {
+      return NextResponse.json(
+        { message: "only 10 members will alaow in group" },
+        { status: 409 },
+      );
+    }
+
     group.members.push({
       username,
       isAdmin: false,

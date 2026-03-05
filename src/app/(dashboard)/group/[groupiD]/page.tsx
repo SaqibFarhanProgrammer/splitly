@@ -60,6 +60,8 @@ import MembersList from "@/components/dashboard/group/MembersList";
 import { IMember } from "@/types/member";
 import { useAuth } from "@/context/AuthContext";
 import mongoose from "mongoose";
+import ExpensesList from "@/components/dashboard/group/ExpensesList";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SettlementFormValues {
   memberId: string;
@@ -67,7 +69,7 @@ interface SettlementFormValues {
   note: string;
 }
 
-interface ExpenseType {
+export interface ExpenseType {
   groupId: mongoose.Types.ObjectId;
   title: string;
   totalAmount: number;
@@ -111,7 +113,10 @@ interface SettlementType {
   groupId: string;
   paidBy: string;
   paidTo: string;
-  amount: number | string;
+  amount: number;
+  paidByUserAvatar: string;
+  paidByUserName: string;
+  paidToUserName: string;
   note: string;
 }
 
@@ -226,38 +231,40 @@ export default function GroupPage() {
     }
   };
 
-const onSettlementSubmit = async (data: SettlementFormValues) => {
-  if (!validateSettlement(data)) return;
+  const onSettlementSubmit = async (data: SettlementFormValues) => {
+    if (!validateSettlement(data)) return;
+    console.log("chala");
 
-  const groupid = params.groupID;
+    const groupid = params.groupID;
 
-  const selectedMember = groupData.members.find(
-    (m) => m.userId === data.memberId
-  );
+    const selectedMember = groupData.members.find(
+      (m) => m.username === data.memberId,
+    );
+    console.log(selectedMember);
 
-  if (!selectedMember) return;
+    if (!selectedMember) return;
 
-  try {
-    const res = await axios.post("/api/settlement/adddsettlement", {
-      paidBy: user?._id,
-      paidTo: data.memberId, // now actual userId
-      amount: data.amount,
-      note: data.note,
-      paidByUserAvatar: user?.avatar || "",
-      paidByUserName: user?.username || "",
-      paidToUserAvatar: selectedMember.avatar || "",
-      paidToUserName: selectedMember.username || "",
-      groupid: groupid as string,
-    });
+    try {
+      const res = await axios.post("/api/settlement/adddsettlement", {
+        paidBy: user?._id,
+        paidTo: selectedMember.userId, // now actual userId
+        amount: data.amount,
+        note: data.note,
+        paidByUserAvatar: user?.avatar || "",
+        paidByUserName: user?.username || "",
+        paidToUserAvatar: selectedMember.avatar || "",
+        paidToUserName: selectedMember.username || "",
+        groupid: groupid as string,
+      });
 
-    console.log(res);
-  } catch (error) {
-    console.error(error);
-  }
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
 
-  setIsSettlementOpen(false);
-  settlementForm.reset();
-};
+    setIsSettlementOpen(false);
+    settlementForm.reset();
+  };
   async function deleteGroup() {
     try {
       const res = await axios.delete(
@@ -303,24 +310,18 @@ const onSettlementSubmit = async (data: SettlementFormValues) => {
 
   async function getallSettlement() {
     try {
-      const res = await axios.post("/api/settlement/getallexpensesbygroupid", {
-        groupId: params.groupID,
-      });
+      const res = await axios.post(
+        "/api/settlement/getallsettlementbyGroupid",
+        {
+          groupId: params.groupID,
+        },
+      );
       console.log(res.data, "settlement");
       if (res.data) setsettlements(res?.data);
     } catch (error) {
       console.error("Error fetching settlements:", error);
     }
   }
-
-  useEffect(() => {
-    GetGroupData().then((data) => {
-      if (data) setgroupData(data);
-    });
-
-    getallSettlement();
-    console.log(settlements);
-  }, [params.groupID]);
 
   async function getExpenses() {
     try {
@@ -366,6 +367,11 @@ const onSettlementSubmit = async (data: SettlementFormValues) => {
   }
 
   useEffect(() => {
+    GetGroupData().then((data) => {
+      if (data) setgroupData(data);
+    });
+
+    getallSettlement();
     getExpenses();
   }, [params.groupID]);
 
@@ -525,90 +531,7 @@ const onSettlementSubmit = async (data: SettlementFormValues) => {
             <p className="text-zinc-600 text-xs mt-1">Add your first expense</p>
           </div>
         ) : (
-          expense.map((exp, index) => (
-            <div key={index} className="flex gap-3 items-start">
-              <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
-                <AvatarImage
-                  src={exp.paidmemberAvatar}
-                  alt={exp.paidmemberUsername}
-                />
-                <AvatarFallback className="bg-gradient-to-br from-zinc-700 to-zinc-900 text-white text-sm font-bold font-['inter-bold']">
-                  {exp.paidmemberUsername.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="flex-1 min-w-0">
-                <Card className="bg-zinc-950 border-white/10 hover:border-white/20 transition-colors">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-white font-semibold text-base font-['inter-bold'] truncate leading-tight">
-                            {exp.title}
-                          </h3>
-                          {user?._id && exp.paidBy.toString() === user._id && (
-                            <span className="flex-shrink-0 text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-['inter-bold'] border border-emerald-500/20">
-                              You
-                            </span>
-                          )}
-                        </div>
-
-                        <p className="text-sm text-zinc-400 font-['inter-light-betaa'] flex items-center gap-1.5">
-                          <span className="text-zinc-300">Paid by</span>
-                          <span className="text-white font-medium">
-                            {exp.paidmemberUsername}
-                          </span>
-                          <span className="text-zinc-600">•</span>
-                          <span className="text-zinc-500 text-xs">
-                            {new Date(exp.createdAt).toLocaleDateString(
-                              "en-US",
-                              { month: "short", day: "numeric" },
-                            )}
-                          </span>
-                        </p>
-                      </div>
-
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-white font-bold text-lg font-['inter-bold'] tracking-tight">
-                          PKR {exp.totalAmount.toLocaleString()}
-                        </p>
-                        <p className="text-xs text-zinc-500 font-['inter-light-betaa'] mt-0.5">
-                          {new Date(exp.createdAt).toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                      <div className="flex items-center gap-2">
-                        <div className="flex -space-x-2">
-                          <div className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
-                            <span className="text-[10px] text-zinc-400 font-bold">
-                              {exp.paidmemberUsername.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950 flex items-center justify-center">
-                            <span className="text-[10px] text-zinc-300 font-bold">
-                              +2
-                            </span>
-                          </div>
-                        </div>
-                        <span className="text-xs text-zinc-500 font-['inter-light-betaa']">
-                          Split equally
-                        </span>
-                      </div>
-
-                      <span className="text-xs text-zinc-400 font-['inter-light-betaa'] bg-zinc-900/50 px-2 py-1 rounded-md">
-                        #{exp.groupId.toString().slice(-4).toUpperCase()}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          ))
+          <ExpensesList expense={expense} />
         )}
       </div>
 
@@ -686,7 +609,7 @@ const onSettlementSubmit = async (data: SettlementFormValues) => {
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={field.value.toString()}
                         >
                           <FormControl>
                             <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">

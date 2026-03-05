@@ -23,7 +23,12 @@ interface AddExpenseModalProps {
   onSubmit?: (data: AddExpenseData) => Promise<void>;
 }
 
-export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExpenseModalProps) {
+export function AddExpenseModal({
+  isOpen,
+  onClose,
+  groupName,
+  onSubmit,
+}: AddExpenseModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -34,7 +39,7 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
     defaultValues: {
       description: "",
       amount: "",
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       notes: "",
     },
   });
@@ -52,11 +57,11 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop with blur */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal Content */}
       <div className="relative w-full max-w-[80%] h-[80vh] bg-zinc-950 border border-white/10 rounded-2xl overflow-hidden flex flex-col font-inter-reguler">
         <div className="flex items-center justify-between p-6 border-b border-white/10">
@@ -65,9 +70,13 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
               <Receipt className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-inter-bold text-white">Add Expense</h2>
+              <h2 className="text-xl font-inter-bold text-white">
+                Add Expense
+              </h2>
               {groupName && (
-                <p className="text-sm text-zinc-400 font-inter-beta">in {groupName}</p>
+                <p className="text-sm text-zinc-400 font-inter-beta">
+                  in {groupName}
+                </p>
               )}
             </div>
           </div>
@@ -81,23 +90,32 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
 
         {/* Form Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          <form id="add-expense-form" onSubmit={handleSubmit(handleAddExpense)} className="space-y-6">
+          <form
+            id="add-expense-form"
+            onSubmit={handleSubmit(handleAddExpense)}
+            className="space-y-6"
+          >
             {/* Description */}
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-white font-inter-bold">
+              <Label
+                htmlFor="description"
+                className="text-white font-inter-bold"
+              >
                 Description
               </Label>
               <Input
                 id="description"
                 placeholder="e.g., Dinner at Monal"
                 className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler h-12"
-                {...register("description", { 
+                {...register("description", {
                   required: "Description is required",
-                  minLength: { value: 3, message: "Min 3 characters" }
+                  minLength: { value: 3, message: "Min 3 characters" },
                 })}
               />
               {errors.description && (
-                <p className="text-sm text-red-400 font-inter-beta">{errors.description.message}</p>
+                <p className="text-sm text-red-400 font-inter-beta">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
@@ -107,24 +125,28 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
                 Amount
               </Label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-inter-bold text-lg">₹</span>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 font-inter-bold text-lg">
+                  ₹
+                </span>
                 <Input
                   id="amount"
                   type="number"
                   placeholder="0.00"
                   className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler h-12 text-lg"
-                  {...register("amount", { 
+                  {...register("amount", {
                     required: "Amount is required",
                     min: { value: 1, message: "Min amount is 1" },
                     pattern: {
                       value: /^\d+(\.\d{1,2})?$/,
-                      message: "Invalid amount"
-                    }
+                      message: "Invalid amount",
+                    },
                   })}
                 />
               </div>
               {errors.amount && (
-                <p className="text-sm text-red-400 font-inter-beta">{errors.amount.message}</p>
+                <p className="text-sm text-red-400 font-inter-beta">
+                  {errors.amount.message}
+                </p>
               )}
             </div>
 
@@ -143,14 +165,19 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
                 />
               </div>
               {errors.date && (
-                <p className="text-sm text-red-400 font-inter-beta">{errors.date.message}</p>
+                <p className="text-sm text-red-400 font-inter-beta">
+                  {errors.date.message}
+                </p>
               )}
             </div>
 
             {/* Notes */}
             <div className="space-y-2">
               <Label htmlFor="notes" className="text-white font-inter-bold">
-                Notes <span className="text-zinc-400 font-inter-beta">(Optional)</span>
+                Notes{" "}
+                <span className="text-zinc-400 font-inter-beta">
+                  (Optional)
+                </span>
               </Label>
               <Textarea
                 id="notes"
@@ -178,7 +205,11 @@ export function AddExpenseModal({ isOpen, onClose, groupName, onSubmit }: AddExp
             className="flex-1 bg-white text-black hover:bg-zinc-200 font-inter-bold"
             disabled={isLoading}
           >
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add Expense"}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Add Expense"
+            )}
           </Button>
         </div>
       </div>

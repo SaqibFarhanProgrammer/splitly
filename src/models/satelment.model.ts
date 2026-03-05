@@ -7,7 +7,6 @@ export interface ISettlement extends Document {
   amount: number;
   paidByUserAvatar: string;
   paidByUserName: string;
-  paidToUserAvatar: string;
   paidToUserName: string;
   note: string;
   createdAt: Date;
@@ -19,7 +18,6 @@ const SettlementSchema = new Schema<ISettlement>({
   paidTo: { type: Schema.Types.ObjectId, ref: "User", required: true },
   paidByUserAvatar: { type: String },
   paidByUserName: { type: String },
-  paidToUserAvatar: { type: String },
   paidToUserName: { type: String },
   amount: { type: Number, required: true },
   note: { type: String },

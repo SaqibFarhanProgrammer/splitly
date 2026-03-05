@@ -11,7 +11,5 @@ export async function POST(request: NextRequest) {
 
   const expenses = await Expense.find({ groupId: groupId });
 
-
-
   return NextResponse.json({ expenses: expenses }, { status: 200 });
 }
