@@ -2,13 +2,15 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface Expense {
-  id: number;
-  title: string;
-  amount: number;
-  paidBy: string;
-  group: string;
-  date: string;
-  yourShare: number;
+  _id: string
+  title: string
+  totalAmount: number
+  groupId: string
+  paidBy: string
+  paidmemberUsername: string
+  paidmemberAvatar: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface ExpensesContextType {
@@ -23,8 +25,6 @@ export const ExpensesProvider: React.FC<{
   children: React.ReactNode;
   expense: Expense[];
 }> = ({ children, expense }) => {
-
-    
   return (
     <ExpensesContext.Provider value={{ expenses: expense }}>
       {children}

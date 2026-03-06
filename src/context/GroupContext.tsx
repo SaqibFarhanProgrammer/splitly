@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 // -------------------- Types --------------------
 
-interface IMember {
+export interface IMember {
   userId?: string;
   username: string;
   avatar?: string;

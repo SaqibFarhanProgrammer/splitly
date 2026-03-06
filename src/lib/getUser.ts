@@ -8,23 +8,11 @@ interface JwtPayload {
   userId: string;
 }
 
-export async function getUser() {
+export async function getUser(userid: string) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-
-    if (!token) return null;
-
-    const payload: JwtPayload = jwt.verify(
-      token,
-      process.env.JWT_SECRET!,
-    ) as JwtPayload;
-
-    if (!payload.userId) return null;
-
     await ConnectDB();
 
-    const user = await User.findById(payload.userId).select("-password").lean();
+    const user = await User.findById(userid).select("-password").lean();
 
     if (!user) return null;
 

@@ -7,6 +7,7 @@ import { getUser } from "@/lib/getUser";
 import fav from "@/assets/images/favicon.jpg";
 import { GetExpense } from "@/lib/Expense";
 import { ExpensesProvider } from "@/context/Expenses.Context";
+import { getUserIdFromToken } from "@/lib/GetToken";
 
 export const dynamic = "force-dynamic";
 
@@ -20,9 +21,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
-  const groups = await GetAllGroups();
-  const expense = await GetExpense();
+  const userid = await getUserIdFromToken();
+  const user = await getUser(userid);
+  const groups = await GetAllGroups(userid);
+  const expense = await GetExpense(userid);
+  
   return (
     <html lang="en">
       <body className="antialiased bg-[#08080B]" cz-shortcut-listen="true">

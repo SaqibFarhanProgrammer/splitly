@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
 import {
   Dialog,
   DialogContent,
@@ -14,6 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
 import {
   Form,
   FormControl,
@@ -29,7 +34,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -37,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import {
   ArrowLeft,
   Plus,
@@ -52,18 +60,37 @@ import {
   LogOut,
   Edit3,
 } from "lucide-react";
+
 import Link from "next/link";
 import axios from "axios";
-import AddMembers from "@/components/dashboard/group/AddMemebers";
-import ManageMembers from "@/components/dashboard/group/ManageMembers";
-import MembersList from "@/components/dashboard/group/MembersList";
+
 import { IMember } from "@/types/member";
 import { useAuth } from "@/context/AuthContext";
 import mongoose from "mongoose";
-import ExpensesList from "@/components/dashboard/group/ExpensesList";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExpenseSkeleton } from "@/components/Skeliton/ExpenseListSkeliton";
 import { MembersListSkeleton } from "@/components/Skeliton/MembersListSkeleton";
+
+const AddMembers = dynamic(
+  () => import("@/components/dashboard/group/AddMemebers"),
+  { loading: () => <Skeleton className="h-10 w-full" /> },
+);
+
+const ManageMembers = dynamic(
+  () => import("@/components/dashboard/group/ManageMembers"),
+  { loading: () => <Skeleton className="h-10 w-full" /> },
+);
+
+const MembersList = dynamic(
+  () => import("@/components/dashboard/group/MembersList"),
+  { loading: () => <MembersListSkeleton /> },
+);
+
+const ExpensesList = dynamic(
+  () => import("@/components/dashboard/group/ExpensesList"),
+  { loading: () => <ExpenseSkeleton /> },
+);
 
 interface SettlementFormValues {
   memberId: string;
@@ -218,8 +245,6 @@ export default function GroupPage() {
 
       const res = await axios.post("/api/expense/addexpense", formdata);
 
-      console.log(res);
-
       setIsExpenseOpen(false);
       expenseForm.reset();
       getExpenses();
@@ -235,14 +260,12 @@ export default function GroupPage() {
 
   const onSettlementSubmit = async (data: SettlementFormValues) => {
     if (!validateSettlement(data)) return;
-    console.log("chala");
 
     const groupid = params.groupID;
 
     const selectedMember = groupData.members.find(
       (m) => m.username === data.memberId,
     );
-    console.log(selectedMember);
 
     if (!selectedMember) return;
 
@@ -258,8 +281,6 @@ export default function GroupPage() {
         paidToUserName: selectedMember.username || "",
         groupid: groupid as string,
       });
-
-      console.log(res);
     } catch (error) {
       console.error(error);
     }
@@ -272,8 +293,6 @@ export default function GroupPage() {
       const res = await axios.delete(
         `/api/group/delete?groupId=${params.groupID}`,
       );
-
-      console.log(res);
 
       router.push("/profile");
     } catch (error) {
@@ -302,8 +321,6 @@ export default function GroupPage() {
         groupid: params.groupID,
       });
 
-      console.log(res);
-
       router.push("/profile");
     } catch (error) {
       console.error(error);
@@ -318,7 +335,6 @@ export default function GroupPage() {
           groupId: params.groupID,
         },
       );
-      console.log(res.data, "settlement");
       if (res.data) setsettlements(res?.data);
     } catch (error) {
       console.error("Error fetching settlements:", error);
@@ -328,12 +344,10 @@ export default function GroupPage() {
   async function getExpenses() {
     try {
       const groupid = params.groupID;
-      console.log(groupid);
 
       const res = await axios.post("/api/expense/getallexpensesbygroupid", {
         groupId: groupid,
       });
-      console.log(res.data);
       setexpense(res.data.expenses);
     } catch (error) {
       console.error("Error fetching expenses:", error);
@@ -522,19 +536,21 @@ export default function GroupPage() {
 
       <div className="max-w-3xl mx-auto w-full px-4 pb-4">
         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {
-            groupData.members.length === 0 ? (
-              <MembersListSkeleton />
-            ) : ( 
-              <MembersList groupData={groupData} />
-              )
-          }
+          {!groupData.members ? (
+            <MembersListSkeleton />
+          ) : (
+            <MembersList groupData={groupData} />
+          )}
         </div>
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
-        {expense.length === 0 ? (
+        {!expense ? (
           <ExpenseSkeleton />
+        ) : expense.length === 0 ? (
+          <p className="text-center text-sm text-muted-foreground py-10">
+            No expenses yet
+          </p>
         ) : (
           <ExpensesList expense={expense} />
         )}

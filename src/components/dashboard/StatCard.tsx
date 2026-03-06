@@ -36,13 +36,17 @@ export function StatCard({
             <p className="text-zinc-400 text-sm mb-1">{title}</p>
             <p className={`text-3xl font-bold ${amountColor}`}>{amount}</p>
           </div>
-          <div className={`w-12 h-12 rounded-full ${iconBgColor} flex items-center justify-center`}>
+          <div
+            className={`w-12 h-12 rounded-full ${iconBgColor} flex items-center justify-center`}
+          >
             <Icon className={`w-6 h-6 ${iconColor}`} />
           </div>
         </div>
         {trend && (
           <div className="flex items-center gap-2 mt-4 text-sm">
-            <span className={`${trendUp ? "text-emerald-400" : "text-red-400"} flex items-center`}>
+            <span
+              className={`${trendUp ? "text-emerald-400" : "text-red-400"} flex items-center`}
+            >
               {trendUp ? (
                 <ArrowUpRight className="w-4 h-4 mr-1" />
               ) : (
