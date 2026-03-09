@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface ISettlement extends Document {
+  type:string
   groupId: mongoose.Types.ObjectId;
   paidBy: mongoose.Types.ObjectId;
   paidTo: mongoose.Types.ObjectId;
@@ -13,6 +14,7 @@ export interface ISettlement extends Document {
 }
 
 const SettlementSchema = new Schema<ISettlement>({
+  type:{type:String,default:"settlement"},
   groupId: { type: Schema.Types.ObjectId, ref: "Group", required: true },
   paidBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   paidTo: { type: Schema.Types.ObjectId, ref: "User", required: true },

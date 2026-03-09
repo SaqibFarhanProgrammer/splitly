@@ -8,6 +8,7 @@ import fav from "@/assets/images/favicon.jpg";
 import { GetExpense } from "@/lib/Expense";
 import { ExpensesProvider } from "@/context/Expenses.Context";
 import { getUserIdFromToken } from "@/lib/GetToken";
+import { GetDashboardAllStateData } from "@/lib/GetDashboardStaesData";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,9 @@ export default async function RootLayout({
   const user = await getUser(userid);
   const groups = await GetAllGroups(userid);
   const expense = await GetExpense(userid);
+  const expenseData = await GetDashboardAllStateData(userid)
+  
+  console.log(expenseData);
   
   return (
     <html lang="en">

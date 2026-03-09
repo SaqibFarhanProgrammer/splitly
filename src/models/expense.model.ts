@@ -2,6 +2,7 @@ import { IMember } from "@/types/member";
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IExpense extends Document {
+  type:string
   groupId: mongoose.Types.ObjectId;
   title: string;
   totalAmount: number;
@@ -15,6 +16,7 @@ export interface IExpense extends Document {
 
 const ExpenseSchema = new Schema<IExpense>(
   {
+    type:{type:String , default:"expense"},
     groupId: { type: Schema.Types.ObjectId, ref: "Group", required: true },
     title: { type: String, required: true },
     totalAmount: { type: Number, required: true },

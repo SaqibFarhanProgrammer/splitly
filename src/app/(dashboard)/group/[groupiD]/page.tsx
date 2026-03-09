@@ -71,6 +71,7 @@ import mongoose from "mongoose";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ExpenseSkeleton } from "@/components/Skeliton/ExpenseListSkeliton";
 import { MembersListSkeleton } from "@/components/Skeliton/MembersListSkeleton";
+import SettlementList from "@/components/dashboard/group/SettlementList";
 
 const AddMembers = dynamic(
   () => import("@/components/dashboard/group/AddMemebers"),
@@ -261,28 +262,44 @@ export default function GroupPage() {
   const onSettlementSubmit = async (data: SettlementFormValues) => {
     if (!validateSettlement(data)) return;
 
-    const groupid = params.groupID;
+    const groupid = params.groupID as string;
 
     const selectedMember = groupData.members.find(
       (m) => m.username === data.memberId,
     );
 
-    if (!selectedMember) return;
+    if (!selectedMember || !user?._id) return;
 
     try {
       const res = await axios.post("/api/settlement/adddsettlement", {
-        paidBy: user?._id,
-        paidTo: selectedMember.userId, // now actual userId
+        paidBy: user._id,
+        paidTo: selectedMember.userId,
         amount: data.amount,
         note: data.note,
-        paidByUserAvatar: user?.avatar || "",
-        paidByUserName: user?.username || "",
+        paidByUserAvatar: user.avatar || "",
+        paidByUserName: user.username || "",
         paidToUserAvatar: selectedMember.avatar || "",
         paidToUserName: selectedMember.username || "",
-        groupid: groupid as string,
+        groupid: groupid,
       });
+
+      if (res.status === 200 || res.status === 201) {
+        // Match exact SettlementType interface
+        const newSettlement: SettlementType = {
+          groupId: groupid,
+          paidBy: user._id.toString(),
+          paidTo: selectedMember.userId as string,
+          amount: Number(data.amount),
+          paidByUserAvatar: user.avatar || "",
+          paidByUserName: user.username || "",
+          paidToUserName: selectedMember.username || "",
+          note: data.note || "",
+        };
+
+        setsettlements((prev) => [newSettlement, ...prev]);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Settlement error:", error);
     }
 
     setIsSettlementOpen(false);
@@ -335,7 +352,7 @@ export default function GroupPage() {
           groupId: params.groupID,
         },
       );
-      if (res.data) setsettlements(res?.data);
+      if (res.data) setsettlements(res?.data.settlemnts);
     } catch (error) {
       console.error("Error fetching settlements:", error);
     }
@@ -390,6 +407,7 @@ export default function GroupPage() {
     getallSettlement();
     getExpenses();
   }, [params.groupID]);
+
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">
@@ -554,6 +572,10 @@ export default function GroupPage() {
         ) : (
           <ExpensesList expense={expense} />
         )}
+      </div>
+      <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
+        <p className="text-2xl text-white" >Settlements</p>
+        <SettlementList settlements={settlements} />
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">

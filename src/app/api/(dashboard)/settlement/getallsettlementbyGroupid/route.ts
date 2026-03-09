@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const { groupId } = await request.json();
-  console.log(groupId, "from settlment");
 
   const settlemnts = await Settlement.find({
     groupId: groupId,

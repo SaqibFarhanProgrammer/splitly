@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   await ConnectDB();
 
   const { groupId } = await request.json();
-  console.log(groupId);
 
   const expenses = await Expense.find({ groupId: groupId });
 
