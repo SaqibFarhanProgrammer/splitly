@@ -55,7 +55,6 @@ function SettlementList({ settlements }: SettlementListProps) {
 
         return (
           <div key={settlement._id || index} className="flex gap-3 items-start">
-            {/* Settlement Icon */}
             <div className="w-11 h-11 flex-shrink-0 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-900/20 border-2 border-emerald-500/30 flex items-center justify-center">
               <Wallet className="w-5 h-5 text-emerald-400" />
             </div>
@@ -67,7 +66,6 @@ function SettlementList({ settlements }: SettlementListProps) {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
-                      {/* Header */}
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="text-white font-semibold text-base font-['inter-bold'] flex items-center gap-2">
                           {isSelfSettlement ? "Self Settlement" : "Settlement"}
@@ -84,9 +82,7 @@ function SettlementList({ settlements }: SettlementListProps) {
                         </h3>
                       </div>
 
-                      {/* Payment Flow */}
                       <div className="flex items-center gap-3 mb-3 flex-wrap">
-                        {/* Payer */}
                         <div className="flex items-center gap-2">
                           <Avatar className="w-8 h-8 ring-2 ring-zinc-800">
                             <AvatarImage
@@ -102,7 +98,6 @@ function SettlementList({ settlements }: SettlementListProps) {
                           </span>
                         </div>
 
-                        {/* Arrow */}
                         <div className="flex flex-col items-center">
                           <ArrowRight
                             className={`w-4 h-4 ${isSelfSettlement ? "text-yellow-500 rotate-90" : "text-emerald-500"}`}
@@ -114,7 +109,6 @@ function SettlementList({ settlements }: SettlementListProps) {
                           </span>
                         </div>
 
-                        {/* Receiver */}
                         <div className="flex items-center gap-2">
                           <Avatar className="w-8 h-8 ring-2 ring-zinc-800">
                             <AvatarFallback className="bg-zinc-800 text-white text-xs font-bold">
@@ -127,14 +121,12 @@ function SettlementList({ settlements }: SettlementListProps) {
                         </div>
                       </div>
 
-                      {/* Note */}
                       {settlement.note && (
                         <p className="text-xs text-zinc-500 italic mb-2 bg-zinc-900/50 p-2 rounded-lg">
                           "{settlement.note}"
                         </p>
                       )}
 
-                      {/* Date */}
                       <p className="text-xs text-zinc-500 font-['inter-light-betaa'] flex items-center gap-1.5">
                         <CheckCircle2
                           className={`w-3 h-3 ${isSelfSettlement ? "text-yellow-500" : "text-emerald-500"}`}
@@ -163,7 +155,6 @@ function SettlementList({ settlements }: SettlementListProps) {
                       </p>
                     </div>
 
-                    {/* Amount */}
                     <div className="text-right flex-shrink-0">
                       <div
                         className={`border rounded-lg px-3 py-2 ${isSelfSettlement ? "bg-yellow-500/10 border-yellow-500/20" : "bg-emerald-500/10 border-emerald-500/20"}`}
@@ -182,7 +173,6 @@ function SettlementList({ settlements }: SettlementListProps) {
                     </div>
                   </div>
 
-                  {/* Footer */}
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
                     <div className="flex items-center gap-2">
                       <div

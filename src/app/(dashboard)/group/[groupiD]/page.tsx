@@ -376,13 +376,23 @@ export default function GroupPage() {
     const membersCount = groupData.members.length;
     if (membersCount === 0) return 0;
 
-    const share = totalAmount / membersCount;
+    let share = totalAmount / membersCount;
 
     const youPaid = expense
       .filter((exp) => exp.paidBy.toString() === user?._id)
       .reduce((sum, exp) => sum + exp.totalAmount, 0);
 
-    return Math.max(0, Math.floor(share - youPaid));
+    const isMe = settlements.filter((paidby) => paidby.paidTo === user?._id);
+
+    const MembersPaidToYou = isMe.reduce(
+      (total, amount) => total + amount.amount,
+      0,
+    );
+    const final = youPaid - share;
+
+    console.log(MembersPaidToYou - final);
+
+    return Math.max(0, Math.floor(MembersPaidToYou - final));
   }
 
   function calculateYouGet() {
@@ -390,13 +400,21 @@ export default function GroupPage() {
     const membersCount = groupData.members.length;
     if (membersCount === 0) return 0;
 
-    const share = totalAmount / membersCount;
+    const totalshare = totalAmount / membersCount;
 
     const youPaid = expense
       .filter((exp) => exp.paidBy.toString() === user?._id)
       .reduce((sum, exp) => sum + exp.totalAmount, 0);
 
-    return Math.max(0, Math.floor(youPaid - share));
+    const isMe = settlements.filter((paidby) => paidby.paidTo === user?._id);
+
+    const MembersPaidToYou = isMe.reduce(
+      (total, amount) => total + amount.amount,
+      0,
+    );
+    const final = youPaid - totalshare;
+
+    return Math.max(0, Math.floor(final - MembersPaidToYou));
   }
 
   useEffect(() => {
@@ -407,7 +425,6 @@ export default function GroupPage() {
     getallSettlement();
     getExpenses();
   }, [params.groupID]);
-
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">
@@ -574,7 +591,7 @@ export default function GroupPage() {
         )}
       </div>
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
-        <p className="text-2xl text-white" >Settlements</p>
+        <p className="text-2xl text-white">Settlements</p>
         <SettlementList settlements={settlements} />
       </div>
 
@@ -748,7 +765,7 @@ export default function GroupPage() {
                           </FormControl>
                           <SelectContent className="bg-zinc-900 border-white/10">
                             {groupData.members
-                              .filter((m) => !m.isAdmin)
+                              .filter((m) => m.userId !== user?._id)
                               .map((member) => (
                                 <SelectItem
                                   key={member.username}
@@ -757,11 +774,17 @@ export default function GroupPage() {
                                 >
                                   <div className="flex items-center gap-2">
                                     <Avatar className="w-6 h-6">
-                                      <AvatarFallback className="bg-zinc-800 text-xs">
-                                        {member.username
-                                          .charAt(0)
-                                          .toUpperCase()}
-                                      </AvatarFallback>
+                                      {member.avatar === "" ? (
+                                        <AvatarFallback className="bg-zinc-800 text-xs">
+                                          {member.username
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                        </AvatarFallback>
+                                      ) : (
+                                        <AvatarImage>
+                                          {member.avatar}
+                                        </AvatarImage>
+                                      )}
                                     </Avatar>
                                     {member.username}
                                   </div>
