@@ -68,7 +68,6 @@ export async function POST(req: NextRequest) {
     });
 
 
-    console.log(result);
     
     await User.findByIdAndUpdate(
       userId,

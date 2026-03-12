@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
     groupId: groupId,
   });
 
-  console.log(settlemnts, "settlement");
 
   return NextResponse.json({
     message: "get all settlment success",

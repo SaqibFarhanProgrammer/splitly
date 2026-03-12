@@ -390,7 +390,6 @@ export default function GroupPage() {
     );
     const final = youPaid - share;
 
-    console.log(MembersPaidToYou - final);
 
     return Math.max(0, Math.floor(MembersPaidToYou - final));
   }

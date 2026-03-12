@@ -57,7 +57,6 @@ export function UploadImageModal() {
         "/api/profile/uploadoncloudinery",
         formData,
       );
-      console.log(response.data.result);
       setisUploadImageShow(false);
 
       setPreview(response.data.result.url);

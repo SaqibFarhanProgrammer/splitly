@@ -88,7 +88,6 @@ export default function Page() {
     date: string;
     notes?: string;
   }) => {
-    console.log("Adding expense:", data);
   };
 
   const { expenses } = useExpenses();
@@ -209,9 +208,9 @@ export default function Page() {
                               src={expense.paidmemberAvatar}
                               alt={expense.paidmemberUsername}
                               className="w-12 h-12 rounded-full object-cover border-2 border-white/10 group-hover:border-white/20 transition-colors"
-                              onError={(e) => {
-                                e.target.src = "https://via.placeholder.com/48";
-                              }}
+                       onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+  e.currentTarget.src = "https://via.placeholder.com/48"
+}}
                             />
                             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10">
                               <Clock className="w-3 h-3 text-zinc-400" />

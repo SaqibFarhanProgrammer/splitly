@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { memberId, groupId } = body;
-    console.log(groupId);
     
 
     if (!memberId || !groupId) {

@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, {  } from "mongoose";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
 import React from "react";
 import { ArrowRight, CheckCircle2, Wallet, User } from "lucide-react";
 
-export interface SettlementType {
-  _id: string;
+export interface SettlementT {
+  _id: mongoose.Types.ObjectId | string;
   type: string;
   groupId: mongoose.Types.ObjectId | string;
   paidBy: mongoose.Types.ObjectId | string;
@@ -17,11 +17,11 @@ export interface SettlementType {
   paidToUserName?: string;
   paidToUserAvatar?: string;
   note?: string;
-  createdAt: string;
+  createdAt: string | Date;
 }
 
 interface SettlementListProps {
-  settlements: SettlementType[];
+  settlements: SettlementT[];
 }
 
 function SettlementList({ settlements }: SettlementListProps) {
@@ -33,7 +33,6 @@ function SettlementList({ settlements }: SettlementListProps) {
     if (!id) return "";
     return id.toString();
   };
-  console.log(settlements);
 
   return (
     <div className="space-y-3">
@@ -54,7 +53,7 @@ function SettlementList({ settlements }: SettlementListProps) {
         const isSelfSettlement = paidByStr === paidToStr;
 
         return (
-          <div key={settlement._id || index} className="flex gap-3 items-start">
+          <div key={ index} className="flex gap-3 items-start">
             <div className="w-11 h-11 flex-shrink-0 rounded-full bg-gradient-to-br from-emerald-500/20 to-emerald-900/20 border-2 border-emerald-500/30 flex items-center justify-center">
               <Wallet className="w-5 h-5 text-emerald-400" />
             </div>

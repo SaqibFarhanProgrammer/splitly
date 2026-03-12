@@ -28,8 +28,6 @@ export default async function RootLayout({
   const expense = await GetExpense(userid);
   const expenseData = await GetDashboardAllStateData(userid)
   
-  console.log(expenseData);
-  
   return (
     <html lang="en">
       <body className="antialiased bg-[#08080B]" cz-shortcut-listen="true">

@@ -9,16 +9,16 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { 
-  User, 
-  Lock, 
-  Bell, 
-  Shield, 
-  Mail, 
+import {
+  User,
+  Lock,
+  Bell,
+  Shield,
+  Mail,
   Camera,
   Loader2,
   Save,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -57,14 +57,12 @@ export default function SettingsPage() {
   const handleProfileSubmit = async (data: any) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Profile updated:", data);
     setIsLoading(false);
   };
 
   const handlePasswordSubmit = async (data: any) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Password changed:", data);
     setIsLoading(false);
   };
 
@@ -78,29 +76,29 @@ export default function SettingsPage() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 w-full justify-start">
-            <TabsTrigger 
-              value="profile" 
+            <TabsTrigger
+              value="profile"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
             >
               <User className="w-4 h-4 mr-2" />
               Profile
             </TabsTrigger>
-            <TabsTrigger 
-              value="account" 
+            <TabsTrigger
+              value="account"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
             >
               <Lock className="w-4 h-4 mr-2" />
               Account
             </TabsTrigger>
-            <TabsTrigger 
-              value="notifications" 
+            <TabsTrigger
+              value="notifications"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
             >
               <Bell className="w-4 h-4 mr-2" />
               Notifications
             </TabsTrigger>
-            <TabsTrigger 
-              value="security" 
+            <TabsTrigger
+              value="security"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
             >
               <Shield className="w-4 h-4 mr-2" />
@@ -111,8 +109,10 @@ export default function SettingsPage() {
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">Profile Information</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-6">
+                Profile Information
+              </h2>
+
               {/* Avatar Section */}
               <div className="flex items-center gap-6 mb-8">
                 <Avatar className="w-24 h-24 border-2 border-white/10">
@@ -122,7 +122,10 @@ export default function SettingsPage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5 mb-2">
+                  <Button
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/5 mb-2"
+                  >
                     <Camera className="w-4 h-4 mr-2" />
                     Change Photo
                   </Button>
@@ -130,7 +133,10 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <form onSubmit={profileForm.handleSubmit(handleProfileSubmit)} className="space-y-5">
+              <form
+                onSubmit={profileForm.handleSubmit(handleProfileSubmit)}
+                className="space-y-5"
+              >
                 <div className="grid md:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <Label className="text-white">Full Name</Label>
@@ -170,12 +176,16 @@ export default function SettingsPage() {
                 </div>
 
                 <div className="flex justify-end pt-4">
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="bg-white text-black hover:bg-zinc-200"
                     disabled={isLoading}
                   >
-                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Save className="w-4 h-4 mr-2" />
+                    )}
                     Save Changes
                   </Button>
                 </div>
@@ -186,13 +196,20 @@ export default function SettingsPage() {
           {/* Account Tab */}
           <TabsContent value="account" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">Change Password</h2>
-              
-              <form onSubmit={accountForm.handleSubmit(handlePasswordSubmit)} className="space-y-5 max-w-md">
+              <h2 className="text-xl font-bold text-white mb-6">
+                Change Password
+              </h2>
+
+              <form
+                onSubmit={accountForm.handleSubmit(handlePasswordSubmit)}
+                className="space-y-5 max-w-md"
+              >
                 <div className="space-y-2">
                   <Label className="text-white">Current Password</Label>
                   <Input
-                    {...accountForm.register("currentPassword", { required: true })}
+                    {...accountForm.register("currentPassword", {
+                      required: true,
+                    })}
                     type="password"
                     className="bg-zinc-900 border-white/10 text-white h-11"
                   />
@@ -201,7 +218,10 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">New Password</Label>
                   <Input
-                    {...accountForm.register("newPassword", { required: true, minLength: 6 })}
+                    {...accountForm.register("newPassword", {
+                      required: true,
+                      minLength: 6,
+                    })}
                     type="password"
                     className="bg-zinc-900 border-white/10 text-white h-11"
                   />
@@ -210,19 +230,25 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">Confirm New Password</Label>
                   <Input
-                    {...accountForm.register("confirmPassword", { required: true })}
+                    {...accountForm.register("confirmPassword", {
+                      required: true,
+                    })}
                     type="password"
                     className="bg-zinc-900 border-white/10 text-white h-11"
                   />
                 </div>
 
                 <div className="pt-4">
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="bg-white text-black hover:bg-zinc-200"
                     disabled={isLoading}
                   >
-                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Lock className="w-4 h-4 mr-2" />
+                    )}
                     Update Password
                   </Button>
                 </div>
@@ -231,8 +257,13 @@ export default function SettingsPage() {
 
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
               <h2 className="text-xl font-bold text-white mb-4">Danger Zone</h2>
-              <p className="text-zinc-400 mb-4">Once you delete your account, there is no going back.</p>
-              <Button variant="destructive" className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20">
+              <p className="text-zinc-400 mb-4">
+                Once you delete your account, there is no going back.
+              </p>
+              <Button
+                variant="destructive"
+                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
+              >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Account
               </Button>
@@ -242,17 +273,25 @@ export default function SettingsPage() {
           {/* Notifications Tab */}
           <TabsContent value="notifications" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">Notification Preferences</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-6">
+                Notification Preferences
+              </h2>
+
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-white font-medium">Email Notifications</h3>
-                    <p className="text-sm text-zinc-500">Receive updates via email</p>
+                    <h3 className="text-white font-medium">
+                      Email Notifications
+                    </h3>
+                    <p className="text-sm text-zinc-500">
+                      Receive updates via email
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.email}
-                    onCheckedChange={(checked) => setNotifications({...notifications, email: checked})}
+                    onCheckedChange={(checked) =>
+                      setNotifications({ ...notifications, email: checked })
+                    }
                     className="data-[state=checked]:bg-white"
                   />
                 </div>
@@ -261,12 +300,18 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-white font-medium">Push Notifications</h3>
-                    <p className="text-sm text-zinc-500">Receive push notifications</p>
+                    <h3 className="text-white font-medium">
+                      Push Notifications
+                    </h3>
+                    <p className="text-sm text-zinc-500">
+                      Receive push notifications
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.push}
-                    onCheckedChange={(checked) => setNotifications({...notifications, push: checked})}
+                    onCheckedChange={(checked) =>
+                      setNotifications({ ...notifications, push: checked })
+                    }
                     className="data-[state=checked]:bg-white"
                   />
                 </div>
@@ -276,11 +321,15 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-white font-medium">Expense Updates</h3>
-                    <p className="text-sm text-zinc-500">Get notified about new expenses</p>
+                    <p className="text-sm text-zinc-500">
+                      Get notified about new expenses
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.expenses}
-                    onCheckedChange={(checked) => setNotifications({...notifications, expenses: checked})}
+                    onCheckedChange={(checked) =>
+                      setNotifications({ ...notifications, expenses: checked })
+                    }
                     className="data-[state=checked]:bg-white"
                   />
                 </div>
@@ -290,11 +339,15 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-white font-medium">Group Activity</h3>
-                    <p className="text-sm text-zinc-500">Notifications about group changes</p>
+                    <p className="text-sm text-zinc-500">
+                      Notifications about group changes
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.groups}
-                    onCheckedChange={(checked) => setNotifications({...notifications, groups: checked})}
+                    onCheckedChange={(checked) =>
+                      setNotifications({ ...notifications, groups: checked })
+                    }
                     className="data-[state=checked]:bg-white"
                   />
                 </div>
@@ -304,11 +357,15 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-white font-medium">Marketing Emails</h3>
-                    <p className="text-sm text-zinc-500">Receive promotional content</p>
+                    <p className="text-sm text-zinc-500">
+                      Receive promotional content
+                    </p>
                   </div>
                   <Switch
                     checked={notifications.marketing}
-                    onCheckedChange={(checked) => setNotifications({...notifications, marketing: checked})}
+                    onCheckedChange={(checked) =>
+                      setNotifications({ ...notifications, marketing: checked })
+                    }
                     className="data-[state=checked]:bg-white"
                   />
                 </div>
@@ -319,15 +376,24 @@ export default function SettingsPage() {
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">Security Settings</h2>
-              
+              <h2 className="text-xl font-bold text-white mb-6">
+                Security Settings
+              </h2>
+
               <div className="space-y-6">
                 <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
                   <div>
-                    <h3 className="text-white font-medium">Two-Factor Authentication</h3>
-                    <p className="text-sm text-zinc-500">Add an extra layer of security</p>
+                    <h3 className="text-white font-medium">
+                      Two-Factor Authentication
+                    </h3>
+                    <p className="text-sm text-zinc-500">
+                      Add an extra layer of security
+                    </p>
                   </div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
+                  <Button
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/5"
+                  >
                     Enable
                   </Button>
                 </div>
@@ -335,9 +401,14 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
                   <div>
                     <h3 className="text-white font-medium">Active Sessions</h3>
-                    <p className="text-sm text-zinc-500">Manage your active devices</p>
+                    <p className="text-sm text-zinc-500">
+                      Manage your active devices
+                    </p>
                   </div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
+                  <Button
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/5"
+                  >
                     View
                   </Button>
                 </div>
@@ -345,9 +416,14 @@ export default function SettingsPage() {
                 <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
                   <div>
                     <h3 className="text-white font-medium">Login History</h3>
-                    <p className="text-sm text-zinc-500">Check recent login activity</p>
+                    <p className="text-sm text-zinc-500">
+                      Check recent login activity
+                    </p>
                   </div>
-                  <Button variant="outline" className="border-white/10 text-white hover:bg-white/5">
+                  <Button
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/5"
+                  >
                     View
                   </Button>
                 </div>

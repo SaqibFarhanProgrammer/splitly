@@ -19,7 +19,6 @@ export async function GetDashboardAllStateData(userid: string) {
 
   );
 
-  console.log(allgroups);
 
   const totalcountofexpense = expensesLast30Days.reduce((total, exp) => {
     return total + exp.totalAmount;

@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["react", "react-hooks", "jsx-a11y", "import", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off",
+
+    "no-warning-comments": "off",
+    "spaced-comment": "off",
+    "no-inline-comments": "off"
+},
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}
