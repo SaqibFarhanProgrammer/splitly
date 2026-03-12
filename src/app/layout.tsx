@@ -1,12 +1,13 @@
 import { GroupProvider } from "@/context/GroupContext";
-import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProfileProvider } from "@/context/Profile.Context";
+import { ExpensesProvider } from "@/context/Expenses.Context";
+import { DashboardProvider } from "@/context/Dashboard.context";
+
+import "./globals.css";
 import { GetAllGroups } from "@/lib/Getallgroups";
 import { getUser } from "@/lib/getUser";
-import fav from "@/assets/images/favicon.jpg";
 import { GetExpense } from "@/lib/Expense";
-import { ExpensesProvider } from "@/context/Expenses.Context";
 import { getUserIdFromToken } from "@/lib/GetToken";
 import { GetDashboardAllStateData } from "@/lib/GetDashboardStaesData";
 
@@ -26,15 +27,19 @@ export default async function RootLayout({
   const user = await getUser(userid);
   const groups = await GetAllGroups(userid);
   const expense = await GetExpense(userid);
-  const expenseData = await GetDashboardAllStateData(userid)
-  
+  const expenseData = await GetDashboardAllStateData(userid);
+
   return (
     <html lang="en">
-      <body className="antialiased bg-[#08080B]" cz-shortcut-listen="true">
+      <body className="antialiased bg-[#08080B]"
+       cz-shortcut-listen="true"
+      >
         <AuthProvider user={user}>
           <GroupProvider groups={groups}>
             <ExpensesProvider expense={expense}>
-              <ProfileProvider>{children}</ProfileProvider>
+              <DashboardProvider data={expenseData}>
+                <ProfileProvider>{children}</ProfileProvider>
+              </DashboardProvider>
             </ExpensesProvider>
           </GroupProvider>
         </AuthProvider>

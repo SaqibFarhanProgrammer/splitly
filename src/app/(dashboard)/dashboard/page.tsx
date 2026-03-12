@@ -28,6 +28,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useGroupContext } from "@/context/GroupContext";
+import { useDashboardContext } from "@/context/Dashboard.context";
 
 // Dummy data
 
@@ -73,6 +74,9 @@ export default function DashboardPage() {
   const { groups } = useGroupContext();
 
   
+  const dashboardstate = useDashboardContext()
+  console.log(dashboardstate);
+  
 
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler']">
@@ -107,7 +111,7 @@ export default function DashboardPage() {
           />
           <StatCard
             title="Monthly Spending"
-            amount="Rs24,500"
+            amount={`Rs${dashboardstate.data}`}
             trend="+8%"
             trendUp={false}
             icon={TrendingUp}
