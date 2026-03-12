@@ -72,6 +72,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ExpenseSkeleton } from "@/components/Skeliton/ExpenseListSkeliton";
 import { MembersListSkeleton } from "@/components/Skeliton/MembersListSkeleton";
 import SettlementList from "@/components/dashboard/group/SettlementList";
+import { SettlementT } from "@/types/settlementTypes";
 
 const AddMembers = dynamic(
   () => import("@/components/dashboard/group/AddMemebers"),
@@ -159,7 +160,7 @@ export default function GroupPage() {
   const [isManageOpen, setIsManageOpen] = useState(false);
   const [ShowAddmember, setShowAddmember] = useState(false);
   const [expense, setexpense] = useState<ExpenseType[]>([]);
-  const [settlements, setsettlements] = useState<SettlementType[]>([]);
+  const [settlements, setsettlements] = useState<SettlementT[]>([]);
 
   const { user } = useAuth();
 
@@ -284,8 +285,7 @@ export default function GroupPage() {
       });
 
       if (res.status === 200 || res.status === 201) {
-        // Match exact SettlementType interface
-        const newSettlement: SettlementType = {
+        const newSettlement: SettlementT = {
           groupId: groupid,
           paidBy: user._id.toString(),
           paidTo: selectedMember.userId as string,
@@ -385,7 +385,7 @@ export default function GroupPage() {
     const isMe = settlements.filter((paidby) => paidby.paidTo === user?._id);
 
     const MembersPaidToYou = isMe.reduce(
-      (total, amount) => total + amount.amount,
+      (total, amount) => total + Number(amount.amount),
       0,
     );
     const final = youPaid - share;
@@ -408,7 +408,7 @@ export default function GroupPage() {
     const isMe = settlements.filter((paidby) => paidby.paidTo === user?._id);
 
     const MembersPaidToYou = isMe.reduce(
-      (total, amount) => total + amount.amount,
+      (total, amount) => total + Number(amount.amount),
       0,
     );
     const final = youPaid - totalshare;
