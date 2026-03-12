@@ -4,65 +4,75 @@ import { Plane, Home, Briefcase, Users } from "lucide-react";
 export function UseCasesSection() {
   const useCases = [
     {
-      icon: <Plane className="w-8 h-8" />,
+      icon: Plane,
       title: "Friends Going on Trips",
       desc: "Weekend getaways, road trips, or international travel. Split petrol, hotels, food, and activities fairly.",
       image: "🏔️",
-      color: "from-blue-500 to-cyan-500"
     },
     {
-      icon: <Home className="w-8 h-8" />,
+      icon: Home,
       title: "Roommates",
       desc: "Monthly rent, utilities, groceries, and shared household items. Keep track of recurring expenses easily.",
       image: "🏠",
-      color: "from-green-500 to-emerald-500"
     },
     {
-      icon: <Briefcase className="w-8 h-8" />,
+      icon: Briefcase,
       title: "Office Teams",
       desc: "Team lunches, outings, gifts for colleagues, and office supplies. Manage corporate group expenses.",
       image: "💼",
-      color: "from-purple-500 to-pink-500"
     },
     {
-      icon: <Users className="w-8 h-8" />,
+      icon: Users,
       title: "Family Events",
       desc: "Weddings, birthdays, reunions, and festivals. Coordinate expenses among family members transparently.",
       image: "🎉",
-      color: "from-orange-500 to-red-500"
     }
   ];
 
   return (
-    <section id="use-cases" className="relative py-24 bg-black overflow-hidden">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none" />
+    <section id="use-cases" className="relative py-32 bg-black overflow-hidden">
+      {/* Subtle Background Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-zinc-900/30 rounded-full blur-[120px] pointer-events-none" />
       
       <div className="relative max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-[inter-bold] text-white mb-4">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <span className="inline-block text-zinc-600 text-sm font-medium mb-4 tracking-wide uppercase">
+            Use Cases
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-6">
             Perfect For Every Group
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto font-[inter-light-betaa]">
+          <p className="text-zinc-500 text-lg max-w-2xl mx-auto leading-relaxed">
             From friends to family, roommates to colleagues — anyone sharing expenses can benefit
           </p>
         </div>
 
+        {/* Use Cases Grid */}
         <div className="grid md:grid-cols-2 gap-6">
           {useCases.map((useCase, i) => (
             <div 
               key={i} 
-              className="group relative bg-white/5 border border-white/10 rounded-3xl p-8 hover:bg-white/[0.07] transition-all overflow-hidden"
+              className="group relative bg-zinc-950 border border-zinc-900 rounded-3xl p-8 hover:bg-zinc-900 hover:border-zinc-800 transition-all duration-300 overflow-hidden"
             >
-              <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${useCase.color} opacity-10 rounded-full blur-2xl group-hover:opacity-20 transition-opacity`} />
-              
               <div className="relative flex items-start gap-6">
-                <div className="text-6xl">{useCase.image}</div>
+                {/* Emoji/Image */}
+                <div className="text-5xl grayscale group-hover:grayscale-0 transition-all duration-300 opacity-50 group-hover:opacity-100">
+                  {useCase.image}
+                </div>
+                
                 <div className="flex-1">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${useCase.color} flex items-center justify-center text-white mb-4`}>
-                    {useCase.icon}
+                  {/* Icon Badge */}
+                  <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mb-4 group-hover:bg-zinc-800 group-hover:text-zinc-300 group-hover:border-zinc-700 transition-all duration-300">
+                    <useCase.icon className="w-5 h-5" />
                   </div>
-                  <h3 className="text-2xl font-[inter-bold] text-white mb-3">{useCase.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{useCase.desc}</p>
+                  
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    {useCase.title}
+                  </h3>
+                  <p className="text-zinc-500 leading-relaxed text-sm">
+                    {useCase.desc}
+                  </p>
                 </div>
               </div>
             </div>

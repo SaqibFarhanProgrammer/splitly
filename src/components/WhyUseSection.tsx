@@ -4,28 +4,28 @@ import { Clock, AlertCircle, Eye, Users } from "lucide-react";
 export function WhyUseSection() {
   const reasons = [
     {
-      icon: <Clock className="w-6 h-6 text-purple-400" />,
+      icon: Clock,
       title: "Saves Time",
       desc: "No more spreadsheets or manual calculations. What used to take hours now takes seconds.",
       stat: "10x",
       statLabel: "Faster"
     },
     {
-      icon: <AlertCircle className="w-6 h-6 text-pink-400" />,
+      icon: AlertCircle,
       title: "Zero Errors",
       desc: "Automated calculations eliminate human error. Every split is mathematically accurate.",
       stat: "100%",
       statLabel: "Accurate"
     },
     {
-      icon: <Eye className="w-6 h-6 text-orange-400" />,
+      icon: Eye,
       title: "Full Transparency",
       desc: "Everyone sees the same data. No hidden expenses or confusion about who paid what.",
       stat: "24/7",
       statLabel: "Visibility"
     },
     {
-      icon: <Users className="w-6 h-6 text-green-400" />,
+      icon: Users,
       title: "Any Group Size",
       desc: "Works perfectly for small friend groups or large events with dozens of participants.",
       stat: "∞",
@@ -34,35 +34,52 @@ export function WhyUseSection() {
   ];
 
   return (
-    <section className="relative py-24 bg-[#050505]">
+    <section className="relative py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          {/* Left Content */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-[inter-bold] text-white leading-tight mb-6">
+            <span className="inline-block text-zinc-600 text-sm font-medium mb-4 tracking-wide uppercase">
+              Why Choose Us
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-6">
               Why Use Expense Splitter?
             </h2>
-            <p className="text-lg text-gray-400 leading-relaxed mb-8 font-[inter-light-betaa]">
+            <p className="text-lg text-zinc-500 leading-relaxed mb-10 max-w-lg">
               Built with simplicity and correctness in mind. We focus on accurate data storage and reliable calculations rather than unnecessary complexity.
             </p>
             
-            <button className="bg-white text-black px-8 py-4 rounded-full font-[inter-bold] hover:bg-gray-100 transition-all hover:scale-105">
+            <button className="group flex items-center gap-2 bg-white text-black px-8 py-4 rounded-lg font-medium hover:bg-zinc-200 transition-all duration-200">
               Start For Free
+              <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
             </button>
           </div>
 
+          {/* Right Grid */}
           <div className="grid sm:grid-cols-2 gap-4">
             {reasons.map((reason, i) => (
               <div 
                 key={i} 
-                className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/[0.07] transition-all group"
+                className="group bg-zinc-950 border border-zinc-900 rounded-2xl p-6 hover:bg-zinc-900 hover:border-zinc-800 transition-all duration-300"
               >
-                <div className="mb-4">{reason.icon}</div>
-                <div className="text-3xl font-[inter-bold] text-white mb-1 group-hover:text-purple-400 transition-colors">
+                {/* Icon */}
+                <div className="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mb-4 group-hover:bg-zinc-800 group-hover:text-zinc-300 group-hover:border-zinc-700 transition-all duration-300">
+                  <reason.icon className="w-5 h-5" />
+                </div>
+                
+                {/* Stat */}
+                <div className="text-3xl font-semibold text-white mb-1">
                   {reason.stat}
                 </div>
-                <div className="text-sm text-gray-500 mb-3">{reason.statLabel}</div>
-                <h3 className="text-lg font-[inter-bold] text-white mb-2">{reason.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{reason.desc}</p>
+                <div className="text-sm text-zinc-600 mb-4">{reason.statLabel}</div>
+                
+                {/* Content */}
+                <h3 className="text-lg font-semibold text-white mb-2">
+                  {reason.title}
+                </h3>
+                <p className="text-zinc-500 text-sm leading-relaxed">
+                  {reason.desc}
+                </p>
               </div>
             ))}
           </div>

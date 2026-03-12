@@ -4,78 +4,94 @@ import { AlertTriangle, Users, Calculator, MessageSquare } from "lucide-react";
 export function ProblemSection() {
   const problems = [
     {
-      icon: <Users className="w-6 h-6 text-red-400" />,
+      icon: Users,
       title: "Uneven Payments",
-      desc: "One person often pays more than others, creating imbalance"
+      desc: "One person often pays more, creating financial imbalance in the group."
     },
     {
-      icon: <AlertTriangle className="w-6 h-6 text-orange-400" />,
+      icon: AlertTriangle,
       title: "Forgotten Expenses",
-      desc: "People forget who paid what, leading to disputes"
+      desc: "People forget who paid what, leading to disputes and mistrust."
     },
     {
-      icon: <Calculator className="w-6 h-6 text-yellow-400" />,
+      icon: Calculator,
       title: "Manual Errors",
-      desc: "Manual calculations cause confusion and arguments"
+      desc: "Spreadsheet calculations cause confusion and costly mistakes."
     },
     {
-      icon: <MessageSquare className="w-6 h-6 text-purple-400" />,
+      icon: MessageSquare,
       title: "Awkward Conversations",
-      desc: "Small expenses add up and become hard to track"
+      desc: "Chasing friends for money strains relationships over time."
     }
   ];
 
   return (
-    <section className="relative py-24 bg-[#000000]">
+    <section className="relative py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-[inter-bold] text-white leading-tight mb-6">
-              Managing Group Expenses Is{" "}
-              <span className="text-gray-500">Messy</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white leading-tight mb-6">
+              Managing group expenses
+              <br />
+              <span className="text-zinc-500">shouldn't be complicated.</span>
             </h2>
-            <p className="text-lg text-gray-400 leading-relaxed mb-8 font-[inter-light-betaa]">
-              Trips and group activities often lead to confusion about who paid and who owes money. Manual tracking causes errors, stress, and awkward conversations that can ruin relationships.
+            <p className="text-lg text-zinc-500 leading-relaxed mb-12 max-w-lg">
+              Group trips and shared activities often lead to confusion about who paid 
+              and who owes what. Manual tracking creates stress that can damage friendships.
             </p>
             
             <div className="grid grid-cols-2 gap-4">
               {problems.map((problem, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/[0.07] transition-colors">
-                  <div className="mb-3">{problem.icon}</div>
-                  <h3 className="text-white font-medium mb-1">{problem.title}</h3>
-                  <p className="text-gray-500 text-sm">{problem.desc}</p>
+                <div 
+                  key={i} 
+                  className="group bg-zinc-900/50 border border-zinc-800 rounded-xl p-5 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300"
+                >
+                  <div className="mb-4 p-2 bg-zinc-800/50 rounded-lg w-fit group-hover:bg-zinc-800 transition-colors">
+                    <problem.icon className="w-5 h-5 text-zinc-400" />
+                  </div>
+                  <h3 className="text-white font-medium mb-2 text-sm">{problem.title}</h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">{problem.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-red-600/20 to-orange-600/20 rounded-3xl blur-2xl" />
-            <div className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl p-8">
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-gray-400 text-sm">Group Chat</span>
-                <span className="text-gray-600 text-xs">3 unread</span>
+            {/* Subtle Glow */}
+            <div className="absolute -inset-4 bg-zinc-800/20 rounded-3xl blur-3xl" />
+            
+            <div className="relative bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-800">
+                <span className="text-zinc-400 text-sm font-medium">Trip Expenses</span>
+                <span className="text-zinc-600 text-xs bg-zinc-800/50 px-2 py-1 rounded">3 members</span>
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {[
-                  { name: "Ahmed", msg: "Guys, I paid ₹24,000 for the hotel. Don't forget!", time: "2h ago", self: false },
-                  { name: "Saqib", msg: "Wait, didn't I give you ₹5,000 already?", time: "1h ago", self: false },
-                  { name: "Ali", msg: "I thought that was for petrol?", time: "45m ago", self: false },
-                  { name: "You", msg: "Can someone calculate who owes what? I'm confused 😅", time: "Now", self: true },
-                ].map((chat, i) => (
-                  <div key={i} className={`flex gap-3 ${chat.self ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${chat.self ? 'bg-purple-600 text-white' : 'bg-white/10 text-gray-300'}`}>
-                      {chat.name[0]}
-                    </div>
-                    <div className={`max-w-[80%] ${chat.self ? 'text-right' : ''}`}>
-                      <div className={`inline-block px-4 py-2 rounded-2xl text-sm ${chat.self ? 'bg-purple-600 text-white' : 'bg-white/10 text-gray-300'}`}>
-                        {chat.msg}
+                  { name: "Ahmed", msg: "Paid ₹24,000 for hotel booking", time: "2h ago", amount: "+₹24,000", type: "credit" },
+                  { name: "Saqib", msg: "Transferred to Ahmed", time: "1h ago", amount: "-₹8,000", type: "debit" },
+                  { name: "Ali", msg: "Paid for dinner", time: "45m ago", amount: "+₹3,200", type: "credit" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 bg-zinc-950/50 rounded-xl border border-zinc-800/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 font-medium text-sm">
+                        {item.name[0]}
                       </div>
-                      <p className="text-gray-600 text-xs mt-1">{chat.time}</p>
+                      <div>
+                        <p className="text-white text-sm font-medium">{item.name}</p>
+                        <p className="text-zinc-500 text-xs">{item.msg}</p>
+                      </div>
+                    </div>
+                    <div className={`text-sm font-medium ${item.type === 'credit' ? 'text-zinc-300' : 'text-zinc-500'}`}>
+                      {item.amount}
                     </div>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between">
+                <span className="text-zinc-500 text-sm">Total Balance</span>
+                <span className="text-white font-semibold">₹19,200</span>
               </div>
             </div>
           </div>

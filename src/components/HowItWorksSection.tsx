@@ -4,57 +4,70 @@ import { Plus, Receipt, PieChart, Banknote } from "lucide-react";
 export function HowItWorksSection() {
   const steps = [
     {
-      icon: <Plus className="w-8 h-8" />,
+      icon: Plus,
       title: "Create a Group",
       desc: "Start by creating a group for your trip, event, or shared living situation. Invite all members via link or email.",
-      color: "purple"
     },
     {
-      icon: <Receipt className="w-8 h-8" />,
+      icon: Receipt,
       title: "Add Expenses",
       desc: "Whenever someone pays, add it to the app. Specify who paid and who should share the cost. The system handles the math.",
-      color: "pink"
     },
     {
-      icon: <PieChart className="w-8 h-8" />,
+      icon: PieChart,
       title: "View Calculations",
       desc: "See automatic balance calculations for every member. Know exactly who owes money and who should receive it.",
-      color: "orange"
     },
     {
-      icon: <Banknote className="w-8 h-8" />,
+      icon: Banknote,
       title: "Settle Balances",
       desc: "Use the settlement summary to pay each other outside the app. Mark payments as settled to keep records clean.",
-      color: "green"
     }
   ];
 
   return (
-    <section id="how-it-works" className="relative py-24 bg-black">
+    <section id="how-it-works" className="relative py-32 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-[inter-bold] text-white mb-4">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <span className="inline-block text-zinc-500 text-sm font-medium mb-4 tracking-wide uppercase">
+            Process
+          </span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-6">
             How It Works
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto font-[inter-light-betaa]">
+          <p className="text-zinc-500 text-lg max-w-2xl mx-auto leading-relaxed">
             Four simple steps to manage your group expenses without any hassle
           </p>
         </div>
 
+        {/* Steps Grid */}
         <div className="relative">
-          {/* Connection Line */}
-          <div className="absolute top-24 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 hidden lg:block" />
+          {/* Connection Line - Minimal */}
+          <div className="absolute top-12 left-[12%] right-[12%] h-px bg-zinc-800 hidden lg:block" />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {steps.map((step, i) => (
-              <div key={i} className="relative">
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 relative z-10 hover:border-purple-500/50 transition-colors">
-                  <div className={`w-16 h-16 rounded-2xl bg-${step.color}-500/10 border border-${step.color}-500/30 flex items-center justify-center text-${step.color}-400 mb-6 mx-auto lg:mx-0`}>
-                    {step.icon}
+              <div key={i} className="relative group">
+                <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300 h-full">
+                  
+                  {/* Step Number Badge */}
+                  <div className="absolute -top-3 left-8 w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 text-xs font-medium z-20 group-hover:bg-zinc-700 group-hover:text-white transition-colors">
+                    {i + 1}
                   </div>
-                  <div className="hidden lg:block absolute -top-3 left-6 w-6 h-6 rounded-full bg-black border-2 border-purple-500 z-20" />
-                  <h3 className="text-xl font-[inter-bold] text-white mb-3 text-center lg:text-left">{step.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed text-center lg:text-left">{step.desc}</p>
+
+                  {/* Icon */}
+                  <div className="w-14 h-14 rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center text-zinc-400 mb-6 group-hover:bg-zinc-800 group-hover:text-zinc-300 transition-all duration-300">
+                    <step.icon className="w-6 h-6" />
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-lg font-semibold text-white mb-3">
+                    {step.title}
+                  </h3>
+                  <p className="text-zinc-500 text-sm leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
               </div>
             ))}
