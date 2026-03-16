@@ -1,17 +1,28 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Users } from "lucide-react";
-import Link from "next/link";
-import { Group } from "@/context/GroupContext";
+import React from 'react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Users } from 'lucide-react'
+import Link from 'next/link'
+import { Group } from '@/context/GroupContext'
+import { Expense } from '@/context/Expenses.Context'
 
 interface GroupsListProps {
-  loading: boolean;
-  groupData: Group[];
+  loading: boolean
+  groupData: Group[]
+  expenses: Expense[]
 }
-function GroupsList({ loading, groupData }: GroupsListProps) {
+function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
+  function getgrouptotalexpense(groupid: string) {
+    const total = expenses.filter((ex) => ex.groupId === groupid)
+    const finalamount = total.reduce((total, ex) => {
+      return total + Number(ex.totalAmount)
+    }, 0)
+
+    return finalamount
+  }
+
   return (
     <div className="grid md:grid-cols-2 gap-4">
       {loading
@@ -50,18 +61,17 @@ function GroupsList({ loading, groupData }: GroupsListProps) {
                       {group.name}
                     </h3>
                     <Badge
-                      variant={group.isActive ? "default" : "secondary"}
+                      variant={group.isActive ? 'default' : 'secondary'}
                       className={`font-['inter-beta'] shrink-0 ${
                         group.isActive
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs"
-                          : "bg-zinc-800 text-zinc-400 border-zinc-700 text-xs"
+                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-xs'
+                          : 'bg-zinc-800 text-zinc-400 border-zinc-700 text-xs'
                       }`}
                     >
-                      {group.isActive ? "Active" : "Settled"}
+                      {group.isActive ? 'Active' : 'Settled'}
                     </Badge>
                   </div>
 
-                  {/* Avatar + Members Count (Row) */}
                   <div className="flex items-center gap-3 mb-4">
                     <Avatar className="w-10 h-10">
                       <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold font-['inter-bold']">
@@ -74,21 +84,20 @@ function GroupsList({ loading, groupData }: GroupsListProps) {
                     </div>
                   </div>
 
-                  {/* Footer: Amount (Left) + Role (Right) */}
                   <div className="flex items-end justify-between pt-4 border-t border-white/5">
                     <div>
                       <p className="text-zinc-500 text-xs mb-0.5 font-['inter-beta']">
                         Total Expenses
                       </p>
                       <p className="text-lg font-bold text-white font-['inter-bold']">
-                        ₹{group.totalAmount.toLocaleString()}
+                        Rs{getgrouptotalexpense(group._id)}
                       </p>
                     </div>
 
                     <p className="text-zinc-500 text-xs font-['inter-beta'] text-right">
                       {group.members[index]?.isAdmin === true
-                        ? "You created this group"
-                        : "You were added"}
+                        ? 'You created this group'
+                        : 'You were added'}
                     </p>
                   </div>
                 </CardContent>
@@ -96,7 +105,7 @@ function GroupsList({ loading, groupData }: GroupsListProps) {
             </Card>
           ))}
     </div>
-  );
+  )
 }
 
-export default GroupsList;
+export default GroupsList

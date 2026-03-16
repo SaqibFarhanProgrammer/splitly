@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState } from "react";
-
-interface Expense {
+  
+export interface Expense {
   _id: string
   title: string
   totalAmount: number
