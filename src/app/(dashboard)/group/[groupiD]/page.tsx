@@ -605,272 +605,272 @@ export default function GroupPage() {
         <SettlementList settlements={settlements} />
       </div>
 
-   <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">
-  <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
-    <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
-      <DialogTrigger asChild>
-        <Button className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm font-medium">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Expense
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold flex items-center gap-2">
-            <Receipt className="w-5 h-5" />
-            Add Expense
-          </DialogTitle>
-        </DialogHeader>
-
-        <Form {...expenseForm}>
-          <form
-            onSubmit={expenseForm.handleSubmit(onExpenseSubmit)}
-            className="space-y-5 mt-4"
-          >
-            <FormField
-              control={expenseForm.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Amount (PKR)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0.00"
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={expenseForm.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Description
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="What was this for?"
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={expenseForm.control}
-              name="paidBy"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Paid By
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value.toString()}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
-                        <SelectValue placeholder="Who paid?" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-zinc-900 border-white/10">
-                      {groupData.members.map((member, index) => (
-                        <SelectItem
-                          key={index}
-                          value={member.userId as string}
-                          className="text-white text-sm"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Avatar className="w-6 h-6">
-                              <AvatarFallback className="bg-zinc-800 text-xs">
-                                {member.username.charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            {member.username}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex gap-2 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
-                onClick={() => setIsExpenseOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
-              >
+      <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
+          <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
+            <DialogTrigger asChild>
+              <Button className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm font-medium">
                 <Plus className="w-4 h-4 mr-2" />
-                Add
+                Add Expense
               </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+            </DialogTrigger>
 
-    <Dialog open={isSettlementOpen} onOpenChange={setIsSettlementOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="flex-1 border-zinc-700 text-zinc-800 hover:bg-zinc-800 hover:text-white h-10 text-sm font-medium"
-        >
-          <Wallet className="w-4 h-4 mr-2" />
-          Settlement
-        </Button>
-      </DialogTrigger>
+            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                  <Receipt className="w-5 h-5" />
+                  Add Expense
+                </DialogTitle>
+              </DialogHeader>
 
-      <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold flex items-center gap-2">
-            <Send className="w-5 h-5" />
-            Record Payment
-          </DialogTitle>
-        </DialogHeader>
+              <Form {...expenseForm}>
+                <form
+                  onSubmit={expenseForm.handleSubmit(onExpenseSubmit)}
+                  className="space-y-5 mt-4"
+                >
+                  <FormField
+                    control={expenseForm.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Amount (PKR)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0.00"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
 
-        <Form {...settlementForm}>
-          <form
-            onSubmit={settlementForm.handleSubmit(onSettlementSubmit)}
-            className="space-y-5 mt-4"
-          >
-            <FormField
-              control={settlementForm.control}
-              name="memberId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Pay To
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
-                        <SelectValue placeholder="Select member" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-zinc-900 border-white/10">
-                      {groupData.members
-                        .filter((m) => m.userId !== user?._id)
-                        .map((member) => (
-                          <SelectItem
-                            key={member.username}
-                            value={member.username}
-                            className="text-white text-sm"
-                          >
-                            <div className="flex items-center gap-2">
-                              <Avatar className="w-6 h-6">
-                                {member.avatar === '' ? (
-                                  <AvatarFallback className="bg-zinc-800 text-xs">
-                                    {member.username
-                                      .charAt(0)
-                                      .toUpperCase()}
-                                  </AvatarFallback>
-                                ) : (
-                                  <AvatarImage>
-                                    {member.avatar}
-                                  </AvatarImage>
-                                )}
-                              </Avatar>
-                              {member.username}
-                            </div>
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
+                  <FormField
+                    control={expenseForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Description
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="What was this for?"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
 
-            <FormField
-              control={settlementForm.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Amount (PKR)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0.00"
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
+                  <FormField
+                    control={expenseForm.control}
+                    name="paidBy"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Paid By
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value.toString()}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
+                              <SelectValue placeholder="Who paid?" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-zinc-900 border-white/10">
+                            {groupData.members.map((member, index) => (
+                              <SelectItem
+                                key={index}
+                                value={member.userId as string}
+                                className="text-white text-sm"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <Avatar className="w-6 h-6">
+                                    <AvatarFallback className="bg-zinc-800 text-xs">
+                                      {member.username.charAt(0).toUpperCase()}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  {member.username}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
 
-            <FormField
-              control={settlementForm.control}
-              name="note"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-zinc-400 text-sm">
-                    Note (Optional)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="What's this for?"
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-400 text-xs" />
-                </FormItem>
-              )}
-            />
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
+                      onClick={() => setIsExpenseOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
 
-            <div className="flex gap-2 pt-2">
+          <Dialog open={isSettlementOpen} onOpenChange={setIsSettlementOpen}>
+            <DialogTrigger asChild>
               <Button
-                type="button"
                 variant="outline"
-                className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
-                onClick={() => setIsSettlementOpen(false)}
+                className="flex-1 border-zinc-700 text-zinc-800 hover:bg-zinc-800 hover:text-white h-10 text-sm font-medium"
               >
-                Cancel
+                <Wallet className="w-4 h-4 mr-2" />
+                Settlement
               </Button>
-              <Button
-                type="submit"
-                className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
-              >
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-                Confirm
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  </div>
-</div>
+            </DialogTrigger>
+
+            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                  <Send className="w-5 h-5" />
+                  Record Payment
+                </DialogTitle>
+              </DialogHeader>
+
+              <Form {...settlementForm}>
+                <form
+                  onSubmit={settlementForm.handleSubmit(onSettlementSubmit)}
+                  className="space-y-5 mt-4"
+                >
+                  <FormField
+                    control={settlementForm.control}
+                    name="memberId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Pay To
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
+                              <SelectValue placeholder="Select member" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="bg-zinc-900 border-white/10">
+                            {groupData.members
+                              .filter((m) => m.userId !== user?._id)
+                              .map((member) => (
+                                <SelectItem
+                                  key={member.username}
+                                  value={member.username}
+                                  className="text-white text-sm"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <Avatar className="w-6 h-6">
+                                      {member.avatar === '' ? (
+                                        <AvatarFallback className="bg-zinc-800 text-xs">
+                                          {member.username
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                        </AvatarFallback>
+                                      ) : (
+                                        <AvatarImage>
+                                          {member.avatar}
+                                        </AvatarImage>
+                                      )}
+                                    </Avatar>
+                                    {member.username}
+                                  </div>
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={settlementForm.control}
+                    name="amount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Amount (PKR)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="0.00"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={settlementForm.control}
+                    name="note"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-zinc-400 text-sm">
+                          Note (Optional)
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="What's this for?"
+                            className="bg-zinc-900 border-white/10 text-white h-11"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-red-400 text-xs" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
+                      onClick={() => setIsSettlementOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Confirm
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
 
       <ManageMembers
         isOpen={isManageOpen}

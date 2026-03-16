@@ -1,7 +1,7 @@
 // app/dashboard/page.tsx
-"use client";
+'use client'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Users,
   Wallet,
@@ -9,83 +9,81 @@ import {
   TrendingUp,
   ArrowDownRight,
   ArrowUpRight,
-} from "lucide-react";
-import React from "react";
+} from 'lucide-react'
+import React from 'react'
 
 // Import components
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { StatCard } from "@/components/dashboard/StatCard";
-import { GroupCard, Group } from "@/components/dashboard/GroupCard";
-import { ExpenseItem, Expense } from "@/components/dashboard/ExpenseItem";
-import { BalanceItem, Balance } from "@/components/dashboard/BalanceItem";
-import { QuickActions } from "@/components/dashboard/QuickActions";
-import { ActivityChart } from "@/components/dashboard/ActivityChart";
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { StatCard } from '@/components/dashboard/StatCard'
+import { GroupCard, Group } from '@/components/dashboard/GroupCard'
+import { ExpenseItem, Expense } from '@/components/dashboard/ExpenseItem'
+import { BalanceItem, Balance } from '@/components/dashboard/BalanceItem'
+import { QuickActions } from '@/components/dashboard/QuickActions'
+import { ActivityChart } from '@/components/dashboard/ActivityChart'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { useGroupContext } from "@/context/GroupContext";
-import { useDashboardContext } from "@/context/Dashboard.context";
+} from '@/components/ui/card'
+import { useGroupContext } from '@/context/GroupContext'
+import { useDashboardContext } from '@/context/Dashboard.context'
 
 // Dummy data
 
 const recentExpenses: Expense[] = [
   {
     id: 1,
-    title: "Hotel Booking - Serena Inn",
+    title: 'Hotel Booking - Serena Inn',
     amount: 24000,
-    paidBy: "You",
-    group: "Hunza Trip 2024",
-    date: "Dec 15, 2024",
+    paidBy: 'You',
+    group: 'Hunza Trip 2024',
+    date: 'Dec 15, 2024',
     yourShare: 6000,
   },
   {
     id: 2,
-    title: "Petrol - Day 1",
+    title: 'Petrol - Day 1',
     amount: 8500,
-    paidBy: "Ahmed",
-    group: "Hunza Trip 2024",
-    date: "Dec 14, 2024",
+    paidBy: 'Ahmed',
+    group: 'Hunza Trip 2024',
+    date: 'Dec 14, 2024',
     yourShare: 2125,
   },
   {
     id: 3,
-    title: "Dinner at Monal",
+    title: 'Dinner at Monal',
     amount: 6200,
-    paidBy: "Saqib",
-    group: "Hunza Trip 2024",
-    date: "Dec 14, 2024",
+    paidBy: 'Saqib',
+    group: 'Hunza Trip 2024',
+    date: 'Dec 14, 2024',
     yourShare: 1550,
   },
-];
+]
 
 const balances: Balance[] = [
-  { name: "Ahmed", amount: 3200, type: "owed" },
-  { name: "Saqib", amount: 2000, type: "owed" },
-  { name: "Ali", amount: 1500, type: "owe" },
-  { name: "Usman", amount: 800, type: "owed" },
-  { name: "Bilal", amount: 1200, type: "owe" },
-];
+  { name: 'Ahmed', amount: 3200, type: 'owed' },
+  { name: 'Saqib', amount: 2000, type: 'owed' },
+  { name: 'Ali', amount: 1500, type: 'owe' },
+  { name: 'Usman', amount: 800, type: 'owed' },
+  { name: 'Bilal', amount: 1200, type: 'owe' },
+]
 
 export default function DashboardPage() {
-  const { groups } = useGroupContext();
+  const { groups } = useGroupContext()
 
-  
   const dashboardstate = useDashboardContext()
-  console.log(dashboardstate);
-  
 
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler']">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <StatCard
-            title="Total Balance"
-            amount="Rs12,400"
+            title="Active Groups"
+            amount={`${groups.length}`}
             trend="+12%"
+            subtitle="Active groups you are currently in"
             trendUp={true}
             icon={Wallet}
             iconBgColor="bg-white/5"
@@ -93,8 +91,8 @@ export default function DashboardPage() {
           />
           <StatCard
             title="You Are Owed"
-            amount="Rs8,500"
-            subtitle="From 3 people"
+            amount={`Rs${dashboardstate.data.youGet || 0}`}
+            subtitle="Pending payments from others"
             icon={ArrowDownRight}
             iconBgColor="bg-emerald-500/10"
             iconColor="text-emerald-400"
@@ -102,8 +100,8 @@ export default function DashboardPage() {
           />
           <StatCard
             title="You Owe"
-            amount="Rs5,700"
-            subtitle="To 2 people"
+            amount={`Rs${dashboardstate.data.youOwe || 0}`}
+            subtitle="Pending payments you need to make"
             icon={ArrowUpRight}
             iconBgColor="bg-red-500/10"
             iconColor="text-red-400"
@@ -111,15 +109,15 @@ export default function DashboardPage() {
           />
           <StatCard
             title="Monthly Spending"
-            amount={`Rs${dashboardstate.data}`}
+            amount={`Rs${dashboardstate.data.monthlyspending || 0}`}
             trend="+8%"
             trendUp={false}
+            subtitle="Spending in the last 30 days"
             icon={TrendingUp}
             iconBgColor="bg-blue-500/10"
             iconColor="text-blue-400"
           />
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Tabs defaultValue="groups" className="w-full">
@@ -187,7 +185,7 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       {balances
-                        .filter((b) => b.type === "owed")
+                        .filter((b) => b.type === 'owed')
                         .map((balance, i) => (
                           <BalanceItem key={i} balance={balance} />
                         ))}
@@ -203,7 +201,7 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-3">
                       {balances
-                        .filter((b) => b.type === "owe")
+                        .filter((b) => b.type === 'owe')
                         .map((balance, i) => (
                           <BalanceItem key={i} balance={balance} />
                         ))}
@@ -227,15 +225,19 @@ export default function DashboardPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Total Expenses</span>
-                  <span className="text-white font-semibold">Rs45,200</span>
+                  <span className="text-white font-semibold">
+                    Rs{dashboardstate.data.monthlyspending}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Groups Active</span>
-                  <span className="text-white font-semibold">4</span>
+                  <span className="text-white font-semibold">
+                    {groups.length}
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-zinc-400">Transactions</span>
-                  <span className="text-white font-semibold">28</span>
+                  <span className="text-white font-semibold">{0}</span>
                 </div>
                 <div className="pt-4 border-t border-white/5">
                   <div className="flex justify-between items-center">
@@ -249,5 +251,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </section>
-  );
+  )
 }
