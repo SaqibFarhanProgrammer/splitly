@@ -3,7 +3,6 @@ import mongoose, { Schema, Model, Document } from "mongoose";
 
 export interface IGroup {
   name: string;
-  totalAmount: number;
   isActive: boolean;
   members: IMember[];
   createdBy: mongoose.Types.ObjectId;
@@ -14,7 +13,6 @@ export interface IGroupDocument extends IGroup, Document {}
 const GroupSchema = new Schema<IGroupDocument>(
   {
     name: { type: String, unique: true, required: true },
-    totalAmount: { type: Number, required: true },
     isActive: { type: Boolean, default: true },
     members: [
       {

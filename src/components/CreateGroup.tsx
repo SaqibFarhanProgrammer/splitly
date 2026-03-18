@@ -12,7 +12,6 @@ import { Group } from "@/context/GroupContext";
 
 interface CreateGroupData {
   groupName: string;
-  totalExpense: string;
 }
 
 
@@ -37,7 +36,6 @@ export function CreateGroupModal({
   } = useForm<CreateGroupData>({
     defaultValues: {
       groupName: "",
-      totalExpense: "",
     },
   });
 
@@ -46,13 +44,10 @@ export function CreateGroupModal({
       setIsLoading(true);
       const response = await axios.post("/api/group/create", {
         name: data.groupName,
-        totalAmount: data.totalExpense,
       });
       
-      // Response se naya group nikalo aur parent ko bhejo
       if (response.data && response.data.data) {
-        onGroupCreated(response.data.data); // Yeh line add ki
-      }
+        onGroupCreated(response.data.data);     }
       
       setIsLoading(false);
       reset();
@@ -67,15 +62,12 @@ export function CreateGroupModal({
 
   return (
     <div className="fixed w-full inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Modal - Compact Size */}
       <div className="relative w-full max-w-sm bg-zinc-950 border border-white/10 rounded-xl">
-        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h2 className="text-base font-semibold text-white">Create New Group</h2>
           <button
@@ -86,13 +78,11 @@ export function CreateGroupModal({
           </button>
         </div>
 
-        {/* Form - Compact */}
         <form
           id="create-group-form"
           onSubmit={handleSubmit(handleCreateGroup)}
           className="p-4 space-y-4"
         >
-          {/* Group Name */}
           <div className="space-y-1.5">
             <Label className="text-zinc-400 text-xs font-medium">
               Group Name
@@ -112,34 +102,9 @@ export function CreateGroupModal({
             )}
           </div>
 
-          {/* Total Expense */}
-          <div className="space-y-1.5">
-            <Label className="text-zinc-400 text-xs font-medium">
-              Total Expense
-            </Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm">
-                ₹
-              </span>
-              <Input
-                type="number"
-                placeholder="0.00"
-                className="pl-7 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-600 h-9 text-sm"
-                {...register("totalExpense", {
-                  required: "Required",
-                  min: { value: 1, message: "Min 1" },
-                })}
-              />
-            </div>
-            {errors.totalExpense && (
-              <p className="text-xs text-red-400">
-                {errors.totalExpense.message}
-              </p>
-            )}
-          </div>
+         
         </form>
 
-        {/* Footer - Compact */}
         <div className="p-4 border-t border-white/10 flex gap-2">
           <Button
             type="button"

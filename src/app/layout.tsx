@@ -29,7 +29,6 @@ export default async function RootLayout({
   const expense = await GetExpense(userid);
   const expenseData = await GetDashboardAllStateData(userid);
 
-  console.log(expenseData , "layout");
   
   return (
     <html lang="en">

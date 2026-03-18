@@ -1,61 +1,129 @@
-// components/dashboard/ActivityChart.tsx
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuth } from '@/context/AuthContext'
-import { useDashboardContext } from '@/context/Dashboard.context'
 import { useExpenses } from '@/context/Expenses.Context'
-import React from 'react'
+import React, { useMemo } from 'react'
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
 
 export function ActivityChart() {
-  // const maxValue = Math.max(...data)
-
-  const { data } = useDashboardContext()
-
   const { expenses } = useExpenses()
 
-  const today = new Date()
-  const last7Days = []
-  for (let i = 6; i >= 0; i--) {
-    const day = new Date()
-    day.setDate(today.getDate() - i)
-    last7Days.push(day.toISOString().split('T')[0])
+  const chartData = useMemo(() => {
+    const today = new Date()
+    const last7Days = []
+    
+    for (let i = 6; i >= 0; i--) {
+      const day = new Date(today)
+      day.setDate(today.getDate() - i)
+      last7Days.push(day.toISOString().split('T')[0])
+    }
+
+    return last7Days.map((dayStr) => {
+      const dayTotal = expenses
+        .filter((exp) => {
+          const expDate = new Date(exp.createdAt).toISOString().split('T')[0]
+          return expDate === dayStr
+        })
+        .reduce((sum, exp) => sum + (exp.totalAmount || 0), 0)
+
+      const dateObj = new Date(dayStr)
+      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' })
+      const fullDate = dateObj.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      })
+
+      return {
+        date: dayStr,
+        day: dayName,
+        fullDate: fullDate,
+        amount: dayTotal,
+      }
+    })
+  }, [expenses])
+
+  const totalAmount = useMemo(() => {
+    return chartData.reduce((sum, item) => sum + item.amount, 0)
+  }, [chartData])
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload
+      return (
+        <div className="bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 shadow-xl">
+          <p className="text-zinc-400 text-xs mb-1">{data.fullDate}</p>
+          <p className="text-white font-semibold">
+            ₹{data.amount.toLocaleString()}
+          </p>
+        </div>
+      )
+    }
+    return null
   }
 
-  const dailyTotals = last7Days.map((dayStr) => {
-    const total = expenses
-      .filter((exp) => {
-        const expDay = new Date(exp.createdAt).toISOString().split('T')[0]
-        return expDay === dayStr
-      })
-      .reduce((sum, exp) => sum + exp.totalAmount, 0)
-
-    return { date: dayStr, total }
-  })
-
-  console.log(dailyTotals)
-
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   return (
     <Card className="bg-zinc-950 border-white/10">
-      <CardHeader>
-        <CardTitle className="text-white">Weekly Activity</CardTitle>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <CardTitle className="text-white text-lg">Weekly Activity</CardTitle>
+          <p className="text-zinc-400 text-sm mt-1">
+            Last 7 days expenses overview
+          </p>
+        </div>
+        <div className="text-left sm:text-right">
+          <p className="text-zinc-400 text-xs uppercase tracking-wider">Total</p>
+          <p className="text-2xl font-bold text-white">
+            ₹{totalAmount.toLocaleString()}
+          </p>
+        </div>
       </CardHeader>
-      <CardContent>
-        <div className="flex items-end justify-between h-32 gap-2">
-          {dailyTotals.map((value, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-2">
-              <div
-                className="w-full bg-white/10 rounded-t-sm hover:bg-white/20 transition-colors relative group"
-                // style={{ height: `${(value.total / maxValue) * 100}%` }}
-              >
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-xs font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                  ₹{value.total}k
-                </div>
-              </div>
-              <span className="text-zinc-500 text-xs">{days[i]}</span>
-            </div>
-          ))}
+      <CardContent className="pt-2">
+        <div className="h-[280px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
+            >
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="rgba(255,255,255,0.05)" 
+                vertical={false}
+              />
+              <XAxis
+                dataKey="day"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#71717a', fontSize: 12 }}
+                dy={10}
+              />
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#71717a', fontSize: 12 }}
+                tickFormatter={(value) => `₹${value}`}
+                width={60}
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+              />
+              <Bar
+                dataKey="amount"
+                fill="rgba(255,255,255,0.9)"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={50}
+                animationDuration={1000}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </CardContent>
     </Card>

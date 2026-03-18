@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
     await ConnectDB();
 
     const body = await request.json();
-    const { name, totalAmount } = body;
+    const { name } = body;
 
-    if (!name || !totalAmount) {
+    if (!name ) {
       return NextResponse.json(
         { success: false, message: "Name and totalAmount are required" },
         { status: 400 },
@@ -55,13 +55,6 @@ export async function POST(request: NextRequest) {
 
     if (!user) return NextResponse.json({ messsage: "user nto found" });
 
-    const parsedAmount = Number(totalAmount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Total amount must be a positive number" },
-        { status: 400 },
-      );
-    }
 
     const existingGroup = await Group.findOne({ name: name.trim() });
     if (existingGroup) {
@@ -73,7 +66,6 @@ export async function POST(request: NextRequest) {
 
     const newGroup = await Group.create({
       name: name.trim(),
-      totalAmount: parsedAmount,
       isActive: true,
       createdBy: userId,
       members: [

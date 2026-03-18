@@ -145,7 +145,11 @@ export default function Page() {
                 Create Group
               </Button>
             </div>
-            <GroupsList expenses={expenses} loading={loading} groupData={groupData} />
+            <GroupsList
+              expenses={expenses}
+              loading={loading}
+              groupData={groupData}
+            />
           </TabsContent>
 
           {/* Expenses Tab */}
