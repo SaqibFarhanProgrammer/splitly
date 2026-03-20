@@ -1,7 +1,7 @@
-import { ExpenseFormValues } from "@/app/(dashboard)/group/[groupID]/page";
 import { Expense } from "@/models/expense.model";
 import { Group } from "@/models/group.model";
 import { User } from "@/models/user.model";
+import { ExpenseFormValues } from "@/types/globalTypes";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
