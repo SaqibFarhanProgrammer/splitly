@@ -1,10 +1,10 @@
-import { ExpenseType } from "@/app/(dashboard)/group/[groupID]/page";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
+import { Expense } from "@/types/globalTypes";
 import React from "react";
 interface Proptype {
-  expense: ExpenseType[];
+  expense: Expense[];
 }
 function ExpensesList({ expense }: Proptype) {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ function ExpensesList({ expense }: Proptype) {
       <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
         <AvatarImage src={exp.paidmemberAvatar} alt={exp.paidmemberUsername} />
         <AvatarFallback className="bg-gradient-to-br from-zinc-700 to-zinc-900 text-white text-sm font-bold font-['inter-bold']">
-          {exp.paidmemberUsername.charAt(0).toUpperCase()}
+          {exp.paidmemberUsername?.charAt(0).toUpperCase()}
         </AvatarFallback>
       </Avatar>
 
@@ -66,7 +66,7 @@ function ExpensesList({ expense }: Proptype) {
                 <div className="flex -space-x-2">
                   <div className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center">
                     <span className="text-[10px] text-zinc-400 font-bold">
-                      {exp.paidmemberUsername.charAt(0).toUpperCase()}
+                      {exp.paidmemberUsername?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950 flex items-center justify-center">

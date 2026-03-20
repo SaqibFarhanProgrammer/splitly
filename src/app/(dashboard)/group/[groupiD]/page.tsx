@@ -74,6 +74,7 @@ import { MembersListSkeleton } from '@/components/Skeliton/MembersListSkeleton'
 import SettlementList from '@/components/dashboard/group/SettlementList'
 import { SettlementT } from '@/types/settlementTypes'
 import { fi } from 'zod/locales'
+import { Expense } from '@/types/globalTypes'
 
 const AddMembers = dynamic(
   () => import('@/components/dashboard/group/AddMemebers'),
@@ -101,16 +102,7 @@ interface SettlementFormValues {
   note: string
 }
 
-export interface ExpenseType {
-  groupId: mongoose.Types.ObjectId
-  title: string
-  totalAmount: number
-  paidBy: mongoose.Types.ObjectId
-  paidmemberAvatar: string
-  paidmemberUsername: string
-  createdAt: Date
-  updatedAt: Date
-}
+
 
 export interface ExpenseFormValues {
   amount: number | string
@@ -160,7 +152,7 @@ export default function GroupPage() {
   const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault)
   const [isManageOpen, setIsManageOpen] = useState(false)
   const [ShowAddmember, setShowAddmember] = useState(false)
-  const [expense, setexpense] = useState<ExpenseType[]>([])
+  const [expense, setexpense] = useState<Expense[]>([])
   const [settlements, setsettlements] = useState<SettlementT[]>([])
 
   const { user } = useAuth()

@@ -1,3 +1,5 @@
+import mongoose from "mongoose"
+
 export interface Member {
   userId: string
   username: string
@@ -26,6 +28,8 @@ export interface Expense {
   createdAt: Date
   updatedAt: Date
 }
+
+
 
 export interface ExpenseFormValues {
   amount: number | string
