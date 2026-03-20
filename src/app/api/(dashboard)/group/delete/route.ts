@@ -1,46 +1,48 @@
-import { ConnectDB } from "@/lib/ConnectDB";
-import { Group } from "@/models/group.model";
-import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
+import { ConnectDB } from '@/lib/ConnectDB'
+import { Group } from '@/models/group.model'
+import { NextRequest, NextResponse } from 'next/server'
+import mongoose from 'mongoose'
+import { Expense } from '@/models/expense.model'
 
-export async function DELETE(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    await ConnectDB();
+    await ConnectDB()
+    const { groupid } = await req.json()
+    console.log(groupid)
 
-    const groupId = req.nextUrl.searchParams.get("groupId");
-
-    if (!groupId) {
+    if (!groupid) {
       return NextResponse.json(
-        { error: "groupId is required" },
+        { error: 'groupid is required' },
         { status: 400 },
-      );
+      )
     }
 
-    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+    if (!mongoose.Types.ObjectId.isValid(groupid)) {
       return NextResponse.json(
-        { error: "Invalid groupId format" },
+        { error: 'Invalid groupid format' },
         { status: 400 },
-      );
+      )
     }
 
-    const existingGroup = await Group.findById(groupId);
+    const existingGroup = await Group.findById(groupid)
 
     if (!existingGroup) {
-      return NextResponse.json({ error: "Group not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Group not found' }, { status: 404 })
     }
 
-    await Group.findByIdAndDelete(groupId);
+    await Expense.deleteMany({ groupId: groupid })
+    await Group.deleteOne(groupid)
 
     return NextResponse.json(
-      { message: "Group deleted successfully" },
+      { message: 'Group deleted successfully' },
       { status: 200 },
-    );
+    )
   } catch (error) {
-    console.error("Delete group error:", error);
+    console.error('Delete group error:', error)
 
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 },
-    );
+    )
   }
 }

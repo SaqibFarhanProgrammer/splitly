@@ -76,7 +76,7 @@ export default function Page() {
 
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false)
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [groupData, setgroupData] = useState<Group[]>(groups || [])
 
   const handleAddExpense = async (data: {
@@ -89,22 +89,19 @@ export default function Page() {
   const { expenses } = useExpenses()
 
   useEffect(() => {
-    if (groups.length > 0) {
-      setLoading(false)
+    if (groups.length === 0) {
+      setLoading(true)
     }
   }, [groups])
 
   return (
     <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
       <div className="max-w-6xl mx-auto">
-        {/* Profile Header */}
-
         <ProfileProvider>
           <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
           <UploadImageModal />
         </ProfileProvider>
 
-        {/* Main Content Tabs */}
         <Tabs defaultValue="groups" className="w-full">
           <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 font-['inter-beta']">
             <TabsTrigger
@@ -130,7 +127,6 @@ export default function Page() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Groups Tab */}
           <TabsContent value="groups" className="space-y-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-white font-['inter-bold']">
@@ -152,7 +148,6 @@ export default function Page() {
             />
           </TabsContent>
 
-          {/* Expenses Tab */}
           <TabsContent value="expenses" className="space-y-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-white font-['inter-bold']">
@@ -355,7 +350,6 @@ export default function Page() {
           </TabsContent>
         </Tabs>
 
-        {/* Modals */}
         <CreateGroupModal
           isOpen={isCreateGroupOpen}
           onClose={() => setIsCreateGroupOpen(false)}

@@ -1,38 +1,41 @@
-"use client";
+'use client'
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Users, Clock } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
+import { Users, Clock } from 'lucide-react'
+import Link from 'next/link'
+import React from 'react'
 
 interface IMember {
-  userId?: string;
-  username: string;
-  avatar?: string;
-  isAdmin?: boolean;
+  userId?: string
+  username: string
+  avatar?: string
+  isAdmin?: boolean
 }
 
 export interface Group {
-  _id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  members: IMember[];
-  totalAmount: number;
-  isActive: boolean;
+  _id: string
+  name: string
+  createdAt: string
+  updatedAt: string
+  createdBy: string
+  members: IMember[]
+  totalAmount: number
+  isActive: boolean
 }
 
 interface GroupCardProps {
-  group: Group;
-  youOwe?: number;       // Optional, if you track per user
-  youAreOwed?: number;   // Optional
+  group: Group
+  youOwe?: number // Optional, if you track per user
+  youAreOwed?: number // Optional
 }
 
-export function GroupCard({ group, youOwe = 0, youAreOwed = 0 }: GroupCardProps) {
-
+export function GroupCard({
+  group,
+  youOwe = 0,
+  youAreOwed = 0,
+}: GroupCardProps) {
   return (
     <div>
       <Link href={`/group/${group._id}`}>
@@ -63,10 +66,14 @@ export function GroupCard({ group, youOwe = 0, youAreOwed = 0 }: GroupCardProps)
                 </div>
               </div>
               <Badge
-                variant={group.isActive ? "default" : "secondary"}
-                className={group.isActive ? "bg-white/10 text-white" : "bg-zinc-800 text-zinc-400"}
+                variant={group.isActive ? 'default' : 'secondary'}
+                className={
+                  group.isActive
+                    ? 'bg-white/10 text-white'
+                    : 'bg-zinc-800 text-zinc-400'
+                }
               >
-                {group.isActive ? "Active" : "Settled"}
+                {group.isActive ? 'Active' : 'Settled'}
               </Badge>
             </div>
 
@@ -75,14 +82,18 @@ export function GroupCard({ group, youOwe = 0, youAreOwed = 0 }: GroupCardProps)
                 <div>
                   <p className="text-zinc-400 text-sm mb-1">Total Expenses</p>
                   <p className="text-xl font-semibold text-white">
-                    ₹{group.totalAmount.toLocaleString()}
+                    ₹{group.totalAmount?.toLocaleString()}
                   </p>
                 </div>
                 <div className="text-right">
                   {youOwe > 0 ? (
-                    <p className="text-red-400 font-medium">You owe ₹{youOwe}</p>
+                    <p className="text-red-400 font-medium">
+                      You owe ₹{youOwe}
+                    </p>
                   ) : youAreOwed > 0 ? (
-                    <p className="text-emerald-400 font-medium">You are owed ₹{youAreOwed}</p>
+                    <p className="text-emerald-400 font-medium">
+                      You are owed ₹{youAreOwed}
+                    </p>
                   ) : (
                     <p className="text-zinc-500 font-medium">All settled</p>
                   )}
@@ -93,5 +104,5 @@ export function GroupCard({ group, youOwe = 0, youAreOwed = 0 }: GroupCardProps)
         </Card>
       </Link>
     </div>
-  );
+  )
 }

@@ -1,24 +1,29 @@
 // components/dashboard/ExpenseItem.tsx
-"use client";
+'use client'
 
-import { Receipt } from "lucide-react";
-import React from "react";
+import { Receipt } from 'lucide-react'
+import React from 'react'
 
 export interface Expense {
-  id: number;
-  title: string;
-  amount: number;
-  paidBy: string;
-  group: string;
-  date: string;
-  yourShare: number;
+  createdAt: string
+  groupId: string
+  paidBy: string
+  paidmemberAvatar: string
+  paidmemberUsername: string
+  title: string
+  totalAmount?: number
+  type: string
+  updatedAt: string
+  _id: string
 }
 
 interface ExpenseItemProps {
-  expense: Expense;
+  expense: Expense
 }
 
 export function ExpenseItem({ expense }: ExpenseItemProps) {
+  console.log(expense, 'hello')
+
   return (
     <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
       <div className="flex items-center gap-4">
@@ -28,16 +33,15 @@ export function ExpenseItem({ expense }: ExpenseItemProps) {
         <div>
           <h4 className="text-white font-medium">{expense.title}</h4>
           <p className="text-zinc-400 text-sm">
-            {expense.group} • {expense.date}
+            {expense.groupId} • {expense.createdAt}
           </p>
         </div>
       </div>
       <div className="text-right">
         <p className="text-white font-semibold">
-          ₹{expense.amount.toLocaleString()}
+          ₹{expense.totalAmount?.toLocaleString()}
         </p>
-        <p className="text-zinc-400 text-sm">Your share: ₹{expense.yourShare}</p>
       </div>
     </div>
-  );
+  )
 }

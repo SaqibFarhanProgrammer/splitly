@@ -7,6 +7,7 @@ export interface Expense {
   totalAmount: number
   groupId: string
   paidBy: string
+  type:string
   paidmemberUsername: string
   paidmemberAvatar: string
   createdAt: string

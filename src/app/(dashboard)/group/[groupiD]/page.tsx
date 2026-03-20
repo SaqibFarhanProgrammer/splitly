@@ -308,9 +308,10 @@ export default function GroupPage() {
   }
   async function deleteGroup() {
     try {
-      const res = await axios.delete(
-        `/api/group/delete?groupId=${params.groupID}`,
-      )
+      const groupid = params.groupID
+      const res = await axios.post(`/api/group/delete`, {
+        groupid: groupid,
+      })
 
       router.push('/profile')
     } catch (error) {
@@ -695,11 +696,22 @@ export default function GroupPage() {
                               >
                                 <div className="flex items-center gap-2">
                                   <Avatar className="w-6 h-6">
-                                    <AvatarFallback className="bg-zinc-800 text-xs">
-                                      {member.username.charAt(0).toUpperCase()}
-                                    </AvatarFallback>
+                                    {member.avatar === '' ? (
+                                      <AvatarFallback className="bg-zinc-800 text-xs">
+                                        {member.username
+                                          .charAt(0)
+                                          .toUpperCase()}
+                                      </AvatarFallback>
+                                    ) : (
+                                      <AvatarImage
+                                        src={member.avatar}
+                                        className="h-full w-full object-cover"
+                                      />
+                                    )}
                                   </Avatar>
-                                  {member.username}
+                                  {member.userId === user?._id
+                                    ? 'You'
+                                    : member.username}
                                 </div>
                               </SelectItem>
                             ))}
@@ -791,9 +803,10 @@ export default function GroupPage() {
                                             .toUpperCase()}
                                         </AvatarFallback>
                                       ) : (
-                                        <AvatarImage>
-                                          {member.avatar}
-                                        </AvatarImage>
+                                        <AvatarImage
+                                          src={member.avatar}
+                                          className="h-full w-full object-cover"
+                                        />
                                       )}
                                     </Avatar>
                                     {member.username}

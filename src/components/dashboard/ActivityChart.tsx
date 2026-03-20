@@ -19,7 +19,7 @@ export function ActivityChart() {
   const chartData = useMemo(() => {
     const today = new Date()
     const last7Days = []
-    
+
     for (let i = 6; i >= 0; i--) {
       const day = new Date(today)
       day.setDate(today.getDate() - i)
@@ -36,9 +36,9 @@ export function ActivityChart() {
 
       const dateObj = new Date(dayStr)
       const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' })
-      const fullDate = dateObj.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
+      const fullDate = dateObj.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
       })
 
       return {
@@ -61,7 +61,7 @@ export function ActivityChart() {
         <div className="bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 shadow-xl">
           <p className="text-zinc-400 text-xs mb-1">{data.fullDate}</p>
           <p className="text-white font-semibold">
-            ₹{data.amount.toLocaleString()}
+            Rs{data.amount.toLocaleString()}
           </p>
         </div>
       )
@@ -79,9 +79,11 @@ export function ActivityChart() {
           </p>
         </div>
         <div className="text-left sm:text-right">
-          <p className="text-zinc-400 text-xs uppercase tracking-wider">Total</p>
+          <p className="text-zinc-400 text-xs uppercase tracking-wider">
+            Total
+          </p>
           <p className="text-2xl font-bold text-white">
-            ₹{totalAmount.toLocaleString()}
+            Rs{totalAmount.toLocaleString()}
           </p>
         </div>
       </CardHeader>
@@ -92,9 +94,9 @@ export function ActivityChart() {
               data={chartData}
               margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
             >
-              <CartesianGrid 
-                strokeDasharray="3 3" 
-                stroke="rgba(255,255,255,0.05)" 
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255,255,255,0.05)"
                 vertical={false}
               />
               <XAxis
@@ -108,7 +110,7 @@ export function ActivityChart() {
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: '#71717a', fontSize: 12 }}
-                tickFormatter={(value) => `₹${value}`}
+                tickFormatter={(value) => `Rs${value}`}
                 width={60}
               />
               <Tooltip

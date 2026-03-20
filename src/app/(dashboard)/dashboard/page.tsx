@@ -29,38 +29,8 @@ import {
 } from '@/components/ui/card'
 import { useGroupContext } from '@/context/GroupContext'
 import { useDashboardContext } from '@/context/Dashboard.context'
-
-// Dummy data
-
-const recentExpenses: Expense[] = [
-  {
-    id: 1,
-    title: 'Hotel Booking - Serena Inn',
-    amount: 24000,
-    paidBy: 'You',
-    group: 'Hunza Trip 2024',
-    date: 'Dec 15, 2024',
-    yourShare: 6000,
-  },
-  {
-    id: 2,
-    title: 'Petrol - Day 1',
-    amount: 8500,
-    paidBy: 'Ahmed',
-    group: 'Hunza Trip 2024',
-    date: 'Dec 14, 2024',
-    yourShare: 2125,
-  },
-  {
-    id: 3,
-    title: 'Dinner at Monal',
-    amount: 6200,
-    paidBy: 'Saqib',
-    group: 'Hunza Trip 2024',
-    date: 'Dec 14, 2024',
-    yourShare: 1550,
-  },
-]
+import { useExpenses } from '@/context/Expenses.Context'
+import { SelectGroup } from '@/components/ui/select'
 
 const balances: Balance[] = [
   { name: 'Ahmed', amount: 3200, type: 'owed' },
@@ -72,6 +42,7 @@ const balances: Balance[] = [
 
 export default function DashboardPage() {
   const { groups } = useGroupContext()
+  const { expenses } = useExpenses()
 
   const dashboardstate = useDashboardContext()
 
@@ -166,12 +137,18 @@ export default function DashboardPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {recentExpenses.map((expense) => (
-                      <ExpenseItem key={expense.id} expense={expense} />
+                    {expenses.map((expense, index) => (
+                      <ExpenseItem key={index} expense={expense} />
                     ))}
                   </CardContent>
                 </Card>
               </TabsContent>
+
+              <div className="card h-100 p-4 w-100 bg-black text-white  fixed top-45 left-135 ">
+                <div className="top">
+                  <h1 className="text-center">select group</h1>
+                </div>
+              </div>
 
               {/* Balances Tab */}
               <TabsContent value="balances" className="space-y-4">

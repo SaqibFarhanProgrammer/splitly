@@ -28,7 +28,7 @@ function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
 
   return (
     <div className="grid md:grid-cols-2 gap-4">
-      {loading
+      {!loading
         ? Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} className="bg-zinc-950 border-white/10">
               <CardContent className="p-5">
@@ -59,7 +59,6 @@ function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
             >
               <Link href={`/group/${group._id}`} className="block">
                 <CardContent className="p-5">
-                  {/* Header: Name + Status */}
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
                       <Avatar className="w-10 h-10 shrink-0">
@@ -92,10 +91,8 @@ function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
                     </Badge>
                   </div>
 
-                  {/* Divider */}
                   <div className="h-px bg-white/5 mb-4" />
 
-                  {/* Footer: Stats + Role */}
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-zinc-500 text-xs mb-1 font-['inter-beta'] uppercase tracking-wider">

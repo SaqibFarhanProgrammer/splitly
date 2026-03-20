@@ -170,7 +170,7 @@ function SettlementList({ settlements }: SettlementListProps) {
                       <span className="text-xs text-zinc-500 font-['inter-light-betaa']">
                         {isSelfSettlement
                           ? 'Self payment recorded'
-                          : 'Payment confirmed'}
+                          : 'Settlement confirmed'}
                       </span>
                     </div>
 
