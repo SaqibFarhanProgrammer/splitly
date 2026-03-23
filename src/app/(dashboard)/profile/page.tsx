@@ -89,7 +89,7 @@ export default function Page() {
   const { expenses } = useExpenses()
 
   useEffect(() => {
-    if (groups.length === 0) {
+    if (groups) {
       setLoading(true)
     }
   }, [groups])

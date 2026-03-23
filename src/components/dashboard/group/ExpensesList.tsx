@@ -1,13 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
-import { useAuth } from "@/context/AuthContext";
-import { Expense } from "@/types/globalTypes";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card, CardContent } from '@/components/ui/card'
+import { useAuth } from '@/context/AuthContext'
+import { Expense } from '@/types/globalTypes'
+import React from 'react'
 interface Proptype {
-  expense: Expense[];
+  expense: Expense[]
 }
 function ExpensesList({ expense }: Proptype) {
-  const { user } = useAuth();
+  const { user } = useAuth()
   return expense.map((exp, index) => (
     <div key={index} className="flex gap-3 items-start">
       <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
@@ -40,9 +40,9 @@ function ExpensesList({ expense }: Proptype) {
                   </span>
                   <span className="text-zinc-600">•</span>
                   <span className="text-zinc-500 text-xs">
-                    {new Date(exp.createdAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
+                    {new Date(exp.createdAt).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
                     })}
                   </span>
                 </p>
@@ -53,9 +53,9 @@ function ExpensesList({ expense }: Proptype) {
                   PKR {exp.totalAmount.toLocaleString()}
                 </p>
                 <p className="text-xs text-zinc-500 font-['inter-light-betaa'] mt-0.5">
-                  {new Date(exp.createdAt).toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
+                  {new Date(exp.createdAt).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </p>
               </div>
@@ -88,7 +88,7 @@ function ExpensesList({ expense }: Proptype) {
         </Card>
       </div>
     </div>
-  ));
+  ))
 }
 
-export default ExpensesList;
+export default ExpensesList
