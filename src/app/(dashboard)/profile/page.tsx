@@ -118,13 +118,6 @@ export default function Page() {
               <Receipt className="w-4 h-4 mr-2" />
               Recent Expenses
             </TabsTrigger>
-            <TabsTrigger
-              value="balances"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-['inter-beta']"
-            >
-              <Wallet className="w-4 h-4 mr-2" />
-              Balances
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="groups" className="space-y-4">
@@ -172,7 +165,7 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {loading
+                {!loading
                   ? Array.from({ length: 3 }).map((_, i) => (
                       <div
                         key={i}
@@ -251,102 +244,6 @@ export default function Page() {
                     ))}
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="balances" className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <Card className="bg-zinc-950 border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2 font-['inter-bold']">
-                    <ArrowDownRight className="w-5 h-5 text-emerald-400" />
-                    You Are Owed
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {loading
-                    ? Array.from({ length: 2 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center justify-between p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/10"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
-                            <Skeleton className="h-5 w-24 bg-zinc-800 font-['inter-bold']" />
-                          </div>
-                          <Skeleton className="h-5 w-16 bg-zinc-800 font-['inter-bold']" />
-                        </div>
-                      ))
-                    : balances
-                        .filter((b) => b.type === 'owed')
-                        .map((balance, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between p-3 bg-emerald-500/5 rounded-lg border border-emerald-500/10"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Avatar className="w-10 h-10">
-                                <AvatarFallback className="bg-zinc-800 text-white font-['inter-bold']">
-                                  {balance.name[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-white font-medium font-['inter-bold']">
-                                {balance.name}
-                              </span>
-                            </div>
-                            <span className="text-emerald-400 font-semibold font-['inter-bold']">
-                              ₹{balance.amount}
-                            </span>
-                          </div>
-                        ))}
-                </CardContent>
-              </Card>
-
-              <Card className="bg-zinc-950 border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2 font-['inter-bold']">
-                    <ArrowUpRight className="w-5 h-5 text-red-400" />
-                    You Owe
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {loading
-                    ? Array.from({ length: 1 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center justify-between p-3 bg-red-500/5 rounded-lg border border-red-500/10"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
-                            <Skeleton className="h-5 w-24 bg-zinc-800 font-['inter-bold']" />
-                          </div>
-                          <Skeleton className="h-5 w-16 bg-zinc-800 font-['inter-bold']" />
-                        </div>
-                      ))
-                    : balances
-                        .filter((b) => b.type === 'owe')
-                        .map((balance, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between p-3 bg-red-500/5 rounded-lg border border-red-500/10"
-                          >
-                            <div className="flex items-center gap-3">
-                              <Avatar className="w-10 h-10">
-                                <AvatarFallback className="bg-zinc-800 text-white font-['inter-bold']">
-                                  {balance.name[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-white font-medium font-['inter-bold']">
-                                {balance.name}
-                              </span>
-                            </div>
-                            <span className="text-red-400 font-semibold font-['inter-bold']">
-                              ₹{balance.amount}
-                            </span>
-                          </div>
-                        ))}
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
         </Tabs>
 

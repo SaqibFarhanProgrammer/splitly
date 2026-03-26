@@ -1,48 +1,45 @@
-// components/dashboard/QuickActions.tsx
-"use client";
+'use client'
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Plus, 
-  Users, 
-  Receipt, 
-  Wallet,
-  ArrowRight
-} from "lucide-react";
-import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useGroupContext } from '@/context/GroupContext'
+import { Users, Receipt, Wallet, ArrowRight } from 'lucide-react'
+
+type QuickActionType = 'add-expense' | 'create-group' | 'settle-up'
+
+interface QuickActionsProps {
+  onActionClick: (action: QuickActionType) => void
+}
 
 const actions = [
   {
-    title: "Add Expense",
-    description: "Log a new expense",
+    id: 'add-expense',
+    title: 'Add Expense',
+    description: 'Log a new expense',
     icon: Receipt,
-    color: "bg-blue-500/10 text-blue-400",
+    color: 'bg-blue-500/10 text-blue-400',
   },
   {
-    title: "Create Group",
-    description: "Start a new group",
+    id: 'create-group',
+    title: 'Create Group',
+    description: 'Start a new group',
     icon: Users,
-    color: "bg-purple-500/10 text-purple-400",
+    color: 'bg-purple-500/10 text-purple-400',
   },
-  {
-    title: "Settle Up",
-    description: "Clear your balances",
-    icon: Wallet,
-    color: "bg-emerald-500/10 text-emerald-400",
-  },
-];
 
-export function QuickActions() {
+] as const
+
+export function QuickActions({ onActionClick }: QuickActionsProps) {
+
   return (
-    <Card className="bg-zinc-950 border-white/10">
+    <Card className="bg-zinc-950 border-white/10"  >
       <CardHeader>
         <CardTitle className="text-white">Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {actions.map((action) => (
           <button
-            key={action.title}
+            key={action.id}
+            onClick={() => onActionClick(action.id)}
             className="w-full flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left group"
           >
             <div className={`w-10 h-10 rounded-full ${action.color} flex items-center justify-center`}>
@@ -57,5 +54,5 @@ export function QuickActions() {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 }

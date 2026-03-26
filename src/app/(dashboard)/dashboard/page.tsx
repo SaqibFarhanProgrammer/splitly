@@ -10,7 +10,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
 } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
 // Import components
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
@@ -31,6 +31,10 @@ import { useGroupContext } from '@/context/GroupContext'
 import { useDashboardContext } from '@/context/Dashboard.context'
 import { useExpenses } from '@/context/Expenses.Context'
 import { SelectGroup } from '@/components/ui/select'
+import SelectGroups from '@/components/dashboard/group/SelectGroup'
+import GroupSelect from '@/components/dashboard/group/SelectGroup'
+import { redirect } from 'next/navigation'
+import DashboardChart from '@/components/DashboardChart'
 
 const balances: Balance[] = [
   { name: 'Ahmed', amount: 3200, type: 'owed' },
@@ -42,53 +46,35 @@ const balances: Balance[] = [
 
 export default function DashboardPage() {
   const { groups } = useGroupContext()
+  const [showSelectGroup, setshowSelectGroup] = useState(false)
   const { expenses } = useExpenses()
 
   const dashboardstate = useDashboardContext()
 
+  function handleQuickAction(id?: string, groupid?: string) {
+    if (id === 'add-expense') {
+      setshowSelectGroup(true)
+      console.log(id)
+      console.log(groupid)
+    }
+
+    if (id === 'create-group') {
+      console.log('open create group modal')
+      redirect('/profile')
+    }
+
+    if (id === 'settle-up') {
+      console.log('open settle up modal')
+    }
+  }
+
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler']">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            title="Active Groups"
-            amount={`${groups.length}`}
-            trend="+12%"
-            subtitle="Active groups you are currently in"
-            trendUp={true}
-            icon={Wallet}
-            iconBgColor="bg-white/5"
-            iconColor="text-white"
-          />
-          <StatCard
-            title="You Are Owed"
-            amount={`Rs${dashboardstate.data.youGet || 0}`}
-            subtitle="Pending payments from others"
-            icon={ArrowDownRight}
-            iconBgColor="bg-emerald-500/10"
-            iconColor="text-emerald-400"
-            amountColor="text-emerald-400"
-          />
-          <StatCard
-            title="You Owe"
-            amount={`Rs${dashboardstate.data.youOwe || 0}`}
-            subtitle="Pending payments you need to make"
-            icon={ArrowUpRight}
-            iconBgColor="bg-red-500/10"
-            iconColor="text-red-400"
-            amountColor="text-red-400"
-          />
-          <StatCard
-            title="Monthly Spending"
-            amount={`Rs${dashboardstate.data.monthlyspending || 0}`}
-            trend="+8%"
-            trendUp={false}
-            subtitle="Spending in the last 30 days"
-            icon={TrendingUp}
-            iconBgColor="bg-blue-500/10"
-            iconColor="text-blue-400"
-          />
-        </div>
+       
+<DashboardChart/>
+
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Tabs defaultValue="groups" className="w-full">
@@ -143,12 +129,13 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               </TabsContent>
-
-              <div className="card h-100 p-4 w-100 bg-black text-white  fixed top-45 left-135 ">
-                <div className="top">
-                  <h1 className="text-center">select group</h1>
-                </div>
-              </div>
+              {showSelectGroup && <SelectGroup />}
+              {showSelectGroup && (
+                <GroupSelect
+                  onClick={handleQuickAction}
+                  onClose={() => setshowSelectGroup(false)}
+                />
+              )}
 
               {/* Balances Tab */}
               <TabsContent value="balances" className="space-y-4">
@@ -191,7 +178,8 @@ export default function DashboardPage() {
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
-            <QuickActions />
+            <QuickActions onActionClick={handleQuickAction} />
+
             <ActivityChart />
 
             {/* Mini Stats */}
