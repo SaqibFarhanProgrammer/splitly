@@ -1,8 +1,8 @@
-import { Expense } from "@/models/expense.model";
-import { Group } from "@/models/group.model";
-import { User } from "@/models/user.model";
-import { ExpenseFormValues } from "@/types/globalTypes";
-import { NextRequest, NextResponse } from "next/server";
+import { Expense } from '@/models/expense.model';
+import { Group } from '@/models/group.model';
+import { User } from '@/models/user.model';
+import { ExpenseFormValues } from '@/types/globalTypes';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { amount, description, paidBy, groupid }: ExpenseFormValues =
@@ -11,28 +11,28 @@ export async function POST(request: NextRequest) {
   // Validation
   if (!amount || (amount as number) <= 0) {
     return NextResponse.json(
-      { error: "Amount must be greater than 0" },
-      { status: 400 },
+      { error: 'Amount must be greater than 0' },
+      { status: 400 }
     );
   }
 
-  if (!description || description.trim() === "") {
+  if (!description || description.trim() === '') {
     return NextResponse.json(
-      { error: "Description is required" },
-      { status: 400 },
+      { error: 'Description is required' },
+      { status: 400 }
     );
   }
 
   const user = await User.findById(paidBy).select(
-    "-password -email -groups  -createdAt -updatedAt",
+    '-password -email -groups  -createdAt -updatedAt'
   );
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
 
   const group = await Group.findById(groupid);
   if (!group) {
-    return NextResponse.json({ error: "Group not found" }, { status: 404 });
+    return NextResponse.json({ error: 'Group not found' }, { status: 404 });
   }
 
   const expense = await Expense.create({
@@ -44,5 +44,5 @@ export async function POST(request: NextRequest) {
     paidmemberUsername: user.username,
   });
 
-  return NextResponse.json({ message: "Expense added successfully!", expense });
+  return NextResponse.json({ message: 'Expense added successfully!', expense });
 }

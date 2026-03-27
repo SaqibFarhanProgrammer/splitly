@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -125,23 +125,23 @@
   }
 }
 
-@font-face{
+@font-face {
   src: url('../assets/fonts/Inter-Bold.otf');
-  font-family: "inter-bold";
+  font-family: 'inter-bold';
 }
-@font-face{
+@font-face {
   src: url('../assets/fonts/Inter-Light-BETA.otf');
-  font-family: "inter-beta";
+  font-family: 'inter-beta';
 }
-@font-face{
+@font-face {
   src: url('../assets/fonts/Inter-Light-BETA.otf');
-  font-family: "inter-light-betaa";
+  font-family: 'inter-light-betaa';
 }
-@font-face{
+@font-face {
   src: url('../assets/fonts/italic-DkwE4c06.ttf');
-  font-family: "pro-italic";
+  font-family: 'pro-italic';
 }
-@font-face{
+@font-face {
   src: url('../assets/fonts/Inter-Regular.otf');
-  font-family: "inter-reguler";
+  font-family: 'inter-reguler';
 }

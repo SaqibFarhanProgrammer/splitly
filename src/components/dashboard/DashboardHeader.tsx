@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Settings, Plus } from "lucide-react";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Settings, Plus } from 'lucide-react';
+import React from 'react';
 
 interface DashboardHeaderProps {
   name: string;

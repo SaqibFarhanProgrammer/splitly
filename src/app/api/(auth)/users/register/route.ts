@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { ConnectDB } from "@/lib/ConnectDB";
-import { User } from "@/models/user.model";
-import bcrypt from "bcryptjs";
+import { NextResponse } from 'next/server';
+import { ConnectDB } from '@/lib/ConnectDB';
+import { User } from '@/models/user.model';
+import bcrypt from 'bcryptjs';
 
 export async function POST(req: Request) {
   await ConnectDB();
@@ -11,16 +11,16 @@ export async function POST(req: Request) {
 
     if (!username || !email || !password) {
       return NextResponse.json(
-        { error: "All fields are required" },
-        { status: 400 },
+        { error: 'All fields are required' },
+        { status: 400 }
       );
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { error: "User already exists" },
-        { status: 409 },
+        { error: 'User already exists' },
+        { status: 409 }
       );
     }
 
@@ -36,17 +36,17 @@ export async function POST(req: Request) {
     }
     return NextResponse.json(
       {
-        message: "User registered successfully",
+        message: 'User registered successfully',
         user: {
           _id: newUser._id,
           username: newUser.username,
           email: newUser.email,
         },
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

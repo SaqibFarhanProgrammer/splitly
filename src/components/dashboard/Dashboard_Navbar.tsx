@@ -1,18 +1,18 @@
 // components/TopNavbar.tsx
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   User,
   Settings,
@@ -22,13 +22,13 @@ import {
   Users,
   ChevronDown,
   Bell,
-} from "lucide-react";
-import axios from "axios";
-import { useAuth } from "@/context/AuthContext";
+} from 'lucide-react';
+import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 
 const navLinks = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Groups", href: "/groups", icon: Users },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+  { name: 'Groups', href: '/groups', icon: Users },
 ];
 
 export function TopNavbar() {
@@ -41,8 +41,8 @@ export function TopNavbar() {
   const { user } = useAuth();
 
   async function handleLogout() {
-    const response = await axios.get("/api/users/logout");
-    router.push("/auth");
+    const response = await axios.get('/api/users/logout');
+    router.push('/auth');
   }
 
   const [mounted, setMounted] = useState(false);
@@ -75,8 +75,8 @@ export function TopNavbar() {
                   href={link.href}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     active
-                      ? "bg-zinc-800 text-white"
-                      : "text-zinc-400 hover:text-white hover:bg-zinc-800/50"
+                      ? 'bg-zinc-800 text-white'
+                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -110,11 +110,11 @@ export function TopNavbar() {
               <button className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-colors">
                 <Avatar className="w-10 h-10 border-2 border-white/10">
                   <AvatarImage
-                    src={user?.avatar || ""}
+                    src={user?.avatar || ''}
                     className="object-cover"
                   />
                   <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
-                    {user?.username ? user.username.charAt(0) : "U"}
+                    {user?.username ? user.username.charAt(0) : 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <span className="text-sm font-medium text-white hidden sm:block">

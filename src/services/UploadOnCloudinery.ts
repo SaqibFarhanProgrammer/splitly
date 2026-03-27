@@ -1,3 +1,1 @@
-export async function UploadOnCloudinery(file:string) {
-    
-}
+export async function UploadOnCloudinery(file: string) {}

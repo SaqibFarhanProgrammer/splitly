@@ -1,6 +1,6 @@
 // components/Navbar.tsx
-import { ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 
 export function Navbar() {
   return (

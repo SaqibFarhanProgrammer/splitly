@@ -17,7 +17,7 @@
     "no-warning-comments": "off",
     "spaced-comment": "off",
     "no-inline-comments": "off"
-},
+  },
   "settings": {
     "react": {
       "version": "detect"

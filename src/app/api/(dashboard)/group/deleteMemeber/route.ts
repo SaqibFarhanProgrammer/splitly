@@ -1,8 +1,8 @@
-import { ConnectDB } from "@/lib/ConnectDB";
-import { Group } from "@/models/group.model";
-import { User } from "@/models/user.model";
-import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
+import { ConnectDB } from '@/lib/ConnectDB';
+import { Group } from '@/models/group.model';
+import { User } from '@/models/user.model';
+import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,11 +10,10 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const { memberId, groupId } = body;
-    
 
     if (!memberId || !groupId) {
       return NextResponse.json(
-        { message: "memberId and groupId are required" },
+        { message: 'memberId and groupId are required' },
         { status: 400 }
       );
     }
@@ -23,7 +22,7 @@ export async function POST(request: NextRequest) {
     const member = await User.findById(memberId);
     if (!member) {
       return NextResponse.json(
-        { message: "Failed to find member" },
+        { message: 'Failed to find member' },
         { status: 404 }
       );
     }
@@ -40,24 +39,18 @@ export async function POST(request: NextRequest) {
     );
 
     if (!updatedGroup) {
-      return NextResponse.json(
-        { message: "Group not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'Group not found' }, { status: 404 });
     }
 
     return NextResponse.json(
       {
-        message: "Member deleted successfully",
+        message: 'Member deleted successfully',
         group: updatedGroup,
       },
       { status: 200 }
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
-      { message: "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }

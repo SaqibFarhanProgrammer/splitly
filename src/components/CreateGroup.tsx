@@ -1,24 +1,23 @@
 // components/modals/CreateGroupModal.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { X, Loader2 } from "lucide-react";
-import axios from "axios";
-import { Group } from "@/context/GroupContext";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { X, Loader2 } from 'lucide-react';
+import axios from 'axios';
+import { Group } from '@/context/GroupContext';
 
 interface CreateGroupData {
   groupName: string;
 }
 
-
 interface CreateGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGroupCreated: (group: Group) => void; 
+  onGroupCreated: (group: Group) => void;
 }
 
 export function CreateGroupModal({
@@ -35,20 +34,21 @@ export function CreateGroupModal({
     reset,
   } = useForm<CreateGroupData>({
     defaultValues: {
-      groupName: "",
+      groupName: '',
     },
   });
 
   const handleCreateGroup = async (data: CreateGroupData) => {
     try {
       setIsLoading(true);
-      const response = await axios.post("/api/group/create", {
+      const response = await axios.post('/api/group/create', {
         name: data.groupName,
       });
-      
+
       if (response.data && response.data.data) {
-        onGroupCreated(response.data.data);     }
-      
+        onGroupCreated(response.data.data);
+      }
+
       setIsLoading(false);
       reset();
       onClose();
@@ -69,7 +69,9 @@ export function CreateGroupModal({
 
       <div className="relative w-full max-w-sm bg-zinc-950 border border-white/10 rounded-xl">
         <div className="flex items-center justify-between p-4 border-b border-white/10">
-          <h2 className="text-base font-semibold text-white">Create New Group</h2>
+          <h2 className="text-base font-semibold text-white">
+            Create New Group
+          </h2>
           <button
             onClick={onClose}
             className="w-7 h-7 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors"
@@ -90,19 +92,15 @@ export function CreateGroupModal({
             <Input
               placeholder="e.g., Trip to Hunza"
               className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-600 h-9 text-sm"
-              {...register("groupName", {
-                required: "Required",
-                minLength: { value: 3, message: "Min 3 chars" },
+              {...register('groupName', {
+                required: 'Required',
+                minLength: { value: 3, message: 'Min 3 chars' },
               })}
             />
             {errors.groupName && (
-              <p className="text-xs text-red-400">
-                {errors.groupName.message}
-              </p>
+              <p className="text-xs text-red-400">{errors.groupName.message}</p>
             )}
           </div>
-
-         
         </form>
 
         <div className="p-4 border-t border-white/10 flex gap-2">
@@ -123,7 +121,7 @@ export function CreateGroupModal({
             {isLoading ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              "Create"
+              'Create'
             )}
           </Button>
         </div>

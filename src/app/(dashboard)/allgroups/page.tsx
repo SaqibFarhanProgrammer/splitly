@@ -1,11 +1,11 @@
 // app/(app)/groups/page.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
   Search,
   Plus,
@@ -16,90 +16,90 @@ import {
   Filter,
   Grid3X3,
   List,
-} from "lucide-react";
-import Link from "next/link";
+} from 'lucide-react';
+import Link from 'next/link';
 
 const groups = [
   {
     id: 1,
-    name: "Hunza Trip 2024",
+    name: 'Hunza Trip 2024',
     members: 4,
     totalExpenses: 45800,
     youOwe: 0,
     youAreOwed: 5200,
-    status: "active",
-    lastActivity: "2 days ago",
-    avatar: "H",
-    color: "bg-emerald-500/10 text-emerald-400",
+    status: 'active',
+    lastActivity: '2 days ago',
+    avatar: 'H',
+    color: 'bg-emerald-500/10 text-emerald-400',
   },
   {
     id: 2,
-    name: "Office Lunch Group",
+    name: 'Office Lunch Group',
     members: 8,
     totalExpenses: 12500,
     youOwe: 1500,
     youAreOwed: 0,
-    status: "active",
-    lastActivity: "5 hours ago",
-    avatar: "O",
-    color: "bg-blue-500/10 text-blue-400",
+    status: 'active',
+    lastActivity: '5 hours ago',
+    avatar: 'O',
+    color: 'bg-blue-500/10 text-blue-400',
   },
   {
     id: 3,
-    name: "Flatmates - Karachi",
+    name: 'Flatmates - Karachi',
     members: 3,
     totalExpenses: 89000,
     youOwe: 4200,
     youAreOwed: 8000,
-    status: "active",
-    lastActivity: "1 week ago",
-    avatar: "F",
-    color: "bg-purple-500/10 text-purple-400",
+    status: 'active',
+    lastActivity: '1 week ago',
+    avatar: 'F',
+    color: 'bg-purple-500/10 text-purple-400',
   },
   {
     id: 4,
-    name: "College Reunion",
+    name: 'College Reunion',
     members: 12,
     totalExpenses: 0,
     youOwe: 0,
     youAreOwed: 0,
-    status: "settled",
-    lastActivity: "2 months ago",
-    avatar: "C",
-    color: "bg-zinc-500/10 text-zinc-400",
+    status: 'settled',
+    lastActivity: '2 months ago',
+    avatar: 'C',
+    color: 'bg-zinc-500/10 text-zinc-400',
   },
   {
     id: 5,
-    name: "Birthday Party",
+    name: 'Birthday Party',
     members: 6,
     totalExpenses: 15000,
     youOwe: 2500,
     youAreOwed: 0,
-    status: "active",
-    lastActivity: "3 days ago",
-    avatar: "B",
-    color: "bg-pink-500/10 text-pink-400",
+    status: 'active',
+    lastActivity: '3 days ago',
+    avatar: 'B',
+    color: 'bg-pink-500/10 text-pink-400',
   },
   {
     id: 6,
-    name: "Road Trip 2023",
+    name: 'Road Trip 2023',
     members: 5,
     totalExpenses: 35000,
     youOwe: 0,
     youAreOwed: 1800,
-    status: "settled",
-    lastActivity: "6 months ago",
-    avatar: "R",
-    color: "bg-orange-500/10 text-orange-400",
+    status: 'settled',
+    lastActivity: '6 months ago',
+    avatar: 'R',
+    color: 'bg-orange-500/10 text-orange-400',
   },
 ];
 
 export default function GroupsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const filteredGroups = groups.filter((group) =>
-    group.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    group.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -108,8 +108,8 @@ export default function GroupsPage() {
         <div>
           <h1 className="text-2xl font-bold text-white">All Groups</h1>
           <p className="text-zinc-400 text-sm mt-1">
-            {groups.length} groups •{" "}
-            {groups.filter((g) => g.status === "active").length} active
+            {groups.length} groups •{' '}
+            {groups.filter((g) => g.status === 'active').length} active
           </p>
         </div>
       </div>
@@ -135,14 +135,14 @@ export default function GroupsPage() {
           </Button>
           <div className="flex border border-zinc-800 rounded-lg overflow-hidden">
             <button
-              onClick={() => setViewMode("grid")}
-              className={`p-2.5 ${viewMode === "grid" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white"}`}
+              onClick={() => setViewMode('grid')}
+              className={`p-2.5 ${viewMode === 'grid' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'}`}
             >
               <Grid3X3 className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setViewMode("list")}
-              className={`p-2.5 ${viewMode === "list" ? "bg-zinc-800 text-white" : "text-zinc-400 hover:text-white"}`}
+              onClick={() => setViewMode('list')}
+              className={`p-2.5 ${viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white'}`}
             >
               <List className="w-4 h-4" />
             </button>
@@ -162,9 +162,9 @@ export default function GroupsPage() {
       ) : (
         <div
           className={`grid gap-4 ${
-            viewMode === "grid"
-              ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-              : "grid-cols-1"
+            viewMode === 'grid'
+              ? 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+              : 'grid-cols-1'
           }`}
         >
           {filteredGroups.map((group) => (
@@ -194,12 +194,12 @@ export default function GroupsPage() {
                     <Badge
                       variant="secondary"
                       className={`text-xs ${
-                        group.status === "active"
-                          ? "bg-emerald-500/10 text-emerald-400 border-0"
-                          : "bg-zinc-800 text-zinc-400 border-0"
+                        group.status === 'active'
+                          ? 'bg-emerald-500/10 text-emerald-400 border-0'
+                          : 'bg-zinc-800 text-zinc-400 border-0'
                       }`}
                     >
-                      {group.status === "active" ? "Active" : "Settled"}
+                      {group.status === 'active' ? 'Active' : 'Settled'}
                     </Badge>
                     <button className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 opacity-0 group-hover:opacity-100 transition-all">
                       <MoreVertical className="w-4 h-4" />

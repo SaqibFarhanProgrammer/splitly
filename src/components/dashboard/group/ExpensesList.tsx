@@ -1,13 +1,13 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { useAuth } from '@/context/AuthContext'
-import { Expense } from '@/types/globalTypes'
-import React from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import { Expense } from '@/types/globalTypes';
+import React from 'react';
 interface Proptype {
-  expense: Expense[]
+  expense: Expense[];
 }
 function ExpensesList({ expense }: Proptype) {
-  const { user } = useAuth()
+  const { user } = useAuth();
   return expense.map((exp, index) => (
     <div key={index} className="flex gap-3 items-start">
       <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
@@ -88,7 +88,7 @@ function ExpensesList({ expense }: Proptype) {
         </Card>
       </div>
     </div>
-  ))
+  ));
 }
 
-export default ExpensesList
+export default ExpensesList;

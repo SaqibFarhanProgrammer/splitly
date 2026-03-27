@@ -1,28 +1,28 @@
 // components/HowItWorksSection.tsx
-import { Plus, Receipt, PieChart, Banknote } from "lucide-react";
+import { Plus, Receipt, PieChart, Banknote } from 'lucide-react';
 
 export function HowItWorksSection() {
   const steps = [
     {
       icon: Plus,
-      title: "Create a Group",
-      desc: "Start by creating a group for your trip, event, or shared living situation. Invite all members via link or email.",
+      title: 'Create a Group',
+      desc: 'Start by creating a group for your trip, event, or shared living situation. Invite all members via link or email.',
     },
     {
       icon: Receipt,
-      title: "Add Expenses",
-      desc: "Whenever someone pays, add it to the app. Specify who paid and who should share the cost. The system handles the math.",
+      title: 'Add Expenses',
+      desc: 'Whenever someone pays, add it to the app. Specify who paid and who should share the cost. The system handles the math.',
     },
     {
       icon: PieChart,
-      title: "View Calculations",
-      desc: "See automatic balance calculations for every member. Know exactly who owes money and who should receive it.",
+      title: 'View Calculations',
+      desc: 'See automatic balance calculations for every member. Know exactly who owes money and who should receive it.',
     },
     {
       icon: Banknote,
-      title: "Settle Balances",
-      desc: "Use the settlement summary to pay each other outside the app. Mark payments as settled to keep records clean.",
-    }
+      title: 'Settle Balances',
+      desc: 'Use the settlement summary to pay each other outside the app. Mark payments as settled to keep records clean.',
+    },
   ];
 
   return (
@@ -50,7 +50,6 @@ export function HowItWorksSection() {
             {steps.map((step, i) => (
               <div key={i} className="relative group">
                 <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8 hover:bg-zinc-900 hover:border-zinc-700 transition-all duration-300 h-full">
-                  
                   {/* Step Number Badge */}
                   <div className="absolute -top-3 left-8 w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 text-xs font-medium z-20 group-hover:bg-zinc-700 group-hover:text-white transition-colors">
                     {i + 1}

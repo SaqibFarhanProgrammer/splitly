@@ -1,5 +1,5 @@
-import { Settlement } from "@/models/satelment.model";
-import { NextRequest, NextResponse } from "next/server";
+import { Settlement } from '@/models/satelment.model';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const { groupId } = await request.json();
@@ -8,9 +8,8 @@ export async function POST(request: NextRequest) {
     groupId: groupId,
   });
 
-
   return NextResponse.json({
-    message: "get all settlment success",
+    message: 'get all settlment success',
     settlemnts,
   });
 }

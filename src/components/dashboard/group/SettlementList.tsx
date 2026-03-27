@@ -1,42 +1,42 @@
-import mongoose from 'mongoose'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Card, CardContent } from '@/components/ui/card'
-import { useAuth } from '@/context/AuthContext'
-import React from 'react'
-import { ArrowRight, CheckCircle2, Wallet, User } from 'lucide-react'
-import { SettlementT } from '@/types/settlementTypes'
+import mongoose from 'mongoose';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
+import React from 'react';
+import { ArrowRight, CheckCircle2, Wallet, User } from 'lucide-react';
+import { SettlementT } from '@/types/settlementTypes';
 
 interface SettlementListProps {
-  settlements: SettlementT[]
+  settlements: SettlementT[];
 }
 
 function SettlementList({ settlements }: SettlementListProps) {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const toStringId = (
-    id: mongoose.Types.ObjectId | string | undefined,
+    id: mongoose.Types.ObjectId | string | undefined
   ): string => {
-    if (!id) return ''
-    return id.toString()
-  }
+    if (!id) return '';
+    return id.toString();
+  };
 
   return (
     <div className="space-y-3">
       {settlements.map((settlement, index) => {
-        const paidByStr = toStringId(settlement.paidBy)
-        const paidToStr = toStringId(settlement.paidTo)
-        const currentUserId = user?._id?.toString()
+        const paidByStr = toStringId(settlement.paidBy);
+        const paidToStr = toStringId(settlement.paidTo);
+        const currentUserId = user?._id?.toString();
 
-        const isPayer = currentUserId === paidByStr
-        const isReceiver = currentUserId === paidToStr
-        const isYouInvolved = isPayer || isReceiver
+        const isPayer = currentUserId === paidByStr;
+        const isReceiver = currentUserId === paidToStr;
+        const isYouInvolved = isPayer || isReceiver;
 
         const payerName =
-          settlement.paidByUserName || (isPayer ? 'You' : 'Unknown')
+          settlement.paidByUserName || (isPayer ? 'You' : 'Unknown');
         const receiverName =
-          settlement.paidToUserName || (isReceiver ? 'You' : 'Unknown')
+          settlement.paidToUserName || (isReceiver ? 'You' : 'Unknown');
 
-        const isSelfSettlement = paidByStr === paidToStr
+        const isSelfSettlement = paidByStr === paidToStr;
 
         return (
           <div key={index} className="flex gap-3 items-start">
@@ -125,7 +125,7 @@ function SettlementList({ settlements }: SettlementListProps) {
                                   month: 'short',
                                   day: 'numeric',
                                   year: 'numeric',
-                                },
+                                }
                               )
                             : '—'}
                         </span>
@@ -137,7 +137,7 @@ function SettlementList({ settlements }: SettlementListProps) {
                                 {
                                   hour: '2-digit',
                                   minute: '2-digit',
-                                },
+                                }
                               )
                             : '—'}
                         </span>
@@ -182,10 +182,10 @@ function SettlementList({ settlements }: SettlementListProps) {
               </Card>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
-export default SettlementList
+export default SettlementList;

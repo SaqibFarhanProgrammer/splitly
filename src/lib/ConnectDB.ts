@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 let cashed = global.mongoose;
 
@@ -22,5 +22,5 @@ try {
   cashed.conn = await cashed.promise;
 } catch (error) {
   cashed.promise = null;
-  console.log("from connect db", error);
+  console.log('from connect db', error);
 }

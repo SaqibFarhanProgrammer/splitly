@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import { ConnectDB } from "@/lib/ConnectDB";
-import { User } from "@/models/user.model";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { NextResponse } from 'next/server';
+import { ConnectDB } from '@/lib/ConnectDB';
+import { User } from '@/models/user.model';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export async function POST(req: Request) {
   await ConnectDB();
@@ -12,47 +12,47 @@ export async function POST(req: Request) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 },
+        { error: 'Email and password are required' },
+        { status: 400 }
       );
     }
 
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 },
+        { error: 'Invalid email or password' },
+        { status: 401 }
       );
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 },
+        { error: 'Invalid email or password' },
+        { status: 401 }
       );
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
-      expiresIn: "20d",
+      expiresIn: '20d',
     });
 
     const response = NextResponse.json(
-      { message: "Login successful" },
-      { status: 200 },
+      { message: 'Login successful' },
+      { status: 200 }
     );
 
-    response.cookies.set("token", token, {
+    response.cookies.set('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
       maxAge: 60 * 60 * 24 * 20, // 20 days
     });
 
     return response;
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

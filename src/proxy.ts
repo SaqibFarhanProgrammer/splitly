@@ -1,22 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export function proxy(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get('token')?.value;
 
   const { pathname } = request.nextUrl;
 
-  if (token && pathname === "/auth") {
-    return NextResponse.redirect(new URL("/profile", request.url));
+  if (token && pathname === '/auth') {
+    return NextResponse.redirect(new URL('/profile', request.url));
   }
 
-  const protectedRoutes = ["/dashboard", "/profile", "/admin", "/allgroups"];
+  const protectedRoutes = ['/dashboard', '/profile', '/admin', '/allgroups'];
 
   const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
+    pathname.startsWith(route)
   );
 
   if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/auth", request.url));
+    return NextResponse.redirect(new URL('/auth', request.url));
   }
 
   return NextResponse.next();
@@ -24,11 +24,11 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/allgroups/:path*",
+    '/dashboard/:path*',
+    '/allgroups/:path*',
 
-    "/profile/:path*",
-    "/admin/:path*",
-    "/auth/:path*",
+    '/profile/:path*',
+    '/admin/:path*',
+    '/auth/:path*',
   ],
 };

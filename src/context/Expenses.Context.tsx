@@ -1,17 +1,17 @@
-"use client";
-import React, { createContext, useContext, useState } from "react";
-  
+'use client';
+import React, { createContext, useContext, useState } from 'react';
+
 export interface Expense {
-  _id: string
-  title: string
-  totalAmount: number
-  groupId: string
-  paidBy: string
-  type:string
-  paidmemberUsername: string
-  paidmemberAvatar: string
-  createdAt: string
-  updatedAt: string
+  _id: string;
+  title: string;
+  totalAmount: number;
+  groupId: string;
+  paidBy: string;
+  type: string;
+  paidmemberUsername: string;
+  paidmemberAvatar: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface ExpensesContextType {
@@ -19,7 +19,7 @@ interface ExpensesContextType {
 }
 
 const ExpensesContext = createContext<ExpensesContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export const ExpensesProvider: React.FC<{
@@ -36,7 +36,7 @@ export const ExpensesProvider: React.FC<{
 export const useExpenses = () => {
   const context = useContext(ExpensesContext);
   if (!context) {
-    throw new Error("useExpenses must be used within ExpensesProvider");
+    throw new Error('useExpenses must be used within ExpensesProvider');
   }
   return context;
 };

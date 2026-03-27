@@ -1,19 +1,17 @@
-'use client'
+'use client';
 
-import { useGroupContext } from '@/context/GroupContext'
-import { Card, CardContent } from '@/components/ui/card'
-import { Users, ChevronRight, X } from 'lucide-react'
-import Link from 'next/link'
+import { useGroupContext } from '@/context/GroupContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Users, ChevronRight, X } from 'lucide-react';
+import Link from 'next/link';
 
 interface SelectGroupProps {
-  onClick?: (groupId: string) => void
-  onClose?: () => void
+  onClick?: (groupId: string) => void;
+  onClose?: () => void;
 }
 
-
-
 export default function GroupSelect({ onClick, onClose }: SelectGroupProps) {
-  const { groups } = useGroupContext()
+  const { groups } = useGroupContext();
 
   const getInitials = (name: string) =>
     name
@@ -21,9 +19,7 @@ export default function GroupSelect({ onClick, onClose }: SelectGroupProps) {
       .map((n) => n[0])
       .join('')
       .toUpperCase()
-      .slice(0, 2)
-
-
+      .slice(0, 2);
 
   return (
     <div className="fixed z-120 inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
@@ -37,19 +33,19 @@ export default function GroupSelect({ onClick, onClose }: SelectGroupProps) {
               Choose a group to continue
             </p>
           </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
-            >
-              <X className="w-5 h-5 text-zinc-400" />
-            </button>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+          >
+            <X className="w-5 h-5 text-zinc-400" />
+          </button>
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[60vh]">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {groups.map((group) => (
               <Link
-              href={`/group/${group._id}`}
+                href={`/group/${group._id}`}
                 key={group._id}
                 onClick={() => onClick?.(group._id)}
                 className="flex items-center gap-4 p-4 bg-zinc-900/50 border border-white/10 rounded-xl hover:bg-zinc-800 hover:border-white/20 transition-all duration-200 group text-left"
@@ -91,5 +87,5 @@ export default function GroupSelect({ onClick, onClose }: SelectGroupProps) {
         </div>
       </Card>
     </div>
-  )
+  );
 }

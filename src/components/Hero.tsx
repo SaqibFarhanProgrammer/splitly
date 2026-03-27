@@ -1,6 +1,6 @@
 // components/HeroSection.tsx
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export function HeroSection() {
   return (
@@ -66,7 +66,7 @@ export function HeroSection() {
               className="w-full h-auto opacity-90 hover:opacity-100 transition-opacity duration-500"
             />
           </div>
-          
+
           {/* Bottom Fade */}
           <div className="absolute -bottom-1 left-0 right-0 h-12 sm:h-20 bg-gradient-to-t from-black to-transparent pointer-events-none" />
         </div>

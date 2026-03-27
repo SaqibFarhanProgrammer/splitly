@@ -1,5 +1,5 @@
-import { Settlement } from "@/models/satelment.model";
-import { NextRequest, NextResponse } from "next/server";
+import { Settlement } from '@/models/satelment.model';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,15 +17,15 @@ export async function POST(request: NextRequest) {
 
     if (!paidBy || !paidTo || !amount || !groupid) {
       return NextResponse.json(
-        { message: "Missing required fields" },
-        { status: 400 },
+        { message: 'Missing required fields' },
+        { status: 400 }
       );
     }
 
     if (amount <= 0) {
       return NextResponse.json(
-        { message: "Amount must be greater than 0" },
-        { status: 400 },
+        { message: 'Amount must be greater than 0' },
+        { status: 400 }
       );
     }
 
@@ -34,18 +34,18 @@ export async function POST(request: NextRequest) {
       paidBy,
       paidTo,
       amount,
-      note: note || "",
-      paidByUserAvatar: paidByUserAvatar || "",
-      paidByUserName: paidByUserName || "",
-      paidToUserName: paidToUserName || "",
+      note: note || '',
+      paidByUserAvatar: paidByUserAvatar || '',
+      paidByUserName: paidByUserName || '',
+      paidToUserName: paidToUserName || '',
     });
 
     return NextResponse.json({
-      message: "Settlement added successfully",
+      message: 'Settlement added successfully',
       status: 200,
     });
   } catch (error) {
-    console.error("Error adding settlement:", error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    console.error('Error adding settlement:', error);
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }

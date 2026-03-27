@@ -1,5 +1,5 @@
-import { IMember } from "@/types/member";
-import mongoose, { Schema, Model, Document } from "mongoose";
+import { IMember } from '@/types/member';
+import mongoose, { Schema, Model, Document } from 'mongoose';
 
 export interface IGroup {
   name: string;
@@ -16,21 +16,21 @@ const GroupSchema = new Schema<IGroupDocument>(
     isActive: { type: Boolean, default: true },
     members: [
       {
-        userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+        userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
         isAdmin: { type: Boolean, default: false },
         username: {
           type: String,
         },
         avatar: {
           type: String,
-          default: "",
+          default: '',
         },
       },
     ],
-    createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const Group: Model<IGroupDocument> =
-  mongoose.models.Group || mongoose.model<IGroupDocument>("Group", GroupSchema);
+  mongoose.models.Group || mongoose.model<IGroupDocument>('Group', GroupSchema);

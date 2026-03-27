@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Edit2Icon } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
-import { useProfileContext } from "@/context/Profile.Context";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Plus, Edit2Icon } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useState, useEffect } from 'react';
+import { useProfileContext } from '@/context/Profile.Context';
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
@@ -21,9 +21,9 @@ export default function ProfileHeader({
 
   const getInitials = (name: string) =>
     name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("")
+      .join('')
       .toUpperCase();
 
   if (!user) {
@@ -49,9 +49,9 @@ export default function ProfileHeader({
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
       <div className="flex items-center gap-4">
         <Avatar className="w-20 h-20 border-2 border-white/10">
-          <AvatarImage src={user.avatar || ""} className="object-cover" />
+          <AvatarImage src={user.avatar || ''} className="object-cover" />
           <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
-            {user.username ? getInitials(user.username) : "U"}
+            {user.username ? getInitials(user.username) : 'U'}
           </AvatarFallback>
         </Avatar>
         <div>
@@ -79,7 +79,7 @@ export default function ProfileHeader({
           <Edit2Icon className="w-4 h-4 mr-2" />
           Edit Profile
         </Button>
-        
+
         <Button
           onClick={() => setIsCreateGroupOpen(true)}
           className="font-['inter-bold']"

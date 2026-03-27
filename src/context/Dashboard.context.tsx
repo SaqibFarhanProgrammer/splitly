@@ -1,30 +1,30 @@
-'use client'
+'use client';
 
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useContext } from 'react';
 
 interface dailyExpensesT {
-  date: string | Date
-  total: number | string
+  date: string | Date;
+  total: number | string;
 }
 
 interface DashboardData {
-  monthlyspending: number
-  youOwe: number
-  youGet: number
-  dailyExpenses: dailyExpensesT[]
+  monthlyspending: number;
+  youOwe: number;
+  youGet: number;
+  dailyExpenses: dailyExpensesT[];
 }
 
 interface DashboardContextType {
-  data: DashboardData
+  data: DashboardData;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(
-  undefined,
-)
+  undefined
+);
 
 interface DashboardProviderProps {
-  children: ReactNode
-  data: DashboardData
+  children: ReactNode;
+  data: DashboardData;
 }
 
 export const DashboardProvider = ({
@@ -35,12 +35,14 @@ export const DashboardProvider = ({
     <DashboardContext.Provider value={{ data }}>
       {children}
     </DashboardContext.Provider>
-  )
-}
+  );
+};
 
 export const useDashboardContext = () => {
-  const context = useContext(DashboardContext)
+  const context = useContext(DashboardContext);
   if (!context)
-    throw new Error('useDashboardContext must be used within DashboardProvider')
-  return context
-}
+    throw new Error(
+      'useDashboardContext must be used within DashboardProvider'
+    );
+  return context;
+};

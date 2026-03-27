@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useExpenses } from '@/context/Expenses.Context'
-import React, { useMemo } from 'react'
+import { useExpenses } from '@/context/Expenses.Context';
+import React, { useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -10,36 +10,36 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts'
-import { format, subDays } from 'date-fns'
+} from 'recharts';
+import { format, subDays } from 'date-fns';
 
 function DashboardChart() {
-  const { expenses } = useExpenses()
+  const { expenses } = useExpenses();
 
   const chartData = useMemo(() => {
-    const today = new Date()
-    const last30Days = []
+    const today = new Date();
+    const last30Days = [];
 
     for (let i = 29; i >= 0; i--) {
-      const date = subDays(today, i)
-      last30Days.push(format(date, 'yyyy-MM-dd'))
+      const date = subDays(today, i);
+      last30Days.push(format(date, 'yyyy-MM-dd'));
     }
 
     return last30Days.map((dateStr) => {
       const dayTotal = expenses
         .filter((exp) => {
-          const expDate = new Date(exp.createdAt).toISOString().split('T')[0]
-          return expDate === dateStr
+          const expDate = new Date(exp.createdAt).toISOString().split('T')[0];
+          return expDate === dateStr;
         })
-        .reduce((total, exp) => total + Number(exp.totalAmount), 0)
+        .reduce((total, exp) => total + Number(exp.totalAmount), 0);
 
       return {
         date: dateStr,
         amount: dayTotal,
         displayDate: format(new Date(dateStr), 'dd/MM'),
-      }
-    })
-  }, [expenses])
+      };
+    });
+  }, [expenses]);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -50,22 +50,18 @@ function DashboardChart() {
             Rs. {payload[0].value.toLocaleString()}
           </p>
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <div className="w-full bg-zinc-950 rounded-xl border border-zinc-800/50 p-6">
       {/* Header - Shadcn Style */}
       <div className="flex items-start justify-between mb-6">
         <div>
-          <h3 className="text-white font-semibold text-base">
-            Last 30 Days
-          </h3>
-          <p className="text-zinc-500 text-sm mt-0.5">
-            Daily expense overview
-          </p>
+          <h3 className="text-white font-semibold text-base">Last 30 Days</h3>
+          <p className="text-zinc-500 text-sm mt-0.5">Daily expense overview</p>
         </div>
       </div>
 
@@ -77,12 +73,12 @@ function DashboardChart() {
             margin={{ top: 5, right: 0, left: -20, bottom: 0 }}
             barGap={1}
           >
-            <CartesianGrid 
-              strokeDasharray="3 3" 
-              stroke="#27272a" 
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#27272a"
               vertical={false}
             />
-            
+
             <XAxis
               dataKey="displayDate"
               stroke="#3f3f46"
@@ -93,21 +89,23 @@ function DashboardChart() {
               interval={4}
               tick={{ fill: '#71717a' }}
             />
-            
+
             <YAxis
               stroke="#3f3f46"
               fontSize={11}
               tickLine={false}
               axisLine={false}
               tick={{ fill: '#71717a' }}
-              tickFormatter={(value) => value >= 1000 ? `${value/1000}k` : value}
+              tickFormatter={(value) =>
+                value >= 1000 ? `${value / 1000}k` : value
+              }
             />
-            
-            <Tooltip 
+
+            <Tooltip
               content={<CustomTooltip />}
               cursor={{ fill: '#27272a', opacity: 0.4 }}
             />
-            
+
             <Bar
               dataKey="amount"
               fill="#e4e4e7"
@@ -118,7 +116,7 @@ function DashboardChart() {
         </ResponsiveContainer>
       </div>
     </div>
-  )
+  );
 }
 
-export default DashboardChart
+export default DashboardChart;

@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import {
   createContext,
   Dispatch,
@@ -6,7 +6,7 @@ import {
   SetStateAction,
   useContext,
   useState,
-} from "react";
+} from 'react';
 
 interface ProfileContextType {
   isUploadImageShow: boolean;
@@ -30,6 +30,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
 export const useProfileContext = () => {
   const context = useContext(ProfileContext);
-  if (!context) throw new Error("useAuth must be used within AuthProvider");
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };

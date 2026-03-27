@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-import { useParams, useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useParams, useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 import {
   Dialog,
@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from '@/components/ui/dialog';
 
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/components/ui/dropdown-menu';
 
 import {
   Form,
@@ -33,9 +33,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/components/ui/form';
 
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/ui/input';
 
 import {
   Select,
@@ -43,7 +43,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/select';
 
 import {
   ArrowLeft,
@@ -59,67 +59,65 @@ import {
   UserPlus,
   LogOut,
   Edit3,
-} from 'lucide-react'
+} from 'lucide-react';
 
-import Link from 'next/link'
-import axios from 'axios'
+import Link from 'next/link';
+import axios from 'axios';
 
-import { IMember } from '@/types/member'
-import { useAuth } from '@/context/AuthContext'
-import mongoose from 'mongoose'
+import { IMember } from '@/types/member';
+import { useAuth } from '@/context/AuthContext';
+import mongoose from 'mongoose';
 
-import { Skeleton } from '@/components/ui/skeleton'
-import { ExpenseSkeleton } from '@/components/Skeliton/ExpenseListSkeliton'
-import { MembersListSkeleton } from '@/components/Skeliton/MembersListSkeleton'
-import SettlementList from '@/components/dashboard/group/SettlementList'
-import { SettlementT } from '@/types/settlementTypes'
-import { fi } from 'zod/locales'
-import { Expense } from '@/types/globalTypes'
+import { Skeleton } from '@/components/ui/skeleton';
+import { ExpenseSkeleton } from '@/components/Skeliton/ExpenseListSkeliton';
+import { MembersListSkeleton } from '@/components/Skeliton/MembersListSkeleton';
+import SettlementList from '@/components/dashboard/group/SettlementList';
+import { SettlementT } from '@/types/settlementTypes';
+import { fi } from 'zod/locales';
+import { Expense } from '@/types/globalTypes';
 
 const AddMembers = dynamic(
   () => import('@/components/dashboard/group/AddMemebers'),
-  { loading: () => <Skeleton className="h-10 w-full" /> },
-)
+  { loading: () => <Skeleton className="h-10 w-full" /> }
+);
 
 const ManageMembers = dynamic(
   () => import('@/components/dashboard/group/ManageMembers'),
-  { loading: () => <Skeleton className="h-10 w-full" /> },
-)
+  { loading: () => <Skeleton className="h-10 w-full" /> }
+);
 
 const MembersList = dynamic(
   () => import('@/components/dashboard/group/MembersList'),
-  { loading: () => <MembersListSkeleton /> },
-)
+  { loading: () => <MembersListSkeleton /> }
+);
 
 const ExpensesList = dynamic(
   () => import('@/components/dashboard/group/ExpensesList'),
-  { loading: () => <ExpenseSkeleton /> },
-)
+  { loading: () => <ExpenseSkeleton /> }
+);
 
 interface SettlementFormValues {
-  memberId: string
-  amount: string
-  note: string
+  memberId: string;
+  amount: string;
+  note: string;
 }
 
-
-
 export interface ExpenseFormValues {
-  amount: number | string
-  description: string
-  paidBy: string | mongoose.Types.ObjectId
-  groupid: string
+  amount: number | string;
+  description: string;
+  paidBy: string | mongoose.Types.ObjectId;
+  groupid: string;
 }
 
 interface IgroupData {
-  name: string
-  totalAmount: number
-  isActive: boolean
-  members: IMember[]
-  createdBy: string
-  createdAt: number
-  upnumberdAt: number
-  _id: string
+  name: string;
+  totalAmount: number;
+  isActive: boolean;
+  members: IMember[];
+  createdBy: string;
+  createdAt: number;
+  upnumberdAt: number;
+  _id: string;
 }
 
 const GroupdataDefault: IgroupData = {
@@ -131,31 +129,31 @@ const GroupdataDefault: IgroupData = {
   createdAt: 100,
   upnumberdAt: 100,
   _id: '',
-}
+};
 
 interface SettlementType {
-  groupId: string
-  paidBy: string
-  paidTo: string
-  amount: number
-  paidByUserAvatar: string
-  paidByUserName: string
-  paidToUserName: string
-  note: string
+  groupId: string;
+  paidBy: string;
+  paidTo: string;
+  amount: number;
+  paidByUserAvatar: string;
+  paidByUserName: string;
+  paidToUserName: string;
+  note: string;
 }
 
 export default function GroupPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [isSettlementOpen, setIsSettlementOpen] = useState(false)
-  const [isExpenseOpen, setIsExpenseOpen] = useState(false)
-  const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault)
-  const [isManageOpen, setIsManageOpen] = useState(false)
-  const [ShowAddmember, setShowAddmember] = useState(false)
-  const [expense, setexpense] = useState<Expense[]>([])
-  const [settlements, setsettlements] = useState<SettlementT[]>([])
+  const params = useParams();
+  const router = useRouter();
+  const [isSettlementOpen, setIsSettlementOpen] = useState(false);
+  const [isExpenseOpen, setIsExpenseOpen] = useState(false);
+  const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);
+  const [isManageOpen, setIsManageOpen] = useState(false);
+  const [ShowAddmember, setShowAddmember] = useState(false);
+  const [expense, setexpense] = useState<Expense[]>([]);
+  const [settlements, setsettlements] = useState<SettlementT[]>([]);
 
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const expenseForm = useForm<ExpenseFormValues>({
     defaultValues: {
@@ -163,7 +161,7 @@ export default function GroupPage() {
       description: '',
       paidBy: '',
     },
-  })
+  });
 
   const settlementForm = useForm<SettlementFormValues>({
     defaultValues: {
@@ -171,98 +169,98 @@ export default function GroupPage() {
       amount: '',
       note: '',
     },
-  })
+  });
 
   const validateExpense = (data: ExpenseFormValues): boolean => {
-    let isValid = true
+    let isValid = true;
 
     if (!data.amount || Number(data.amount) <= 0) {
       expenseForm.setError('amount', {
         type: 'manual',
         message: 'Valid amount required',
-      })
-      isValid = false
+      });
+      isValid = false;
     }
 
     if (!data.description) {
       expenseForm.setError('description', {
         type: 'manual',
         message: 'Description required',
-      })
-      isValid = false
+      });
+      isValid = false;
     }
 
     if (!data.paidBy) {
       expenseForm.setError('paidBy', {
         type: 'manual',
         message: 'Select who paid',
-      })
-      isValid = false
+      });
+      isValid = false;
     }
 
-    return isValid
-  }
+    return isValid;
+  };
 
   const validateSettlement = (data: SettlementFormValues): boolean => {
-    let isValid = true
+    let isValid = true;
 
     if (!data.memberId) {
       settlementForm.setError('memberId', {
         type: 'manual',
         message: 'Select a member',
-      })
-      isValid = false
+      });
+      isValid = false;
     }
 
     if (!data.amount || parseFloat(data.amount) <= 0) {
       settlementForm.setError('amount', {
         type: 'manual',
         message: 'Valid amount required',
-      })
-      isValid = false
+      });
+      isValid = false;
     }
 
-    return isValid
-  }
+    return isValid;
+  };
 
   const onExpenseSubmit = async (data: ExpenseFormValues) => {
-    if (!validateExpense(data)) return
+    if (!validateExpense(data)) return;
 
     try {
-      const groupid = params.groupID
+      const groupid = params.groupID;
 
       const formdata: ExpenseFormValues = {
         amount: data.amount,
         description: data.description,
         paidBy: data.paidBy,
         groupid: groupid as string,
-      }
+      };
 
-      const res = await axios.post('/api/expense/addexpense', formdata)
+      const res = await axios.post('/api/expense/addexpense', formdata);
 
-      setIsExpenseOpen(false)
-      expenseForm.reset()
-      getExpenses()
+      setIsExpenseOpen(false);
+      expenseForm.reset();
+      getExpenses();
     } catch (error) {
-      console.error('Error adding expense:', error)
+      console.error('Error adding expense:', error);
 
       expenseForm.setError('amount', {
         type: 'manual',
         message: 'Failed to add expense',
-      })
+      });
     }
-  }
+  };
 
   const onSettlementSubmit = async (data: SettlementFormValues) => {
-    if (!validateSettlement(data)) return
+    if (!validateSettlement(data)) return;
 
-    const groupid = params.groupID as string
+    const groupid = params.groupID as string;
 
     const selectedMember = groupData.members.find(
-      (m) => m.username === data.memberId,
-    )
+      (m) => m.username === data.memberId
+    );
 
-    if (!selectedMember || !user?._id) return
+    if (!selectedMember || !user?._id) return;
 
     try {
       const res = await axios.post('/api/settlement/adddsettlement', {
@@ -275,7 +273,7 @@ export default function GroupPage() {
         paidToUserAvatar: selectedMember.avatar || '',
         paidToUserName: selectedMember.username || '',
         groupid: groupid,
-      })
+      });
 
       if (res.status === 200 || res.status === 201) {
         const newSettlement: SettlementT = {
@@ -287,42 +285,42 @@ export default function GroupPage() {
           paidByUserName: user.username || '',
           paidToUserName: selectedMember.username || '',
           note: data.note || '',
-        }
+        };
 
-        setsettlements((prev) => [newSettlement, ...prev])
+        setsettlements((prev) => [newSettlement, ...prev]);
       }
     } catch (error) {
-      console.error('Settlement error:', error)
+      console.error('Settlement error:', error);
     }
 
-    setIsSettlementOpen(false)
-    settlementForm.reset()
-  }
+    setIsSettlementOpen(false);
+    settlementForm.reset();
+  };
   async function deleteGroup() {
     try {
-      const groupid = params.groupID
+      const groupid = params.groupID;
       const res = await axios.post(`/api/group/delete`, {
         groupid: groupid,
-      })
+      });
 
-      router.push('/profile')
+      router.push('/profile');
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   async function GetGroupData() {
     try {
-      const { groupID } = params
+      const { groupID } = params;
 
       const res = await axios.post('/api/group/getgroupdatabyid', {
         groupid: groupID,
-      })
+      });
 
-      return res.data?.data
+      return res.data?.data;
     } catch (error) {
-      console.error(error)
-      return null
+      console.error(error);
+      return null;
     }
   }
 
@@ -330,11 +328,11 @@ export default function GroupPage() {
     try {
       const res = await axios.post('/api/group/leavegroup', {
         groupid: params.groupID,
-      })
+      });
 
-      router.push('/profile')
+      router.push('/profile');
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
@@ -344,90 +342,90 @@ export default function GroupPage() {
         '/api/settlement/getallsettlementbyGroupid',
         {
           groupId: params.groupID,
-        },
-      )
-      if (res.data) setsettlements(res?.data.settlemnts)
+        }
+      );
+      if (res.data) setsettlements(res?.data.settlemnts);
     } catch (error) {
-      console.error('Error fetching settlements:', error)
+      console.error('Error fetching settlements:', error);
     }
   }
 
   async function getExpenses() {
     try {
-      const groupid = params.groupID
+      const groupid = params.groupID;
 
       const res = await axios.post('/api/expense/getallexpensesbygroupid', {
         groupId: groupid,
-      })
-      setexpense(res.data.expenses)
+      });
+      setexpense(res.data.expenses);
     } catch (error) {
-      console.error('Error fetching expenses:', error)
+      console.error('Error fetching expenses:', error);
     }
   }
   function calculateBalance() {
-    if (!expense || !groupData?.members || !user?._id) return 0
+    if (!expense || !groupData?.members || !user?._id) return 0;
 
     const totalAmount = expense.reduce((sum, exp) => {
-      return sum + Number(exp.totalAmount)
-    }, 0)
+      return sum + Number(exp.totalAmount);
+    }, 0);
 
-    const membersCount = groupData.members.length
-    if (membersCount === 0) return 0
+    const membersCount = groupData.members.length;
+    if (membersCount === 0) return 0;
 
-    const share = totalAmount / membersCount
+    const share = totalAmount / membersCount;
 
     const youPaid = expense
       .filter((exp) => exp.paidBy.toString() === user._id)
       .reduce((sum, exp) => {
-        return sum + Number(exp.totalAmount)
-      }, 0)
+        return sum + Number(exp.totalAmount);
+      }, 0);
 
     const settlementsPaid = settlements
       .filter((s) => s.paidBy === user._id)
       .reduce((sum, s) => {
-        return sum + Number(s.amount)
-      }, 0)
+        return sum + Number(s.amount);
+      }, 0);
 
     const settlementsReceived = settlements
       .filter((s) => s.paidTo === user._id)
       .reduce((sum, s) => {
-        return sum + Number(s.amount)
-      }, 0)
+        return sum + Number(s.amount);
+      }, 0);
 
-    const expenseBalance = youPaid - share
+    const expenseBalance = youPaid - share;
 
-    const balance = expenseBalance - settlementsReceived + settlementsPaid
+    const balance = expenseBalance - settlementsReceived + settlementsPaid;
 
-    return balance
+    return balance;
   }
 
   function calculateYouOwe() {
-    const balance = calculateBalance()
+    const balance = calculateBalance();
 
     if (balance < 0) {
-      return Math.abs(Math.round(balance))
+      return Math.abs(Math.round(balance));
     }
 
-    return 0
+    return 0;
   }
 
   function calculateYouGet() {
-    const balance = calculateBalance()
+    const balance = calculateBalance();
 
     if (balance > 0) {
-      return Math.round(balance)
+      return Math.round(balance);
     }
 
-    return 0
+    return 0;
   }
   useEffect(() => {
     GetGroupData().then((data) => {
-      if (data) setgroupData(data)
-    })
+      if (data) setgroupData(data);
+    });
 
-    getallSettlement()
-    getExpenses()
-  }, [params.groupID])
+    getallSettlement();
+    getExpenses();
+  }, [params.groupID]);
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">
@@ -886,11 +884,11 @@ export default function GroupPage() {
           setgroupData((prev) => ({
             ...prev,
             members: prev.members.filter(
-              (m) => (m.userId?.toString() as string) !== deletedMemberId,
+              (m) => (m.userId?.toString() as string) !== deletedMemberId
             ),
           }))
         }
       />
     </div>
-  )
+  );
 }

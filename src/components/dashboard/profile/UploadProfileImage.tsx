@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useProfileContext } from "@/context/Profile.Context";
-import { useState, useRef } from "react";
-import { X, Upload, ImageIcon } from "lucide-react";
-import axios from "axios";
+import { Button } from '@/components/ui/button';
+import { useProfileContext } from '@/context/Profile.Context';
+import { useState, useRef } from 'react';
+import { X, Upload, ImageIcon } from 'lucide-react';
+import axios from 'axios';
 
 export function UploadImageModal() {
   const { isUploadImageShow, setisUploadImageShow } = useProfileContext();
@@ -23,12 +23,12 @@ export function UploadImageModal() {
     if (!selectedFile) return;
 
     if (selectedFile.size > 10 * 1024 * 1024) {
-      setError("File must be under 10MB");
+      setError('File must be under 10MB');
       return;
     }
 
-    if (!selectedFile.type.startsWith("image/")) {
-      setError("Only image files allowed");
+    if (!selectedFile.type.startsWith('image/')) {
+      setError('Only image files allowed');
       return;
     }
 
@@ -51,17 +51,17 @@ export function UploadImageModal() {
       setError(null);
 
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
       const response = await axios.post(
-        "/api/profile/uploadoncloudinery",
-        formData,
+        '/api/profile/uploadoncloudinery',
+        formData
       );
       setisUploadImageShow(false);
 
       setPreview(response.data.result.url);
     } catch (err) {
-      setError("Upload failed");
+      setError('Upload failed');
     } finally {
       setIsUploading(false);
     }
@@ -142,7 +142,7 @@ export function UploadImageModal() {
             className="flex-1 disabled:opacity-50"
           >
             {isUploading ? (
-              "Uploading..."
+              'Uploading...'
             ) : (
               <>
                 <ImageIcon className="w-4 h-4 mr-2" />

@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import {
   Card,
@@ -15,9 +15,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/components/ui/card';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import {
   Users,
@@ -27,72 +27,72 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Clock,
-} from 'lucide-react'
+} from 'lucide-react';
 
-import Link from 'next/link'
+import Link from 'next/link';
 
-import { ProfileProvider } from '@/context/Profile.Context'
-import { Group, useGroupContext } from '@/context/GroupContext'
-import { useExpenses } from '@/context/Expenses.Context'
-import GroupsList from '@/components/dashboard/group/GroupsList'
+import { ProfileProvider } from '@/context/Profile.Context';
+import { Group, useGroupContext } from '@/context/GroupContext';
+import { useExpenses } from '@/context/Expenses.Context';
+import GroupsList from '@/components/dashboard/group/GroupsList';
 
 const CreateGroupModal = dynamic(() =>
-  import('@/components/CreateGroup').then((m) => m.CreateGroupModal),
-)
+  import('@/components/CreateGroup').then((m) => m.CreateGroupModal)
+);
 
 const AddExpenseModal = dynamic(() =>
-  import('@/components/AddExpenseModal').then((m) => m.AddExpenseModal),
-)
+  import('@/components/AddExpenseModal').then((m) => m.AddExpenseModal)
+);
 
 const ProfileHeader = dynamic(
-  () => import('@/components/dashboard/profile/ProfileHeader'),
-)
+  () => import('@/components/dashboard/profile/ProfileHeader')
+);
 
 const UploadImageModal = dynamic(() =>
   import('@/components/dashboard/profile/UploadProfileImage').then(
-    (m) => m.UploadImageModal,
-  ),
-)
+    (m) => m.UploadImageModal
+  )
+);
 const balances = [
   { name: 'hamza', amount: 3200, type: 'owed' },
   { name: 'Saqib', amount: 2000, type: 'owed' },
   { name: 'Ali', amount: 1500, type: 'owe' },
-]
+];
 export interface Expense {
-  _id: string
-  title: string
-  totalAmount: number
-  groupId: string
-  paidBy: string
-  paidmemberUsername: string
-  paidmemberAvatar: string
-  createdAt: string
-  updatedAt: string
-  __v: number
+  _id: string;
+  title: string;
+  totalAmount: number;
+  groupId: string;
+  paidBy: string;
+  paidmemberUsername: string;
+  paidmemberAvatar: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export default function Page() {
-  const { groups } = useGroupContext()
+  const { groups } = useGroupContext();
 
-  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false)
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [groupData, setgroupData] = useState<Group[]>(groups || [])
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [groupData, setgroupData] = useState<Group[]>(groups || []);
 
   const handleAddExpense = async (data: {
-    description: string
-    amount: string
-    date: string
-    notes?: string
-  }) => {}
+    description: string;
+    amount: string;
+    date: string;
+    notes?: string;
+  }) => {};
 
-  const { expenses } = useExpenses()
+  const { expenses } = useExpenses();
 
   useEffect(() => {
     if (groups) {
-      setLoading(true)
+      setLoading(true);
     }
-  }, [groups])
+  }, [groups]);
 
   return (
     <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
@@ -196,10 +196,10 @@ export default function Page() {
                               alt={expense.paidmemberUsername}
                               className="w-12 h-12 rounded-full object-cover border-2 border-white/10 group-hover:border-white/20 transition-colors"
                               onError={(
-                                e: React.SyntheticEvent<HTMLImageElement>,
+                                e: React.SyntheticEvent<HTMLImageElement>
                               ) => {
                                 e.currentTarget.src =
-                                  'https://via.placeholder.com/48'
+                                  'https://via.placeholder.com/48';
                               }}
                             />
                             <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10">
@@ -236,7 +236,7 @@ export default function Page() {
                                 day: 'numeric',
                                 hour: '2-digit',
                                 minute: '2-digit',
-                              },
+                              }
                             )}
                           </p>
                         </div>
@@ -262,5 +262,5 @@ export default function Page() {
         />
       </div>
     </section>
-  )
+  );
 }

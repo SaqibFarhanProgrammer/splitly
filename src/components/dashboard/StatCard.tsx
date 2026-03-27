@@ -1,20 +1,20 @@
 // components/dashboard/StatCard.tsx
-'use client'
+'use client';
 
-import { Card, CardContent } from '@/components/ui/card'
-import { ArrowUpRight, ArrowDownRight, LucideIcon } from 'lucide-react'
-import React from 'react'
+import { Card, CardContent } from '@/components/ui/card';
+import { ArrowUpRight, ArrowDownRight, LucideIcon } from 'lucide-react';
+import React from 'react';
 
 interface StatCardProps {
-  title: string
-  amount: string
-  trend?: string
-  trendUp?: boolean
-  icon: LucideIcon
-  iconBgColor: string
-  iconColor: string
-  amountColor?: string
-  subtitle?: string
+  title: string;
+  amount: string;
+  trend?: string;
+  trendUp?: boolean;
+  icon: LucideIcon;
+  iconBgColor: string;
+  iconColor: string;
+  amountColor?: string;
+  subtitle?: string;
 }
 
 export function StatCard({
@@ -46,5 +46,5 @@ export function StatCard({
         {subtitle && <p className="text-zinc-500 text-sm mt-4">{subtitle}</p>}
       </CardContent>
     </Card>
-  )
+  );
 }

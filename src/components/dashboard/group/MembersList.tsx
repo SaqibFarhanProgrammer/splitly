@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { IMember } from "@/types/member";
-import { Crown } from "lucide-react";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { IMember } from '@/types/member';
+import { Crown } from 'lucide-react';
+import React from 'react';
 
 interface MembersListProps {
   groupData: {
@@ -15,7 +15,7 @@ export default function MembersList({ groupData }: MembersListProps) {
   if (!groupData?.members?.length) return null;
 
   const members = [...groupData.members].sort(
-    (a, b) => Number(b.isAdmin) - Number(a.isAdmin),
+    (a, b) => Number(b.isAdmin) - Number(a.isAdmin)
   );
 
   return (
@@ -23,9 +23,9 @@ export default function MembersList({ groupData }: MembersListProps) {
       {members.map((member) => {
         const avatar = member.avatar;
         const hasAvatar =
-          typeof avatar === "string" &&
+          typeof avatar === 'string' &&
           avatar.trim().length > 0 &&
-          avatar.startsWith("http");
+          avatar.startsWith('http');
 
         return (
           <div
@@ -42,7 +42,7 @@ export default function MembersList({ groupData }: MembersListProps) {
                   />
                 ) : (
                   <AvatarFallback className="bg-gradient-to-br from-zinc-600 to-zinc-800 text-white text-xs font-bold">
-                    {member.username?.charAt(0).toUpperCase() || "U"}
+                    {member.username?.charAt(0).toUpperCase() || 'U'}
                   </AvatarFallback>
                 )}
               </Avatar>
@@ -55,10 +55,10 @@ export default function MembersList({ groupData }: MembersListProps) {
 
             <div className="flex flex-col leading-none pr-1">
               <span className="text-white text-sm font-medium whitespace-nowrap">
-                {member.username || "Unknown"}
+                {member.username || 'Unknown'}
               </span>
               <span className="text-zinc-500 text-[10px] whitespace-nowrap mt-0.5">
-                {member.isAdmin ? "Admin" : "Member"}
+                {member.isAdmin ? 'Admin' : 'Member'}
               </span>
             </div>
           </div>

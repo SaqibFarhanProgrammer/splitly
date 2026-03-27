@@ -1,23 +1,23 @@
-import { cookies } from 'next/headers'
-import jwt from 'jsonwebtoken'
-import { ConnectDB } from '@/lib/ConnectDB'
-import { User } from '@/models/user.model'
-import mongoose from 'mongoose'
-export const dynamic = 'force-dynamic'
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+import { ConnectDB } from '@/lib/ConnectDB';
+import { User } from '@/models/user.model';
+import mongoose from 'mongoose';
+export const dynamic = 'force-dynamic';
 interface JwtPayload {
-  userId: string
+  userId: string;
 }
 
 export async function getUser(userid: string) {
   try {
-    await ConnectDB()
+    await ConnectDB();
 
-    const user = await User.findById(userid).select('-password').lean()
+    const user = await User.findById(userid).select('-password').lean();
 
-    if (!user) return null
+    if (!user) return null;
 
-    return JSON.parse(JSON.stringify(user))
+    return JSON.parse(JSON.stringify(user));
   } catch (error) {
-    return null
+    return null;
   }
 }

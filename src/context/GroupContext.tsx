@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { createContext, useContext, ReactNode } from "react";
-import mongoose from "mongoose";
+import { createContext, useContext, ReactNode } from 'react';
+import mongoose from 'mongoose';
 
 // -------------------- Types --------------------
 
@@ -43,6 +43,6 @@ export const GroupProvider = ({
 export const useGroupContext = () => {
   const context = useContext(GroupContext);
   if (!context)
-    throw new Error("useGroupContext must be used within GroupProvider");
+    throw new Error('useGroupContext must be used within GroupProvider');
   return context;
 };

@@ -1,13 +1,13 @@
 // components/modals/AddExpenseModal.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { X, Receipt, Calendar, Loader2 } from "lucide-react";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { X, Receipt, Calendar, Loader2 } from 'lucide-react';
 
 interface AddExpenseData {
   description: string;
@@ -37,10 +37,10 @@ export function AddExpenseModal({
     formState: { errors },
   } = useForm<AddExpenseData>({
     defaultValues: {
-      description: "",
-      amount: "",
-      date: new Date().toISOString().split("T")[0],
-      notes: "",
+      description: '',
+      amount: '',
+      date: new Date().toISOString().split('T')[0],
+      notes: '',
     },
   });
 
@@ -107,9 +107,9 @@ export function AddExpenseModal({
                 id="description"
                 placeholder="e.g., Dinner at Monal"
                 className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler h-12"
-                {...register("description", {
-                  required: "Description is required",
-                  minLength: { value: 3, message: "Min 3 characters" },
+                {...register('description', {
+                  required: 'Description is required',
+                  minLength: { value: 3, message: 'Min 3 characters' },
                 })}
               />
               {errors.description && (
@@ -133,12 +133,12 @@ export function AddExpenseModal({
                   type="number"
                   placeholder="0.00"
                   className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler h-12 text-lg"
-                  {...register("amount", {
-                    required: "Amount is required",
-                    min: { value: 1, message: "Min amount is 1" },
+                  {...register('amount', {
+                    required: 'Amount is required',
+                    min: { value: 1, message: 'Min amount is 1' },
                     pattern: {
                       value: /^\d+(\.\d{1,2})?$/,
-                      message: "Invalid amount",
+                      message: 'Invalid amount',
                     },
                   })}
                 />
@@ -161,7 +161,7 @@ export function AddExpenseModal({
                   id="date"
                   type="date"
                   className="pl-10 bg-zinc-900 border-white/10 text-white font-inter-reguler h-12"
-                  {...register("date", { required: "Date is required" })}
+                  {...register('date', { required: 'Date is required' })}
                 />
               </div>
               {errors.date && (
@@ -174,7 +174,7 @@ export function AddExpenseModal({
             {/* Notes */}
             <div className="space-y-2">
               <Label htmlFor="notes" className="text-white font-inter-bold">
-                Notes{" "}
+                Notes{' '}
                 <span className="text-zinc-400 font-inter-beta">
                   (Optional)
                 </span>
@@ -183,7 +183,7 @@ export function AddExpenseModal({
                 id="notes"
                 placeholder="Add any additional details..."
                 className="bg-zinc-900 border-white/10 text-white placeholder:text-zinc-500 font-inter-reguler min-h-[100px] resize-none"
-                {...register("notes")}
+                {...register('notes')}
               />
             </div>
           </form>
@@ -208,7 +208,7 @@ export function AddExpenseModal({
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              "Add Expense"
+              'Add Expense'
             )}
           </Button>
         </div>

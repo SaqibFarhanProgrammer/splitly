@@ -1,35 +1,35 @@
 // components/TechPhilosophySection.tsx
-import { Code, Database, Server, Lock } from "lucide-react";
+import { Code, Database, Server, Lock } from 'lucide-react';
 
 export function TechPhilosophySection() {
   const items = [
     {
       icon: Database,
-      title: "Dynamic Calculations",
-      desc: "Balances are calculated on-demand from expense records, never stored totals",
+      title: 'Dynamic Calculations',
+      desc: 'Balances are calculated on-demand from expense records, never stored totals',
     },
     {
       icon: Server,
-      title: "Clean Data",
-      desc: "Server validates all amounts, participants, and payers for data integrity",
+      title: 'Clean Data',
+      desc: 'Server validates all amounts, participants, and payers for data integrity',
     },
     {
       icon: Code,
-      title: "Simple Architecture",
-      desc: "Focused on core functionality without unnecessary complexity",
+      title: 'Simple Architecture',
+      desc: 'Focused on core functionality without unnecessary complexity',
     },
     {
       icon: Lock,
-      title: "Secure",
-      desc: "Your financial data is encrypted and protected at all times",
-    }
+      title: 'Secure',
+      desc: 'Your financial data is encrypted and protected at all times',
+    },
   ];
 
   return (
     <section className="relative py-32 bg-black">
       {/* Subtle Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#18181b_0%,transparent_70%)]" />
-      
+
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-20">
@@ -37,19 +37,19 @@ export function TechPhilosophySection() {
             Technical Excellence
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white mb-6">
-            Built for{" "}
-            <span className="text-zinc-500">Reliability</span>
+            Built for <span className="text-zinc-500">Reliability</span>
           </h2>
           <p className="text-zinc-500 text-lg leading-relaxed">
-            Our technical approach prioritizes data integrity and calculation accuracy above all else.
+            Our technical approach prioritizes data integrity and calculation
+            accuracy above all else.
           </p>
         </div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="group bg-zinc-950 border border-zinc-900 rounded-2xl p-6 text-center hover:bg-zinc-900 hover:border-zinc-800 transition-all duration-300"
             >
               <div className="w-14 h-14 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mx-auto mb-5 group-hover:bg-zinc-800 group-hover:text-zinc-300 group-hover:border-zinc-700 transition-all duration-300">
@@ -73,11 +73,13 @@ export function TechPhilosophySection() {
               System Operational
             </span>
           </div>
-          
+
           <blockquote className="text-zinc-300 text-lg leading-relaxed mb-8 border-l-2 border-zinc-800 pl-6 italic">
-            "We believe financial tools should be boringly reliable. No surprises, no hidden fees, just accurate calculations every single time."
+            "We believe financial tools should be boringly reliable. No
+            surprises, no hidden fees, just accurate calculations every single
+            time."
           </blockquote>
-          
+
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-500 text-sm font-medium">
               ES

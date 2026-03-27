@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useExpenses } from '@/context/Expenses.Context'
-import React, { useMemo } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useExpenses } from '@/context/Expenses.Context';
+import React, { useMemo } from 'react';
 import {
   BarChart,
   Bar,
@@ -11,52 +11,52 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts'
+} from 'recharts';
 
 export function ActivityChart() {
-  const { expenses } = useExpenses()
+  const { expenses } = useExpenses();
 
   const chartData = useMemo(() => {
-    const today = new Date()
-    const last7Days = []
+    const today = new Date();
+    const last7Days = [];
 
     for (let i = 6; i >= 0; i--) {
-      const day = new Date(today)
-      day.setDate(today.getDate() - i)
-      last7Days.push(day.toISOString().split('T')[0])
+      const day = new Date(today);
+      day.setDate(today.getDate() - i);
+      last7Days.push(day.toISOString().split('T')[0]);
     }
 
     return last7Days.map((dayStr) => {
       const dayTotal = expenses
         .filter((exp) => {
-          const expDate = new Date(exp.createdAt).toISOString().split('T')[0]
-          return expDate === dayStr
+          const expDate = new Date(exp.createdAt).toISOString().split('T')[0];
+          return expDate === dayStr;
         })
-        .reduce((sum, exp) => sum + (exp.totalAmount || 0), 0)
+        .reduce((sum, exp) => sum + (exp.totalAmount || 0), 0);
 
-      const dateObj = new Date(dayStr)
-      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' })
+      const dateObj = new Date(dayStr);
+      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
       const fullDate = dateObj.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
-      })
+      });
 
       return {
         date: dayStr,
         day: dayName,
         fullDate: fullDate,
         amount: dayTotal,
-      }
-    })
-  }, [expenses])
+      };
+    });
+  }, [expenses]);
 
   const totalAmount = useMemo(() => {
-    return chartData.reduce((sum, item) => sum + item.amount, 0)
-  }, [chartData])
+    return chartData.reduce((sum, item) => sum + item.amount, 0);
+  }, [chartData]);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload
+      const data = payload[0].payload;
       return (
         <div className="bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 shadow-xl">
           <p className="text-zinc-400 text-xs mb-1">{data.fullDate}</p>
@@ -64,10 +64,10 @@ export function ActivityChart() {
             Rs{data.amount.toLocaleString()}
           </p>
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <Card className="bg-zinc-950 border-white/10">
@@ -129,5 +129,5 @@ export function ActivityChart() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

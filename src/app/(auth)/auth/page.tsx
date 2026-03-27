@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 interface LoginData {
   email: string;
@@ -46,15 +46,15 @@ export default function AuthPage() {
     watch,
     formState: { errors: registerErrors },
   } = useForm<RegisterData>();
-  const password = watch("password");
+  const password = watch('password');
 
   const onLogin = async (data: LoginData) => {
     setServerError(null);
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/users/login", data);
-      if (res.status >= 400) throw new Error(res.data.error || "Login failed");
-      router.push("/profile");
+      const res = await axios.post('/api/users/login', data);
+      if (res.status >= 400) throw new Error(res.data.error || 'Login failed');
+      router.push('/profile');
     } catch (error: any) {
       setServerError(error.response?.data?.error || error.message);
     } finally {
@@ -65,22 +65,19 @@ export default function AuthPage() {
   const onRegister = async (data: RegisterData) => {
     setServerError(null);
     if (data.password !== data.confirmPassword) {
-      setServerError("Passwords do not match");
+      setServerError('Passwords do not match');
       return;
     }
 
     try {
       setIsLoading(true);
-      const res = await axios.post("/api/users/register", {
+      const res = await axios.post('/api/users/register', {
         username: data.username,
         email: data.email,
         password: data.password,
       });
 
-      setServerError("User Created Success Please Login")
-
-
-
+      setServerError('User Created Success Please Login');
     } catch (error: any) {
       setServerError(error.response?.data?.error || error.message);
     } finally {
@@ -117,9 +114,15 @@ export default function AuthPage() {
             </TabsList>
 
             {serverError && (
-              <div className={`mb-6 p-4 rounded-xl ${serverError === "User Created Success Please Login" ?   "bg-green-500/10" : "bg-red-600" } border border-red-500/20 animate-in fade-in slide-in-from-top-2`}>
-                <p className={` text-sm ${serverError === "User Created Success Please Login" ? "text-green-500" : "text-red-400" } text-center font-medium`}>
-                  {serverError === "User Created Success Please Login" ? serverError : serverError}
+              <div
+                className={`mb-6 p-4 rounded-xl ${serverError === 'User Created Success Please Login' ? 'bg-green-500/10' : 'bg-red-600'} border border-red-500/20 animate-in fade-in slide-in-from-top-2`}
+              >
+                <p
+                  className={` text-sm ${serverError === 'User Created Success Please Login' ? 'text-green-500' : 'text-red-400'} text-center font-medium`}
+                >
+                  {serverError === 'User Created Success Please Login'
+                    ? serverError
+                    : serverError}
                 </p>
               </div>
             )}
@@ -134,7 +137,7 @@ export default function AuthPage() {
                     type="email"
                     placeholder="you@example.com"
                     className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
-                    {...registerLogin("email", { required: "Email required" })}
+                    {...registerLogin('email', { required: 'Email required' })}
                   />
                   {loginErrors.email && (
                     <p className="text-xs text-red-400 ml-1">
@@ -148,11 +151,11 @@ export default function AuthPage() {
                   </Label>
                   <div className="relative">
                     <Input
-                      type={showLoginPassword ? "text" : "password"}
+                      type={showLoginPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl pr-12"
-                      {...registerLogin("password", {
-                        required: "Password required",
+                      {...registerLogin('password', {
+                        required: 'Password required',
                       })}
                     />
                     <button
@@ -181,7 +184,7 @@ export default function AuthPage() {
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={20} />
                   ) : (
-                    "Sign In"
+                    'Sign In'
                   )}
                 </Button>
               </form>
@@ -199,8 +202,8 @@ export default function AuthPage() {
                   <Input
                     placeholder="johndoe"
                     className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
-                    {...registerRegister("username", {
-                      required: "Username required",
+                    {...registerRegister('username', {
+                      required: 'Username required',
                     })}
                   />
                   {registerErrors.username && (
@@ -218,8 +221,8 @@ export default function AuthPage() {
                     type="email"
                     placeholder="you@example.com"
                     className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
-                    {...registerRegister("email", {
-                      required: "Email required",
+                    {...registerRegister('email', {
+                      required: 'Email required',
                     })}
                   />
                   {registerErrors.email && (
@@ -235,11 +238,11 @@ export default function AuthPage() {
                   </Label>
                   <div className="relative">
                     <Input
-                      type={showRegisterPassword ? "text" : "password"}
+                      type={showRegisterPassword ? 'text' : 'password'}
                       placeholder="••••••••"
                       className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl pr-12"
-                      {...registerRegister("password", {
-                        required: "Password required",
+                      {...registerRegister('password', {
+                        required: 'Password required',
                       })}
                     />
                     <button
@@ -268,13 +271,13 @@ export default function AuthPage() {
                     Confirm Password
                   </Label>
                   <Input
-                    type={showRegisterPassword ? "text" : "password"}
+                    type={showRegisterPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
-                    {...registerRegister("confirmPassword", {
-                      required: "Confirm required",
+                    {...registerRegister('confirmPassword', {
+                      required: 'Confirm required',
                       validate: (val) =>
-                        val === password || "Passwords do not match",
+                        val === password || 'Passwords do not match',
                     })}
                   />
                   {registerErrors.confirmPassword && (
@@ -292,7 +295,7 @@ export default function AuthPage() {
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={20} />
                   ) : (
-                    "Create Account"
+                    'Create Account'
                   )}
                 </Button>
               </form>

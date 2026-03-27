@@ -1,103 +1,108 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowDownRight, ArrowUpRight, Badge, Clock, Receipt, Users, Wallet } from "lucide-react";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Badge,
+  Clock,
+  Receipt,
+  Users,
+  Wallet,
+} from 'lucide-react';
 
 function Group_tabs() {
+  const groups = [
+    {
+      id: 1,
+      name: 'Hunza Trip 2024',
+      members: 4,
+      totalExpenses: 45800,
+      youOwe: 0,
+      youAreOwed: 5200,
+      status: 'active',
+      lastActivity: '2 days ago',
+      avatar: 'H',
+    },
+    {
+      id: 2,
+      name: 'Office Lunch Group',
+      members: 8,
+      totalExpenses: 12500,
+      youOwe: 1500,
+      youAreOwed: 0,
+      status: 'active',
+      lastActivity: '5 hours ago',
+      avatar: 'O',
+    },
+    {
+      id: 3,
+      name: 'Flatmates - Karachi',
+      members: 3,
+      totalExpenses: 89000,
+      youOwe: 4200,
+      youAreOwed: 8000,
+      status: 'active',
+      lastActivity: '1 week ago',
+      avatar: 'F',
+    },
+    {
+      id: 4,
+      name: 'College Reunion',
+      members: 12,
+      totalExpenses: 0,
+      youOwe: 0,
+      youAreOwed: 0,
+      status: 'settled',
+      lastActivity: '2 months ago',
+      avatar: 'C',
+    },
+  ];
 
+  // Dummy Recent Expenses
+  const recentExpenses = [
+    {
+      id: 1,
+      title: 'Hotel Booking - Serena Inn',
+      amount: 24000,
+      paidBy: 'You',
+      group: 'Hunza Trip 2024',
+      date: 'Dec 15, 2024',
+      yourShare: 6000,
+    },
+    {
+      id: 2,
+      title: 'Petrol - Day 1',
+      amount: 8500,
+      paidBy: 'Ahmed',
+      group: 'Hunza Trip 2024',
+      date: 'Dec 14, 2024',
+      yourShare: 2125,
+    },
+    {
+      id: 3,
+      title: 'Dinner at Monal',
+      amount: 6200,
+      paidBy: 'Saqib',
+      group: 'Hunza Trip 2024',
+      date: 'Dec 14, 2024',
+      yourShare: 1550,
+    },
+  ];
 
-
-const groups = [
-  {
-    id: 1,
-    name: "Hunza Trip 2024",
-    members: 4,
-    totalExpenses: 45800,
-    youOwe: 0,
-    youAreOwed: 5200,
-    status: "active",
-    lastActivity: "2 days ago",
-    avatar: "H",
-  },
-  {
-    id: 2,
-    name: "Office Lunch Group",
-    members: 8,
-    totalExpenses: 12500,
-    youOwe: 1500,
-    youAreOwed: 0,
-    status: "active",
-    lastActivity: "5 hours ago",
-    avatar: "O",
-  },
-  {
-    id: 3,
-    name: "Flatmates - Karachi",
-    members: 3,
-    totalExpenses: 89000,
-    youOwe: 4200,
-    youAreOwed: 8000,
-    status: "active",
-    lastActivity: "1 week ago",
-    avatar: "F",
-  },
-  {
-    id: 4,
-    name: "College Reunion",
-    members: 12,
-    totalExpenses: 0,
-    youOwe: 0,
-    youAreOwed: 0,
-    status: "settled",
-    lastActivity: "2 months ago",
-    avatar: "C",
-  },
-];
-
-// Dummy Recent Expenses
-const recentExpenses = [
-  {
-    id: 1,
-    title: "Hotel Booking - Serena Inn",
-    amount: 24000,
-    paidBy: "You",
-    group: "Hunza Trip 2024",
-    date: "Dec 15, 2024",
-    yourShare: 6000,
-  },
-  {
-    id: 2,
-    title: "Petrol - Day 1",
-    amount: 8500,
-    paidBy: "Ahmed",
-    group: "Hunza Trip 2024",
-    date: "Dec 14, 2024",
-    yourShare: 2125,
-  },
-  {
-    id: 3,
-    title: "Dinner at Monal",
-    amount: 6200,
-    paidBy: "Saqib",
-    group: "Hunza Trip 2024",
-    date: "Dec 14, 2024",
-    yourShare: 1550,
-  },
-];
-
-// Dummy Balances
-const balances = [
-  { name: "Ahmed", amount: 3200, type: "owed" },
-  { name: "Saqib", amount: 2000, type: "owed" },
-  { name: "Ali", amount: 1500, type: "owe" },
-];
+  // Dummy Balances
+  const balances = [
+    { name: 'Ahmed', amount: 3200, type: 'owed' },
+    { name: 'Saqib', amount: 2000, type: 'owed' },
+    { name: 'Ali', amount: 1500, type: 'owe' },
+  ];
 
   return (
     <div>
@@ -161,15 +166,15 @@ const balances = [
                     </div>
                     <Badge
                       fontVariant={
-                        group.status === "active" ? "default" : "secondary"
+                        group.status === 'active' ? 'default' : 'secondary'
                       }
                       className={
-                        group.status === "active"
-                          ? "bg-white/10 text-white"
-                          : "bg-zinc-800 text-zinc-400"
+                        group.status === 'active'
+                          ? 'bg-white/10 text-white'
+                          : 'bg-zinc-800 text-zinc-400'
                       }
                     >
-                      {group.status === "active" ? "Active" : "Settled"}
+                      {group.status === 'active' ? 'Active' : 'Settled'}
                     </Badge>
                   </div>
 
@@ -260,7 +265,7 @@ const balances = [
               </CardHeader>
               <CardContent className="space-y-3">
                 {balances
-                  .filter((b) => b.type === "owed")
+                  .filter((b) => b.type === 'owed')
                   .map((balance, i) => (
                     <div
                       key={i}
@@ -293,7 +298,7 @@ const balances = [
               </CardHeader>
               <CardContent className="space-y-3">
                 {balances
-                  .filter((b) => b.type === "owe")
+                  .filter((b) => b.type === 'owe')
                   .map((balance, i) => (
                     <div
                       key={i}

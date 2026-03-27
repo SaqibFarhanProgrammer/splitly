@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useParams } from "next/navigation";
-import axios from "axios";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useParams } from 'next/navigation';
+import axios from 'axios';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Form,
   FormControl,
@@ -14,10 +14,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { X, UserPlus } from "lucide-react";
-import { IMember } from "@/types/member";
+} from '@/components/ui/form';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { X, UserPlus } from 'lucide-react';
+import { IMember } from '@/types/member';
 
 interface AddMembersProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
   const form = useForm<IMember>({
     defaultValues: {
-      username: "",
+      username: '',
     },
   });
 
@@ -43,7 +43,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
       setLoading(true);
       setError(null);
 
-      const res = await axios.post("/api/group/addmemeber", {
+      const res = await axios.post('/api/group/addmemeber', {
         username: data.username.trim().toLowerCase(),
         groupId: groupID,
       });
@@ -56,7 +56,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
       form.reset();
     } catch (err: any) {
-      setError(err?.response?.data?.message || "Something went wrong");
+      setError(err?.response?.data?.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -146,7 +146,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
                     <div className="flex items-center gap-3">
                       <Avatar className="w-9 h-9">
                         <AvatarFallback className="bg-zinc-800 text-white text-sm font-bold">
-                          {user.username.split("")[0].toUpperCase()}
+                          {user.username.split('')[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
 

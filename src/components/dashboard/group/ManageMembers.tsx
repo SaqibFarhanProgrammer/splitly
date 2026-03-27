@@ -1,14 +1,14 @@
 // components/modals/ManageMembers.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { X, Crown, Trash2 } from "lucide-react";
-import axios from "axios";
-import { useParams } from "next/navigation";
-import { IMember } from "@/types/member";
+import { useState } from 'react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { X, Crown, Trash2 } from 'lucide-react';
+import axios from 'axios';
+import { useParams } from 'next/navigation';
+import { IMember } from '@/types/member';
 
 interface ManageMembersProps {
   isOpen: boolean;
@@ -24,7 +24,7 @@ export default function ManageMembers({
   onClose,
   members,
   onDelete,
-  currentUserId = "1",
+  currentUserId = '1',
   onMemberDeleted,
 }: ManageMembersProps) {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
@@ -34,7 +34,7 @@ export default function ManageMembers({
 
   const handleDeleteClick = async (id: string) => {
     try {
-      const res = await axios.post("/api/group/deleteMemeber", {
+      const res = await axios.post('/api/group/deleteMemeber', {
         groupId: giD,
         memberId: id,
       });
@@ -48,9 +48,9 @@ export default function ManageMembers({
   };
 
   const getBalanceColor = (balance: number) => {
-    if (balance > 0) return "text-emerald-400";
-    if (balance < 0) return "text-red-400";
-    return "text-zinc-400";
+    if (balance > 0) return 'text-emerald-400';
+    if (balance < 0) return 'text-red-400';
+    return 'text-zinc-400';
   };
 
   if (!isOpen) return null;
@@ -91,9 +91,9 @@ export default function ManageMembers({
             >
               <div className="flex items-center gap-3">
                 <Avatar className="w-9 h-9">
-                  {typeof member.avatar === "string" &&
+                  {typeof member.avatar === 'string' &&
                   member.avatar.trim().length > 0 &&
-                  member.avatar.startsWith("http") ? (
+                  member.avatar.startsWith('http') ? (
                     <img
                       src={member.avatar}
                       alt={member.username}
@@ -130,8 +130,8 @@ export default function ManageMembers({
                       size="icon"
                       className={`h-7 w-7 ${
                         deleteConfirm === member.userId?.toString()
-                          ? "bg-red-500/20 text-red-400"
-                          : "text-zinc-500 hover:text-red-400 hover:bg-red-500/10"
+                          ? 'bg-red-500/20 text-red-400'
+                          : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10'
                       }`}
                       onClick={() => {
                         if (deleteConfirm === member.userId?.toString()) {

@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent } from '@/components/ui/card';
 
 export function ExpenseSkeleton() {
   return (
@@ -32,8 +32,8 @@ export function ExpenseSkeleton() {
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
                   <div className="flex items-center gap-2">
                     <div className="flex -space-x-2">
-                       <Skeleton className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950" />
-                       <Skeleton className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950" />
+                      <Skeleton className="w-6 h-6 rounded-full bg-zinc-800 border-2 border-zinc-950" />
+                      <Skeleton className="w-6 h-6 rounded-full bg-zinc-700 border-2 border-zinc-950" />
                     </div>
                     <Skeleton className="h-3 w-20 bg-zinc-900" />
                   </div>
@@ -45,5 +45,5 @@ export function ExpenseSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }

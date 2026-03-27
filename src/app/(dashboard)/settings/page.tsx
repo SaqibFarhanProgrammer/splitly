@@ -1,14 +1,14 @@
 // app/settings/page.tsx
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
 import {
   User,
   Lock,
@@ -19,29 +19,29 @@ import {
   Loader2,
   Save,
   Trash2,
-} from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState('profile');
 
   // Profile Form
   const profileForm = useForm({
     defaultValues: {
-      name: "John Doe",
-      username: "johndoe",
-      email: "john@example.com",
-      bio: "Software Developer",
+      name: 'John Doe',
+      username: 'johndoe',
+      email: 'john@example.com',
+      bio: 'Software Developer',
     },
   });
 
   // Account Form
   const accountForm = useForm({
     defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   });
 
@@ -141,14 +141,14 @@ export default function SettingsPage() {
                   <div className="space-y-2">
                     <Label className="text-white">Full Name</Label>
                     <Input
-                      {...profileForm.register("name", { required: true })}
+                      {...profileForm.register('name', { required: true })}
                       className="bg-zinc-900 border-white/10 text-white h-11"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label className="text-white">Username</Label>
                     <Input
-                      {...profileForm.register("username", { required: true })}
+                      {...profileForm.register('username', { required: true })}
                       className="bg-zinc-900 border-white/10 text-white h-11"
                     />
                   </div>
@@ -159,7 +159,7 @@ export default function SettingsPage() {
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                     <Input
-                      {...profileForm.register("email", { required: true })}
+                      {...profileForm.register('email', { required: true })}
                       type="email"
                       className="pl-10 bg-zinc-900 border-white/10 text-white h-11"
                     />
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">Bio</Label>
                   <textarea
-                    {...profileForm.register("bio")}
+                    {...profileForm.register('bio')}
                     rows={3}
                     className="w-full bg-zinc-900 border border-white/10 rounded-lg p-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/20 resize-none"
                   />
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">Current Password</Label>
                   <Input
-                    {...accountForm.register("currentPassword", {
+                    {...accountForm.register('currentPassword', {
                       required: true,
                     })}
                     type="password"
@@ -218,7 +218,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">New Password</Label>
                   <Input
-                    {...accountForm.register("newPassword", {
+                    {...accountForm.register('newPassword', {
                       required: true,
                       minLength: 6,
                     })}
@@ -230,7 +230,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label className="text-white">Confirm New Password</Label>
                   <Input
-                    {...accountForm.register("confirmPassword", {
+                    {...accountForm.register('confirmPassword', {
                       required: true,
                     })}
                     type="password"

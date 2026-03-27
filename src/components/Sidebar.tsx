@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useSidebar } from "@/context/SidebarContext";
-import { useAuth } from "@/context/AuthContext";
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useSidebar } from '@/context/SidebarContext';
+import { useAuth } from '@/context/AuthContext';
 import {
   Menu,
   X,
@@ -19,17 +19,17 @@ import {
   PlusCircle,
   ChevronRight,
   PanelLeft,
-} from "lucide-react";
+} from 'lucide-react';
 
 const navigation = [
-  { name: "Profile", href: "/profile", icon: User },
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Groups", href: "/allgroups", icon: Users },
+  { name: 'Profile', href: '/profile', icon: User },
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
+  { name: 'Groups', href: '/allgroups', icon: Users },
 ];
 
 const bottomNavigation = [
-  { name: "Notifications", href: "/notifications", icon: Bell, badge: 3 },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: 'Notifications', href: '/notifications', icon: Bell, badge: 3 },
+  { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
 export function Sidebar() {
@@ -43,9 +43,9 @@ export function Sidebar() {
 
   const getInitials = (name: string) =>
     name
-      .split(" ")
+      .split(' ')
       .map((n) => n[0])
-      .join("")
+      .join('')
       .toUpperCase();
 
   return (
@@ -70,8 +70,8 @@ export function Sidebar() {
         className={`
           fixed inset-y-0 left-0 bg-zinc-950 border-r border-zinc-800/50 z-50
           transform transition-all duration-300 ease-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          ${isCollapsed ? "w-[75px]" : "w-64"}
+          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${isCollapsed ? 'w-[75px]' : 'w-64'}
         `}
       >
         {/* Header */}
@@ -82,17 +82,17 @@ export function Sidebar() {
                 <AvatarImage src={user.avatar} className="object-cover" />
               ) : (
                 <AvatarFallback>
-                  {user?.username ? getInitials(user.username).charAt(0) : "U"}
+                  {user?.username ? getInitials(user.username).charAt(0) : 'U'}
                 </AvatarFallback>
               )}
             </Avatar>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
                 <p className="text-white truncate">
-                  {user?.username || "User"}
+                  {user?.username || 'User'}
                 </p>
                 <p className="text-zinc-500 text-xs truncate">
-                  {user?.email || "user@example.com"}
+                  {user?.email || 'user@example.com'}
                 </p>
               </div>
             )}
@@ -104,7 +104,7 @@ export function Sidebar() {
             className="hidden lg:flex w-6 h-6 rounded-full bg-zinc-800 border border-zinc-700 items-center justify-center text-zinc-400 hover:text-white"
           >
             <PanelLeft
-              className={`${isCollapsed ? "rotate-180" : ""} w-3 h-3`}
+              className={`${isCollapsed ? 'rotate-180' : ''} w-3 h-3`}
             />
           </button>
 
@@ -118,10 +118,10 @@ export function Sidebar() {
         </div>
 
         {/* Add Expense Button */}
-        <div className={`relative py-3 ${isCollapsed ? "px-2" : "px-3"}`}>
+        <div className={`relative py-3 ${isCollapsed ? 'px-2' : 'px-3'}`}>
           <button
             className={`w-full group flex items-center justify-center rounded-lg bg-white text-black font-medium shadow-lg shadow-white/5 hover:shadow-white/10 hover:scale-[1.02] transition-all duration-200 ${
-              isCollapsed ? "p-2.5" : "px-4 py-2.5 gap-2"
+              isCollapsed ? 'p-2.5' : 'px-4 py-2.5 gap-2'
             }`}
           >
             <PlusCircle className="w-4 h-4 shrink-0" />
@@ -148,8 +148,8 @@ export function Sidebar() {
                 onClick={() => setIsOpen(false)}
                 className={`
                   flex items-center gap-2 rounded-lg text-xs font-medium transition-all
-                  ${isCollapsed ? "justify-center p-2.5" : "px-3 py-2"}
-                  ${active ? "bg-zinc-800/80 text-white" : "text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100"}
+                  ${isCollapsed ? 'justify-center p-2.5' : 'px-3 py-2'}
+                  ${active ? 'bg-zinc-800/80 text-white' : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-100'}
                 `}
                 title={isCollapsed ? link.name : undefined}
               >
@@ -169,7 +169,7 @@ export function Sidebar() {
               <AvatarImage src={user.avatar} className="object-cover" />
             ) : (
               <AvatarFallback>
-                {user?.username?.charAt(0) ?? "U"}
+                {user?.username?.charAt(0) ?? 'U'}
               </AvatarFallback>
             )}
           </Avatar>
