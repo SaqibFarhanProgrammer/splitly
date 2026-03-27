@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // 3️⃣ Upload to Cloudinary
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -69,7 +68,6 @@ export async function POST(req: NextRequest) {
 
     await User.findByIdAndUpdate(userId, { avatar: result.url }, { new: true });
 
-    // 5️⃣ Return minimal response
     return NextResponse.json({ url: result.secure_url });
   } catch (error) {
     console.error(error);

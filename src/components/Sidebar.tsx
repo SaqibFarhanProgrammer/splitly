@@ -24,7 +24,6 @@ import {
 const navigation = [
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Groups', href: '/allgroups', icon: Users },
 ];
 
 const bottomNavigation = [

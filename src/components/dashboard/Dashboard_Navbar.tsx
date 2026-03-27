@@ -1,4 +1,3 @@
-// components/TopNavbar.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -28,7 +27,6 @@ import { useAuth } from '@/context/AuthContext';
 
 const navLinks = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Groups', href: '/groups', icon: Users },
 ];
 
 export function TopNavbar() {
@@ -47,14 +45,12 @@ export function TopNavbar() {
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  if (!mounted) return null; // Server-side render nothing
+  if (!mounted) return null; 
 
   return (
     <header className=" fixed top-0  z-30  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
       <div className="w-[85%] mx-auto h-16 flex items-center justify-between">
-        {/* Left - Logo & Nav */}
         <div className="flex items-center gap-8">
-          {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center">
               <span className="text-black font-bold text-lg">S</span>
@@ -64,7 +60,6 @@ export function TopNavbar() {
             </span>
           </Link>
 
-          {/* Navigation */}
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => {
               const Icon = link.icon;
@@ -94,9 +89,7 @@ export function TopNavbar() {
           </nav>
         </div>
 
-        {/* Right - Actions & Profile */}
         <div className="flex items-center gap-3">
-          {/* Notification */}
           <button className="relative p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors">
             <Bell className="w-5 h-5" />
             {notifications > 0 && (
@@ -104,7 +97,6 @@ export function TopNavbar() {
             )}
           </button>
 
-          {/* Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-colors">

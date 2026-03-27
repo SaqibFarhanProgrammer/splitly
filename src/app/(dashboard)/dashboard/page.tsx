@@ -82,7 +82,6 @@ export default function DashboardPage() {
                 </TabsTrigger>
               </TabsList>
 
-              {/* Groups Tab */}
               <TabsContent value="groups" className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   {groups.map((group) => (
@@ -91,12 +90,10 @@ export default function DashboardPage() {
                 </div>
               </TabsContent>
 
-              {/* Expenses Tab */}
               <TabsContent value="expenses" className="space-y-4">
                 <Card className="bg-zinc-950 border-white/10">
                   <CardHeader>
                     <CardTitle className="text-white">
-                      {' '}
                       Recent Expenses
                     </CardTitle>
                     s
@@ -121,13 +118,11 @@ export default function DashboardPage() {
             </Tabs>
           </div>
 
-          {/* Right Column - Sidebar */}
           <div className="space-y-6">
             <QuickActions onActionClick={handleQuickAction} />
 
             <ActivityChart />
 
-            {/* Mini Stats */}
             <Card className="bg-zinc-950 border-white/10 mb-5">
               <CardHeader>
                 <CardTitle className="text-white text-lg">This Month</CardTitle>
@@ -149,6 +144,7 @@ export default function DashboardPage() {
 
                 <div className="pt-4 border-t border-white/5">
                   <div className="flex justify-between items-center">
+                    
                     <span className="text-zinc-400">Net Balance</span>
                     {stateData > 0 ? (
                       <span className="text-emerald-400 font-bold">
@@ -169,5 +165,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </section>
-  );
+  );  
 }

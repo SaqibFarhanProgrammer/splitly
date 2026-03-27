@@ -58,6 +58,7 @@ const balances = [
   { name: 'Saqib', amount: 2000, type: 'owed' },
   { name: 'Ali', amount: 1500, type: 'owe' },
 ];
+
 export interface Expense {
   _id: string;
   title: string;
