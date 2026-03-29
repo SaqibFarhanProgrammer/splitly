@@ -80,7 +80,7 @@ export function TopNavbar() {
               );
             })}
             <Link
-              href="/groups"
+              href="/profile"
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors"
             >
               <PlusCircle className="w-4 h-4" />

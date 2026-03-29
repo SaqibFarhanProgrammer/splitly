@@ -74,7 +74,7 @@ export default function ProfileHeader({
         <Button
           onClick={() => setisUploadImageShow(true)}
           variant="outline"
-          className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
+          className="border-white/10 text-black hover:bg-white/c font-['inter-bold']"
         >
           <Edit2Icon className="w-4 h-4 mr-2" />
           Edit Profile

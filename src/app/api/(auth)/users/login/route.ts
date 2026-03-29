@@ -17,7 +17,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const user = await User.findOne({ email });
+    const emailQuery = email.trim().toLowerCase();
+    const user = await User.findOne({ email: emailQuery });
+    
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid email or password' },
@@ -25,7 +27,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      user?.password as string
+    );
     if (!isPasswordValid) {
       return NextResponse.json(
         { error: 'Invalid email or password' },

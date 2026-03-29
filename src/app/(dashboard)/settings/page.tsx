@@ -1,4 +1,3 @@
-// app/settings/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -7,36 +6,26 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import {
-  User,
-  Lock,
-  Bell,
-  Shield,
-  Mail,
-  Camera,
-  Loader2,
-  Save,
-  Trash2,
-} from 'lucide-react';
+import { Loader2, Save, Lock, Trash2, User, Mail } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuth } from '@/context/AuthContext';
+import axios from 'axios';
+import { toast } from 'sonner';
+import bcrypt from 'bcryptjs';
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
-  // Profile Form
+  const { user } = useAuth();
+
   const profileForm = useForm({
     defaultValues: {
-      name: 'John Doe',
-      username: 'johndoe',
-      email: 'john@example.com',
-      bio: 'Software Developer',
+      username: user?.username || '',
+      email: user?.email || '',
     },
   });
 
-  // Account Form
   const accountForm = useForm({
     defaultValues: {
       currentPassword: '',
@@ -45,26 +34,67 @@ export default function SettingsPage() {
     },
   });
 
-  // Notification Settings
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    expenses: true,
-    groups: true,
-    marketing: false,
-  });
+  // Demo hashed password (frontend comparison). Replace with secure backend check in prod
+  const userPasswordHash =
+    '$2a$10$CwTycUXWue0Thq9StjUM0uJ8s6e5Io1oMqVhU9A3G4jOzN6kA4qG6'; // hash of 'password123'
 
   const handleProfileSubmit = async (data: any) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const res = await axios.post('/api/users/updateProfile', {
+        username: data.username,
+        email: data.email,
+      });
+
+      toast.success(res.data.message || 'Profile updated');
+    } catch (error: any) {
+      const message = error?.response?.data?.error || 'Something went wrong';
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handlePasswordSubmit = async (data: any) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsLoading(false);
+    // Frontend bcrypt check
+    const isMatch = await bcrypt.compare(
+      data.currentPassword,
+      userPasswordHash
+    );
+
+    if (!isMatch) {
+      toast.error('Current password is incorrect');
+      return;
+    }
+
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error('New password and confirm password do not match');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const res = await axios.post(
+        '/api/users/updatePassword',
+        {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        },
+        { withCredentials: true }
+      );
+
+      toast.success(res.data.message || 'Password updated');
+      accountForm.reset();
+    } catch (error: any) {
+      const message = error?.response?.data?.error || 'Something went wrong';
+      toast.error(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+
 
   return (
     <div className="min-h-screen bg-black py-12 px-4 mt-10">
@@ -90,47 +120,21 @@ export default function SettingsPage() {
               <Lock className="w-4 h-4 mr-2" />
               Account
             </TabsTrigger>
-            <TabsTrigger
-              value="notifications"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
-            >
-              <Bell className="w-4 h-4 mr-2" />
-              Notifications
-            </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
-            >
-              <Shield className="w-4 h-4 mr-2" />
-              Security
-            </TabsTrigger>
           </TabsList>
 
-          {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">
                 Profile Information
               </h2>
 
-              {/* Avatar Section */}
               <div className="flex items-center gap-6 mb-8">
                 <Avatar className="w-24 h-24 border-2 border-white/10">
-                  <AvatarImage src="" />
+                  <AvatarImage src={user?.avatar} className="object-cover" />
                   <AvatarFallback className="bg-white text-black text-3xl font-bold">
-                    JD
+                    {user?.username?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5 mb-2"
-                  >
-                    <Camera className="w-4 h-4 mr-2" />
-                    Change Photo
-                  </Button>
-                  <p className="text-sm text-zinc-500">JPG, PNG. Max 2MB</p>
-                </div>
               </div>
 
               <form
@@ -138,13 +142,6 @@ export default function SettingsPage() {
                 className="space-y-5"
               >
                 <div className="grid md:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <Label className="text-white">Full Name</Label>
-                    <Input
-                      {...profileForm.register('name', { required: true })}
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                    />
-                  </div>
                   <div className="space-y-2">
                     <Label className="text-white">Username</Label>
                     <Input
@@ -166,15 +163,6 @@ export default function SettingsPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-white">Bio</Label>
-                  <textarea
-                    {...profileForm.register('bio')}
-                    rows={3}
-                    className="w-full bg-zinc-900 border border-white/10 rounded-lg p-3 text-white placeholder:text-zinc-500 focus:outline-none focus:border-white/20 resize-none"
-                  />
-                </div>
-
                 <div className="flex justify-end pt-4">
                   <Button
                     type="submit"
@@ -193,7 +181,6 @@ export default function SettingsPage() {
             </div>
           </TabsContent>
 
-          {/* Account Tab */}
           <TabsContent value="account" className="space-y-6">
             <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
               <h2 className="text-xl font-bold text-white mb-6">
@@ -261,173 +248,13 @@ export default function SettingsPage() {
                 Once you delete your account, there is no going back.
               </p>
               <Button
+              onClick={handledelete}
                 variant="destructive"
                 className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
               >
                 <Trash2 className="w-4 h-4 mr-2" />
                 Delete Account
               </Button>
-            </div>
-          </TabsContent>
-
-          {/* Notifications Tab */}
-          <TabsContent value="notifications" className="space-y-6">
-            <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">
-                Notification Preferences
-              </h2>
-
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white font-medium">
-                      Email Notifications
-                    </h3>
-                    <p className="text-sm text-zinc-500">
-                      Receive updates via email
-                    </p>
-                  </div>
-                  <Switch
-                    checked={notifications.email}
-                    onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, email: checked })
-                    }
-                    className="data-[state=checked]:bg-white"
-                  />
-                </div>
-
-                <Separator className="bg-white/10" />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white font-medium">
-                      Push Notifications
-                    </h3>
-                    <p className="text-sm text-zinc-500">
-                      Receive push notifications
-                    </p>
-                  </div>
-                  <Switch
-                    checked={notifications.push}
-                    onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, push: checked })
-                    }
-                    className="data-[state=checked]:bg-white"
-                  />
-                </div>
-
-                <Separator className="bg-white/10" />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white font-medium">Expense Updates</h3>
-                    <p className="text-sm text-zinc-500">
-                      Get notified about new expenses
-                    </p>
-                  </div>
-                  <Switch
-                    checked={notifications.expenses}
-                    onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, expenses: checked })
-                    }
-                    className="data-[state=checked]:bg-white"
-                  />
-                </div>
-
-                <Separator className="bg-white/10" />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white font-medium">Group Activity</h3>
-                    <p className="text-sm text-zinc-500">
-                      Notifications about group changes
-                    </p>
-                  </div>
-                  <Switch
-                    checked={notifications.groups}
-                    onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, groups: checked })
-                    }
-                    className="data-[state=checked]:bg-white"
-                  />
-                </div>
-
-                <Separator className="bg-white/10" />
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-white font-medium">Marketing Emails</h3>
-                    <p className="text-sm text-zinc-500">
-                      Receive promotional content
-                    </p>
-                  </div>
-                  <Switch
-                    checked={notifications.marketing}
-                    onCheckedChange={(checked) =>
-                      setNotifications({ ...notifications, marketing: checked })
-                    }
-                    className="data-[state=checked]:bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Security Tab */}
-          <TabsContent value="security" className="space-y-6">
-            <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">
-                Security Settings
-              </h2>
-
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
-                  <div>
-                    <h3 className="text-white font-medium">
-                      Two-Factor Authentication
-                    </h3>
-                    <p className="text-sm text-zinc-500">
-                      Add an extra layer of security
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5"
-                  >
-                    Enable
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
-                  <div>
-                    <h3 className="text-white font-medium">Active Sessions</h3>
-                    <p className="text-sm text-zinc-500">
-                      Manage your active devices
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5"
-                  >
-                    View
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-zinc-900 rounded-lg">
-                  <div>
-                    <h3 className="text-white font-medium">Login History</h3>
-                    <p className="text-sm text-zinc-500">
-                      Check recent login activity
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5"
-                  >
-                    View
-                  </Button>
-                </div>
-              </div>
             </div>
           </TabsContent>
         </Tabs>
