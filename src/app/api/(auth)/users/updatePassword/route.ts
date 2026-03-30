@@ -7,7 +7,6 @@ export async function POST(request: NextRequest) {
   try {
     const cookiesStore = await cookies();
     const token = cookiesStore.get('token')?.value;
-      
 
     if (!token) {
       return NextResponse.json(
@@ -32,7 +31,6 @@ export async function POST(request: NextRequest) {
     const { currentPassword, newPassword } = await request.json();
 
     if (!currentPassword || !newPassword) {
-      
       return NextResponse.json(
         { error: 'All fields are required' },
         { status: 400 }
@@ -55,7 +53,7 @@ export async function POST(request: NextRequest) {
     const isMatch = await bcrypt.compare(currentPassword, user.password);
 
     if (!isMatch) {
-      console.log("wrog pass");
+      console.log('wrog pass');
 
       return NextResponse.json(
         { error: 'Current password is incorrect' },
@@ -76,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     user.password = hashedPassword;
     await user.save();
-    
+
     return NextResponse.json(
       { message: 'Password updated successfully' },
       { status: 200 }

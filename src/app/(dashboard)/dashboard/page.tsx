@@ -9,6 +9,7 @@ import {
   TrendingUp,
   ArrowDownRight,
   ArrowUpRight,
+  InfoIcon,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -36,6 +37,7 @@ import GroupSelect from '@/components/dashboard/group/SelectGroup';
 import { redirect } from 'next/navigation';
 import DashboardChart from '@/components/DashboardChart';
 import { useStateContext } from '@/context/States.context';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function DashboardPage() {
   const { groups } = useGroupContext();
@@ -47,8 +49,6 @@ export default function DashboardPage() {
   function handleQuickAction(id?: string, groupid?: string) {
     if (id === 'add-expense') {
       setshowSelectGroup(true);
-      console.log(id);
-      console.log(groupid);
     }
 
     if (id === 'create-group') {
@@ -61,6 +61,8 @@ export default function DashboardPage() {
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler'] ">
       <div className="max-w-7xl mx-auto">
         <DashboardChart />
+
+      
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -144,7 +146,6 @@ export default function DashboardPage() {
 
                 <div className="pt-4 border-t border-white/5">
                   <div className="flex justify-between items-center">
-                    
                     <span className="text-zinc-400">Net Balance</span>
                     {stateData > 0 ? (
                       <span className="text-emerald-400 font-bold">
@@ -165,5 +166,5 @@ export default function DashboardPage() {
         </div>
       </div>
     </section>
-  );  
+  );
 }

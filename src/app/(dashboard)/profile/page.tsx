@@ -29,12 +29,11 @@ import {
   Clock,
 } from 'lucide-react';
 
-import Link from 'next/link';
-
 import { ProfileProvider } from '@/context/Profile.Context';
 import { Group, useGroupContext } from '@/context/GroupContext';
 import { useExpenses } from '@/context/Expenses.Context';
 import GroupsList from '@/components/dashboard/group/GroupsList';
+import { useNotification } from '@/context/notification.context';
 
 const CreateGroupModal = dynamic(() =>
   import('@/components/CreateGroup').then((m) => m.CreateGroupModal)
@@ -74,6 +73,7 @@ export interface Expense {
 
 export default function Page() {
   const { groups } = useGroupContext();
+  const { setNotification } = useNotification();
 
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
@@ -93,6 +93,10 @@ export default function Page() {
     if (groups) {
       setLoading(true);
     }
+    setNotification({
+      type: 'group',
+      id: Date.now(),
+    });
   }, [groups]);
 
   return (

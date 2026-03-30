@@ -75,6 +75,7 @@ import SettlementList from '@/components/dashboard/group/SettlementList';
 import { SettlementT } from '@/types/settlementTypes';
 import { fi } from 'zod/locales';
 import { Expense } from '@/types/globalTypes';
+import { useNotification } from '@/context/notification.context';
 
 const AddMembers = dynamic(
   () => import('@/components/dashboard/group/AddMemebers'),
@@ -426,6 +427,18 @@ export default function GroupPage() {
     getallSettlement();
     getExpenses();
   }, [params.groupID]);
+
+
+  const { setNotification } = useNotification();
+
+useEffect(() => {
+  if (expense) {
+    setNotification({
+      type: 'expense',
+      id: Date.now(),
+    });
+  }
+}, [expense]);
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">

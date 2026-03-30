@@ -12,6 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 import bcrypt from 'bcryptjs';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -94,8 +95,6 @@ export default function SettingsPage() {
     }
   };
 
-
-
   return (
     <div className="min-h-screen bg-black py-12 px-4 mt-10">
       <div className="max-w-4xl mx-auto">
@@ -142,26 +141,36 @@ export default function SettingsPage() {
                 className="space-y-5"
               >
                 <div className="grid md:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <Label className="text-white">Username</Label>
-                    <Input
-                      {...profileForm.register('username', { required: true })}
-                      className="bg-zinc-900 border-white/10 text-white h-11"
-                    />
-                  </div>
+                  {user?.username ? (
+                    <div className="space-y-2">
+                      <Label className="text-white">Username</Label>
+                      <Input
+                        {...profileForm.register('username', {
+                          required: true,
+                        })}
+                        className="bg-zinc-900 border-white/10 text-white h-11"
+                      />
+                    </div>
+                  ) : (
+                    <Skeleton className="h-10 w-150 bg-zinc-700" />
+                  )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-white">Email</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                    <Input
-                      {...profileForm.register('email', { required: true })}
-                      type="email"
-                      className="pl-10 bg-zinc-900 border-white/10 text-white h-11"
-                    />
+                {user?.email ? (
+                  <div className="space-y-2">
+                    <Label className="text-white">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                      <Input
+                        {...profileForm.register('email', { required: true })}
+                        type="email"
+                        className="pl-10 bg-zinc-900 border-white/10 text-white h-11"
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <Skeleton className="h-10 w-200 bg-zinc-700" />
+                )}
 
                 <div className="flex justify-end pt-4">
                   <Button
@@ -248,7 +257,6 @@ export default function SettingsPage() {
                 Once you delete your account, there is no going back.
               </p>
               <Button
-              onClick={handledelete}
                 variant="destructive"
                 className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
               >
