@@ -73,7 +73,6 @@ export interface Expense {
 
 export default function Page() {
   const { groups } = useGroupContext();
-  const { setNotification } = useNotification();
 
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
@@ -93,10 +92,6 @@ export default function Page() {
     if (groups) {
       setLoading(true);
     }
-    setNotification({
-      type: 'group',
-      id: Date.now(),
-    });
   }, [groups]);
 
   return (

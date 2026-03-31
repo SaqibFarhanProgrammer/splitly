@@ -429,16 +429,6 @@ export default function GroupPage() {
   }, [params.groupID]);
 
 
-  const { setNotification } = useNotification();
-
-useEffect(() => {
-  if (expense) {
-    setNotification({
-      type: 'expense',
-      id: Date.now(),
-    });
-  }
-}, [expense]);
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">

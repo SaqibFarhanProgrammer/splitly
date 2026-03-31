@@ -12,7 +12,6 @@ import { getUserIdFromToken } from '@/lib/GetToken';
 import { GetDashboardAllStateData } from '@/lib/GetDashboardStaesData';
 import { GetNetBalance } from '@/lib/States';
 import { StateProvider } from '@/context/States.context';
-import { NotificationProvider } from '@/context/notification.context';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,11 +39,9 @@ export default async function RootLayout({
           <GroupProvider groups={groups}>
             <ExpensesProvider expense={expense}>
               <DashboardProvider data={expenseData}>
-                <NotificationProvider>
                   <StateProvider stateData={{ stateData: states }}>
                     <ProfileProvider>{children}</ProfileProvider>
                   </StateProvider>
-                </NotificationProvider>
               </DashboardProvider>
             </ExpensesProvider>
           </GroupProvider>
