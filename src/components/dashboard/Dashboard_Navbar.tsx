@@ -45,7 +45,7 @@ export function TopNavbar() {
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  if (!mounted) return null; 
+  if (!mounted) return null;
 
   return (
     <header className=" fixed top-0  z-30  w-full bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
@@ -90,13 +90,6 @@ export function TopNavbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="relative p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/50 transition-colors">
-            <Bell className="w-5 h-5" />
-            {notifications > 0 && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-white rounded-full" />
-            )}
-          </button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-3 p-1.5 pr-3 rounded-full bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-colors">

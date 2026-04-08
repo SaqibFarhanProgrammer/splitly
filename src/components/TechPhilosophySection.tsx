@@ -27,11 +27,9 @@ export function TechPhilosophySection() {
 
   return (
     <section className="relative py-32 bg-black">
-      {/* Subtle Background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,#18181b_0%,transparent_70%)]" />
 
       <div className="relative max-w-7xl mx-auto px-6">
-        {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-20">
           <span className="inline-block text-zinc-600 text-sm font-medium mb-4 tracking-wide uppercase">
             Technical Excellence
@@ -45,7 +43,6 @@ export function TechPhilosophySection() {
           </p>
         </div>
 
-        {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {items.map((item, i) => (
             <div
@@ -65,7 +62,6 @@ export function TechPhilosophySection() {
           ))}
         </div>
 
-        {/* Quote Block */}
         <div className="mt-20 bg-zinc-950 border border-zinc-900 rounded-2xl p-8 max-w-3xl mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-2 rounded-full bg-zinc-600 animate-pulse" />

@@ -60,7 +60,9 @@ export function ExpenseItem({ expense }: ExpenseItemProps) {
 
       <div className="text-right flex flex-col items-end gap-1">
         <p className="text-white font-semibold font-['inter-bold'] text-lg">
-          Rs{expense.totalAmount.toLocaleString()}
+          {expense.totalAmount === undefined
+            ? 'Nill'
+            : 'Rs' + expense.totalAmount.toLocaleString()}
         </p>
         <div className="flex items-center gap-2"></div>
         <p className="text-zinc-500 text-xs mt-1">

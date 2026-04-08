@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useParams, useRouter } from 'next/navigation';
+import { redirect, useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -75,7 +75,6 @@ import SettlementList from '@/components/dashboard/group/SettlementList';
 import { SettlementT } from '@/types/settlementTypes';
 import { fi } from 'zod/locales';
 import { Expense } from '@/types/globalTypes';
-import { useNotification } from '@/context/notification.context';
 
 const AddMembers = dynamic(
   () => import('@/components/dashboard/group/AddMemebers'),
@@ -318,10 +317,13 @@ export default function GroupPage() {
         groupid: groupID,
       });
 
-      return res.data?.data;
+      if (res?.status === 200) {
+        return res.data?.data;
+      } else {
+        redirect('/profile');
+      }
     } catch (error) {
       console.error(error);
-      return null;
     }
   }
 
@@ -427,8 +429,6 @@ export default function GroupPage() {
     getallSettlement();
     getExpenses();
   }, [params.groupID]);
-
-
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">

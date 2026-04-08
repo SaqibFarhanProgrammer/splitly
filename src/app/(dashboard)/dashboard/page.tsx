@@ -62,8 +62,6 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto">
         <DashboardChart />
 
-      
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <Tabs defaultValue="groups" className="w-full">
@@ -85,11 +83,15 @@ export default function DashboardPage() {
               </TabsList>
 
               <TabsContent value="groups" className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  {groups.map((group) => (
-                    <GroupCard key={group._id} group={group} />
-                  ))}
-                </div>
+                {groups.length === 0 ? (
+                  <p className=' text-center pt-20 text-zinc-200'>No Group yet</p>
+                ) : (
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {groups.map((group) => (
+                      <GroupCard key={group._id} group={group} />
+                    ))}
+                  </div>
+                )}
               </TabsContent>
 
               <TabsContent value="expenses" className="space-y-4">

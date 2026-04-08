@@ -20,7 +20,7 @@ interface AddExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
   groupName?: string;
-  onSubmit?: (data: AddExpenseData) => Promise<void>;
+  onSubmit?: (data: AddExpenseData) => null | Promise<void>;
 }
 
 export function AddExpenseModal({
