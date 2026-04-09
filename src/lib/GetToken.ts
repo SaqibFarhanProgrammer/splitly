@@ -1,5 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export async function getUserIdFromToken() {
   try {
@@ -7,8 +8,7 @@ export async function getUserIdFromToken() {
     const token = cookiesStore.get('token')?.value;
 
     if (!token) {
-      console.error('Token not found in cookies');
-      return null;
+      throw new Error('No token found');
     }
 
     const payload: JwtPayload = jwt.verify(

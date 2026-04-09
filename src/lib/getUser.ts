@@ -8,11 +8,12 @@ interface JwtPayload {
   userId: string;
 }
 
-export async function getUser(userid: string) {
+export async function getUser(userid: string | Promise<string | null>) {
   try {
+    const userId = await Promise.resolve(userid);
     await ConnectDB();
 
-    const user = await User.findById(userid).select('-password').lean();
+    const user = await User.findById(userId).select('-password').lean();
 
     if (!user) return null;
 

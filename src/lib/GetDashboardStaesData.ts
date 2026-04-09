@@ -3,7 +3,8 @@ import { ConnectDB } from './ConnectDB';
 import { Group } from '@/models/group.model';
 import { ObjectId } from 'mongoose';
 
-export async function GetDashboardAllStateData(userid: string) {
+export async function GetDashboardAllStateData(userid: string | Promise<string | null>) {
+  const userId = await Promise.resolve(userid);
   await ConnectDB();
 
   // Date ranges
@@ -15,7 +16,7 @@ export async function GetDashboardAllStateData(userid: string) {
 
   // Expenses in last 30 days by user
   const expensesLast30Days = await Expense.find({
-    paidBy: userid,
+    paidBy: userId,
     createdAt: { $gte: thirtyDaysAgo },
   }).select('totalAmount -_id');
 
@@ -26,8 +27,8 @@ export async function GetDashboardAllStateData(userid: string) {
 
   // Fetch groups the user is part of
   const groups = await Group.find({
-    createdBy: userid,
-    'members.userId': userid,
+    createdBy: userId,
+    'members.userId': userId ,
   }).select('_id');
 
   const mygroups = groups.map((g) => g._id);

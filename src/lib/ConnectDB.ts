@@ -1,8 +1,13 @@
 import mongoose from 'mongoose';
+import { ur } from 'zod/locales';
 
 let cashed = global.mongoose;
 
 const url = process.env.MONGODB_URI!;
+
+if (url === undefined) {
+  throw new Error('MONGODB_URI is not defined');
+}
 
 if (!cashed) {
   cashed = global.mongoose = { conn: null, promise: null };
@@ -20,6 +25,8 @@ if (!cashed.promise) {
 }
 try {
   cashed.conn = await cashed.promise;
+  console.log("Mongodb Connected");
+  
 } catch (error) {
   cashed.promise = null;
   console.log('from connect db', error);
