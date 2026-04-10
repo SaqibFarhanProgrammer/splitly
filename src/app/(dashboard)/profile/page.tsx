@@ -1,265 +1,273 @@
-'use client';
+  'use client';
 
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+  // fetch data on client component
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+  import { useEffect, useState } from 'react';
+  import dynamic from 'next/dynamic';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+  import { Badge } from '@/components/ui/badge';
+  import { Button } from '@/components/ui/button';
+  import { Skeleton } from '@/components/ui/skeleton';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+  import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+  } from '@/components/ui/card';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import {
-  Users,
-  Wallet,
-  Receipt,
-  Plus,
-  ArrowUpRight,
-  ArrowDownRight,
-  Clock,
-} from 'lucide-react';
+  import {
+    Users,
+    Wallet,
+    Receipt,
+    Plus,
+    ArrowUpRight,
+    ArrowDownRight,
+    Clock,
+  } from 'lucide-react';
 
-import { ProfileProvider } from '@/context/Profile.Context';
-import { Group, useGroupContext } from '@/context/GroupContext';
-import { useExpenses } from '@/context/Expenses.Context';
-import GroupsList from '@/components/dashboard/group/GroupsList';
+  import GroupsList from '@/components/dashboard/group/GroupsList';
+  import axios from 'axios';
+  import { Group } from '@/types/globalTypes';
 
-const CreateGroupModal = dynamic(() =>
-  import('@/components/CreateGroup').then((m) => m.CreateGroupModal)
-);
-
-const AddExpenseModal = dynamic(() =>
-  import('@/components/AddExpenseModal').then((m) => m.AddExpenseModal)
-);
-
-const ProfileHeader = dynamic(
-  () => import('@/components/dashboard/profile/ProfileHeader')
-);
-
-const UploadImageModal = dynamic(() =>
-  import('@/components/dashboard/profile/UploadProfileImage').then(
-    (m) => m.UploadImageModal
-  )
-);
-const balances = [
-  { name: 'hamza', amount: 3200, type: 'owed' },
-  { name: 'Saqib', amount: 2000, type: 'owed' },
-  { name: 'Ali', amount: 1500, type: 'owe' },
-];
-
-export interface Expense {
-  _id: string;
-  title: string;
-  totalAmount: number;
-  groupId: string;
-  paidBy: string;
-  paidmemberUsername: string;
-  paidmemberAvatar: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
-export default function Page() {
-  const { groups } = useGroupContext();
-
-  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [groupData, setgroupData] = useState<Group[]>(groups || []);
-
-  const handleAddExpense = async (data: {
-    description: string;
-    amount: string;
-    date: string;
-    notes?: string;
-  }) => {};
-
-  const { expenses } = useExpenses();
-
-  useEffect(() => {
-    if (groups) {
-      setLoading(true);
-    }
-  }, [groups]);
-
-  return (
-    <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
-      <div className="max-w-6xl mx-auto">
-        <ProfileProvider>
-          <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
-          <UploadImageModal />
-        </ProfileProvider>
-
-        <Tabs defaultValue="groups" className="w-full">
-          <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 font-['inter-beta']">
-            <TabsTrigger
-              value="groups"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-['inter-beta']"
-            >
-              <Users className="w-4 h-4 mr-2" />
-              My Groups
-            </TabsTrigger>
-            <TabsTrigger
-              value="expenses"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-['inter-beta']"
-            >
-              <Receipt className="w-4 h-4 mr-2" />
-              Recent Expenses
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="groups" className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white font-['inter-bold']">
-                Your Groups
-              </h2>
-              <Button
-                onClick={() => setIsCreateGroupOpen(true)}
-                variant="outline"
-                className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Create Group
-              </Button>
-            </div>
-            <GroupsList
-              expenses={expenses}
-              loading={loading}
-              groupData={groupData}
-            />
-          </TabsContent>
-
-          <TabsContent value="expenses" className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-white font-['inter-bold']">
-                Recent Expenses
-              </h2>
-              <Button
-                onClick={() => setIsAddExpenseOpen(true)}
-                variant="outline"
-                className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Expense
-              </Button>
-            </div>
-            <Card className="bg-zinc-950 border-white/10">
-              <CardHeader>
-                <CardTitle className="text-white font-['inter-bold']">
-                  Recent Expenses
-                </CardTitle>
-                <CardDescription className="text-zinc-400 font-['inter-beta']">
-                  Latest transactions across your groups
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {!loading
-                  ? Array.from({ length: 3 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between p-4 bg-white/5 rounded-xl"
-                      >
-                        <div className="flex items-center gap-4">
-                          <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-40 bg-zinc-800 font-['inter-bold']" />
-                            <Skeleton className="h-3 w-32 bg-zinc-800 font-['inter-beta']" />
-                          </div>
-                        </div>
-                        <div className="text-right space-y-1">
-                          <Skeleton className="h-5 w-20 bg-zinc-800 ml-auto font-['inter-bold']" />
-                          <Skeleton className="h-3 w-24 bg-zinc-800 ml-auto font-['inter-beta']" />
-                        </div>
-                      </div>
-                    ))
-                  : expenses.map((expense, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-xl border border-white/5 hover:border-white/10 group"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <img
-                              src={expense.paidmemberAvatar}
-                              alt={expense.paidmemberUsername}
-                              className="w-12 h-12 rounded-full object-cover border-2 border-white/10 group-hover:border-white/20 transition-colors"
-                              onError={(
-                                e: React.SyntheticEvent<HTMLImageElement>
-                              ) => {
-                                e.currentTarget.src =
-                                  'https://via.placeholder.com/48';
-                              }}
-                            />
-                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10">
-                              <Clock className="w-3 h-3 text-zinc-400" />
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col gap-1">
-                            <h4 className="text-white font-medium font-['inter-bold'] text-base">
-                              {expense.title}
-                            </h4>
-                            <div className="flex items-center gap-2 text-zinc-400 text-sm font-['inter-beta']">
-                              <span className="bg-white/5 px-2 py-0.5 rounded-full text-xs">
-                                {expense.groupId.split('').slice(0, 5).join('')
-                                  ? 'Group Expense'
-                                  : 'Personal'}
-                              </span>
-                              <span>•</span>
-                              <span>@{expense.paidmemberUsername}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="text-right flex flex-col items-end gap-1">
-                          <p className="text-white font-semibold font-['inter-bold'] text-lg">
-                            Rs{expense.totalAmount.toLocaleString()}
-                          </p>
-                          <div className="flex items-center gap-2"></div>
-                          <p className="text-zinc-500 text-xs mt-1">
-                            {new Date(expense.createdAt).toLocaleDateString(
-                              'en-US',
-                              {
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              }
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
-        <CreateGroupModal
-          isOpen={isCreateGroupOpen}
-          onClose={() => setIsCreateGroupOpen(false)}
-          onGroupCreated={(newGroup) =>
-            setgroupData((prev) => [...prev, newGroup])
-          }
-        />
-
-        <AddExpenseModal
-          isOpen={isAddExpenseOpen}
-          onClose={() => setIsAddExpenseOpen(false)}
-          onSubmit={handleAddExpense}
-        />
-      </div>
-    </section>
+  const CreateGroupModal = dynamic(() =>
+    import('@/components/CreateGroup').then((m) => m.CreateGroupModal)
   );
-}
+
+  const AddExpenseModal = dynamic(() =>
+    import('@/components/AddExpenseModal').then((m) => m.AddExpenseModal)
+  );
+
+  const ProfileHeader = dynamic(
+    () => import('@/components/dashboard/profile/ProfileHeader')
+  );
+
+  const UploadImageModal = dynamic(() =>
+    import('@/components/dashboard/profile/UploadProfileImage').then(
+      (m) => m.UploadImageModal
+    )
+  );
+  const balances = [
+    { name: 'hamza', amount: 3200, type: 'owed' },
+    { name: 'Saqib', amount: 2000, type: 'owed' },
+    { name: 'Ali', amount: 1500, type: 'owe' },
+  ];
+
+  export interface Expense {
+    _id: string;
+    title: string;
+    totalAmount: number;
+    groupId: string;
+    paidBy: string;
+    paidmemberUsername: string;
+    paidmemberAvatar: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  }
+
+  export default function Page() {
+    const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+    const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [groupData, setgroupData] = useState<Group[]>(  []);
+    const [expenseData, setexpenseData] = useState<Expense[]>([])
+    const handleAddExpense = async (data: {
+      description: string;
+      amount: string;
+      date: string;
+      notes?: string;
+    }) => {};
+
+    async function GetGroupsdata() {
+      try {
+        const res = await fetch('/api/users/me');
+        console.log(res);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
+
+    
+
+    useEffect(() => {
+      GetGroupsdata();
+    }, []);
+
+    useEffect(() => {
+      if (groupData) {
+        setLoading(true);
+      }
+    }, [groupData]);
+
+    return (
+      <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
+        <div className="max-w-6xl mx-auto">
+            <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
+            <UploadImageModal />
+
+          <Tabs defaultValue="groups" className="w-full">
+            <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 font-['inter-beta']">
+              <TabsTrigger
+                value="groups"
+                className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-['inter-beta']"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                My Groups
+              </TabsTrigger>
+              <TabsTrigger
+                value="expenses"
+                className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400 font-['inter-beta']"
+              >
+                <Receipt className="w-4 h-4 mr-2" />
+                Recent Expenses
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="groups" className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-white font-['inter-bold']">
+                  Your Groups
+                </h2>
+                <Button
+                  onClick={() => setIsCreateGroupOpen(true)}
+                  variant="outline"
+                  className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Group
+                </Button>
+              </div>
+              <GroupsList
+                expenses={expenses}
+                loading={loading}
+                groupData={groupData}
+              />
+            </TabsContent>
+
+            <TabsContent value="expenses" className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-white font-['inter-bold']">
+                  Recent Expenses
+                </h2>
+                <Button
+                  onClick={() => setIsAddExpenseOpen(true)}
+                  variant="outline"
+                  className="border-white/10 text-white hover:bg-white/5 font-['inter-bold']"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Expense
+                </Button>
+              </div>
+              <Card className="bg-zinc-950 border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white font-['inter-bold']">
+                    Recent Expenses
+                  </CardTitle>
+                  <CardDescription className="text-zinc-400 font-['inter-beta']">
+                    Latest transactions across your groups
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {!loading
+                    ? Array.from({ length: 3 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center justify-between p-4 bg-white/5 rounded-xl"
+                        >
+                          <div className="flex items-center gap-4">
+                            <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
+                            <div className="space-y-2">
+                              <Skeleton className="h-5 w-40 bg-zinc-800 font-['inter-bold']" />
+                              <Skeleton className="h-3 w-32 bg-zinc-800 font-['inter-beta']" />
+                            </div>
+                          </div>
+                          <div className="text-right space-y-1">
+                            <Skeleton className="h-5 w-20 bg-zinc-800 ml-auto font-['inter-bold']" />
+                            <Skeleton className="h-3 w-24 bg-zinc-800 ml-auto font-['inter-beta']" />
+                          </div>
+                        </div>
+                      ))
+                    : expenses.map((expense, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-4 bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-xl border border-white/5 hover:border-white/10 group"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="relative">
+                              <img
+                                src={expense.paidmemberAvatar}
+                                alt={expense.paidmemberUsername}
+                                className="w-12 h-12 rounded-full object-cover border-2 border-white/10 group-hover:border-white/20 transition-colors"
+                                onError={(
+                                  e: React.SyntheticEvent<HTMLImageElement>
+                                ) => {
+                                  e.currentTarget.src =
+                                    'https://via.placeholder.com/48';
+                                }}
+                              />
+                              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-zinc-800 rounded-full flex items-center justify-center border border-white/10">
+                                <Clock className="w-3 h-3 text-zinc-400" />
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <h4 className="text-white font-medium font-['inter-bold'] text-base">
+                                {expense.title}
+                              </h4>
+                              <div className="flex items-center gap-2 text-zinc-400 text-sm font-['inter-beta']">
+                                <span className="bg-white/5 px-2 py-0.5 rounded-full text-xs">
+                                  {expense.groupId.split('').slice(0, 5).join('')
+                                    ? 'Group Expense'
+                                    : 'Personal'}
+                                </span>
+                                <span>•</span>
+                                <span>@{expense.paidmemberUsername}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-right flex flex-col items-end gap-1">
+                            <p className="text-white font-semibold font-['inter-bold'] text-lg">
+                              Rs{expense.totalAmount.toLocaleString()}
+                            </p>
+                            <div className="flex items-center gap-2"></div>
+                            <p className="text-zinc-500 text-xs mt-1">
+                              {new Date(expense.createdAt).toLocaleDateString(
+                                'en-US',
+                                {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                }
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+
+          <CreateGroupModal
+            isOpen={isCreateGroupOpen}
+            onClose={() => setIsCreateGroupOpen(false)}
+            onGroupCreated={(newGroup) =>
+              setgroupData((prev) => [...prev, newGroup])
+            }
+          />
+
+          <AddExpenseModal
+            isOpen={isAddExpenseOpen}
+            onClose={() => setIsAddExpenseOpen(false)}
+            onSubmit={handleAddExpense}
+          />
+        </div>
+      </section>
+    );
+  }

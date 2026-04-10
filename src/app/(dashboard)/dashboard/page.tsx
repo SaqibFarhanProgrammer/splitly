@@ -4,21 +4,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Users,
-  Wallet,
   Receipt,
-  TrendingUp,
-  ArrowDownRight,
-  ArrowUpRight,
-  InfoIcon,
 } from 'lucide-react';
 import React, { useState } from 'react';
 
 // Import components
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
-import { StatCard } from '@/components/dashboard/StatCard';
 import { GroupCard, Group } from '@/components/dashboard/GroupCard';
 import { ExpenseItem, Expense } from '@/components/dashboard/ExpenseItem';
-import { BalanceItem, Balance } from '@/components/dashboard/BalanceItem';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
 import {
@@ -28,23 +20,16 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { useGroupContext } from '@/context/GroupContext';
-import { useDashboardContext } from '@/context/Dashboard.context';
-import { useExpenses } from '@/context/Expenses.Context';
 import { SelectGroup } from '@/components/ui/select';
 import SelectGroups from '@/components/dashboard/group/SelectGroup';
 import GroupSelect from '@/components/dashboard/group/SelectGroup';
 import { redirect } from 'next/navigation';
 import DashboardChart from '@/components/DashboardChart';
-import { useStateContext } from '@/context/States.context';
+ 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function DashboardPage() {
-  const { groups } = useGroupContext();
   const [showSelectGroup, setshowSelectGroup] = useState(false);
-  const { expenses } = useExpenses();
-  const { stateData } = useStateContext();
-  const dashboardstate = useDashboardContext();
 
   function handleQuickAction(id?: string, groupid?: string) {
     if (id === 'add-expense') {

@@ -5,17 +5,13 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, Crown, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
-import { Group } from '@/context/GroupContext';
-import { Expense } from '@/context/Expenses.Context';
-import { useAuth } from '@/context/AuthContext';
 
 interface GroupsListProps {
-  loading: boolean;
+    loading: boolean;
   groupData: Group[];
   expenses: Expense[];
 }
 function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
-  const { user } = useAuth();
 
   function getgrouptotalexpense(groupid: string) {
     const total = expenses.filter((ex) => ex.groupId.includes(groupid));

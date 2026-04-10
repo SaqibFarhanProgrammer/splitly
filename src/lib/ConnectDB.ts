@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
-import { ur } from 'zod/locales';
+import dns from 'node:dns';
+
+dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
 
 let cashed = global.mongoose;
 
@@ -25,8 +27,7 @@ if (!cashed.promise) {
 }
 try {
   cashed.conn = await cashed.promise;
-  console.log("Mongodb Connected");
-  
+  console.log('Mongodb Connected');
 } catch (error) {
   cashed.promise = null;
   console.log('from connect db', error);

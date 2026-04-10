@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   //
   if (!token) return NextResponse.json({ message: 'token is not found' });
 
-  const deocoded: string | JwtPayload = await jwt.verify(
+  const deocoded: string | JwtPayload =  jwt.verify(
     token,
     process.env.JWT_SECRET!
   );

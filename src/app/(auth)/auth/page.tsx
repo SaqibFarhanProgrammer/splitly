@@ -179,7 +179,7 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-white/10 hover:shadow-xl hover:shadow-white/20 disabled:opacity-50"
+                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-full transition-all duration-200   disabled:opacity-50"
                 >
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={20} />
@@ -290,7 +290,7 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-xl transition-all "
+                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-full transition-all "
                 >
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={20} />

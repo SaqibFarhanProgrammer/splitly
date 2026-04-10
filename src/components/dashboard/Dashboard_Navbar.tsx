@@ -23,7 +23,6 @@ import {
   Bell,
 } from 'lucide-react';
 import axios from 'axios';
-import { useAuth } from '@/context/AuthContext';
 
 const navLinks = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -31,12 +30,10 @@ const navLinks = [
 
 export function TopNavbar() {
   const pathname = usePathname();
-  const [notifications] = useState(3);
   const router = useRouter();
 
   const isActive = (href: string) => pathname === href;
 
-  const { user } = useAuth();
 
   async function handleLogout() {
     const response = await axios.get('/api/users/logout');

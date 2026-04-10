@@ -65,7 +65,6 @@ import Link from 'next/link';
 import axios from 'axios';
 
 import { IMember } from '@/types/member';
-import { useAuth } from '@/context/AuthContext';
 import mongoose from 'mongoose';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -153,7 +152,6 @@ export default function GroupPage() {
   const [expense, setexpense] = useState<Expense[]>([]);
   const [settlements, setsettlements] = useState<SettlementT[]>([]);
 
-  const { user } = useAuth();
 
   const expenseForm = useForm<ExpenseFormValues>({
     defaultValues: {

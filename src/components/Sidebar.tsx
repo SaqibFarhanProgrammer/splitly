@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSidebar } from '@/context/SidebarContext';
-import { useAuth } from '@/context/AuthContext';
 import {
   Menu,
   X,
@@ -35,9 +34,6 @@ export function Sidebar() {
   const { isOpen, setIsOpen } = useSidebar();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const pathname = usePathname();
-  const { user } = useAuth();
-  const loading = !user;
-
   const isActive = (href: string) => pathname === href;
 
   const getInitials = (name: string) =>

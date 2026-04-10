@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, Save, Lock, Trash2, User, Mail } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { toast } from 'sonner';
 import bcrypt from 'bcryptjs';
@@ -18,7 +17,6 @@ export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
-  const { user } = useAuth();
 
   const profileForm = useForm({
     defaultValues: {
