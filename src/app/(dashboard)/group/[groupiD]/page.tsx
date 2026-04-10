@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { redirect, useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useAuthContext } from '@/context/AuthContext';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -144,6 +145,7 @@ interface SettlementType {
 export default function GroupPage() {
   const params = useParams();
   const router = useRouter();
+  const { user } = useAuthContext();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
   const [isExpenseOpen, setIsExpenseOpen] = useState(false);
   const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);

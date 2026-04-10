@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Edit2Icon } from 'lucide-react';
 import { useProfileContext } from '@/context/Profile.Context';
+import { useAuthContext } from '@/context/AuthContext';
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
@@ -15,6 +16,7 @@ export default function ProfileHeader({
   setIsCreateGroupOpen,
 }: ProfileHeaderProps) {
   const { isUploadImageShow, setisUploadImageShow } = useProfileContext();
+  const { user } = useAuthContext();
 
   const getInitials = (name: string) =>
     name

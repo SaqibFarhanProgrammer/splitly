@@ -1,0 +1,88 @@
+﻿src/app/(dashboard)/dashboard/page.tsx(71,18): error TS2304: Cannot find name 'groups'.
+src/app/(dashboard)/dashboard/page.tsx(75,22): error TS2304: Cannot find name 'groups'.
+src/app/(dashboard)/dashboard/page.tsx(75,34): error TS7006: Parameter 'group' implicitly has an 'any' type.
+src/app/(dashboard)/dashboard/page.tsx(94,22): error TS2304: Cannot find name 'expenses'.
+src/app/(dashboard)/dashboard/page.tsx(94,36): error TS7006: Parameter 'expense' implicitly has an 'any' type.
+src/app/(dashboard)/dashboard/page.tsx(94,45): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/app/(dashboard)/dashboard/page.tsx(123,24): error TS2304: Cannot find name 'dashboardstate'.
+src/app/(dashboard)/dashboard/page.tsx(130,22): error TS2304: Cannot find name 'groups'.
+src/app/(dashboard)/dashboard/page.tsx(137,22): error TS2304: Cannot find name 'stateData'.
+src/app/(dashboard)/dashboard/page.tsx(139,29): error TS2304: Cannot find name 'stateData'.
+src/app/(dashboard)/dashboard/page.tsx(141,25): error TS2304: Cannot find name 'stateData'.
+src/app/(dashboard)/dashboard/page.tsx(143,38): error TS2304: Cannot find name 'stateData'.
+src/app/(dashboard)/group/[groupID]/page.tsx(261,29): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(265,17): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(269,27): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(270,25): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(279,19): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(282,29): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(283,27): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(367,45): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(379,50): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(385,35): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(391,35): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(477,50): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(703,54): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/group/[groupID]/page.tsx(781,59): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/profile/page.tsx(145,27): error TS2304: Cannot find name 'expenses'.
+src/app/(dashboard)/profile/page.tsx(194,23): error TS2304: Cannot find name 'expenses'.
+src/app/(dashboard)/profile/page.tsx(194,37): error TS7006: Parameter 'expense' implicitly has an 'any' type.
+src/app/(dashboard)/profile/page.tsx(194,46): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/app/(dashboard)/settings/page.tsx(23,17): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/settings/page.tsx(24,14): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/settings/page.tsx(130,37): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/settings/page.tsx(132,22): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/settings/page.tsx(142,20): error TS2304: Cannot find name 'user'.
+src/app/(dashboard)/settings/page.tsx(157,18): error TS2304: Cannot find name 'user'.
+src/app/layout.tsx(2,30): error TS2307: Cannot find module '@/lib/Getallgroups' or its corresponding type declarations.
+src/app/Providers.tsx(3,31): error TS2307: Cannot find module '@/context/GroupContext' or its corresponding type declarations.
+src/app/Providers.tsx(4,30): error TS2307: Cannot find module '@/context/AuthContext' or its corresponding type declarations.
+src/app/Providers.tsx(6,34): error TS2307: Cannot find module '@/context/Expenses.Context' or its corresponding type declarations.
+src/app/Providers.tsx(7,35): error TS2307: Cannot find module '@/context/Dashboard.context' or its corresponding type declarations.
+src/app/Providers.tsx(8,31): error TS2307: Cannot find module '@/context/States.context' or its corresponding type declarations.
+src/components/CreateGroup.tsx(11,23): error TS2307: Cannot find module '@/context/GroupContext' or its corresponding type declarations.
+src/components/dashboard/ActivityChart.tsx(4,29): error TS2307: Cannot find module '@/context/Expenses.Context' or its corresponding type declarations.
+src/components/dashboard/ActivityChart.tsx(31,18): error TS7006: Parameter 'exp' implicitly has an 'any' type.
+src/components/dashboard/ActivityChart.tsx(35,18): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/components/dashboard/ActivityChart.tsx(35,23): error TS7006: Parameter 'exp' implicitly has an 'any' type.
+src/components/dashboard/Dashboard_Navbar.tsx(95,26): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/Dashboard_Navbar.tsx(99,22): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/Dashboard_Navbar.tsx(99,39): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/Dashboard_Navbar.tsx(103,20): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/Dashboard_Navbar.tsx(114,20): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/Dashboard_Navbar.tsx(116,55): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/dashboard/group/ExpensesList.tsx(3,25): error TS2307: Cannot find module '@/context/AuthContext' or its corresponding type declarations.
+src/components/dashboard/group/GroupsList.tsx(11,14): error TS2304: Cannot find name 'Group'.
+src/components/dashboard/group/GroupsList.tsx(12,13): error TS2304: Cannot find name 'Expense'.
+src/components/dashboard/group/GroupsList.tsx(106,48): error TS2304: Cannot find name 'user'.
+src/components/dashboard/group/GroupsList.tsx(119,48): error TS2304: Cannot find name 'user'.
+src/components/dashboard/group/SelectGroup.tsx(3,33): error TS2307: Cannot find module '@/context/GroupContext' or its corresponding type declarations.
+src/components/dashboard/group/SelectGroup.tsx(46,26): error TS7006: Parameter 'group' implicitly has an 'any' type.
+src/components/dashboard/group/SettlementList.tsx(4,25): error TS2307: Cannot find module '@/context/AuthContext' or its corresponding type declarations.
+src/components/dashboard/GroupCard.tsx(6,29): error TS2307: Cannot find module '@/context/Expenses.Context' or its corresponding type declarations.
+src/components/dashboard/GroupCard.tsx(43,36): error TS7006: Parameter 'ex' implicitly has an 'any' type.
+src/components/dashboard/GroupCard.tsx(44,39): error TS7006: Parameter 'total' implicitly has an 'any' type.
+src/components/dashboard/GroupCard.tsx(44,46): error TS7006: Parameter 'ex' implicitly has an 'any' type.
+src/components/dashboard/profile/ProfileHeader.tsx(26,8): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(49,29): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(51,14): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(51,42): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(56,14): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(58,61): error TS2304: Cannot find name 'user'.
+src/components/dashboard/profile/ProfileHeader.tsx(64,31): error TS2304: Cannot find name 'user'.
+src/components/dashboard/QuickActions.tsx(4,33): error TS2307: Cannot find module '@/context/GroupContext' or its corresponding type declarations.
+src/components/DashboardChart.tsx(3,29): error TS2307: Cannot find module '@/context/Expenses.Context' or its corresponding type declarations.
+src/components/DashboardChart.tsx(30,18): error TS7006: Parameter 'exp' implicitly has an 'any' type.
+src/components/DashboardChart.tsx(34,18): error TS7006: Parameter 'total' implicitly has an 'any' type.
+src/components/DashboardChart.tsx(34,25): error TS7006: Parameter 'exp' implicitly has an 'any' type.
+src/components/Sidebar.tsx(76,16): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/Sidebar.tsx(77,35): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(80,20): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(80,49): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(87,20): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(90,20): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(163,14): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/Sidebar.tsx(164,33): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/Sidebar.tsx(167,18): error TS2552: Cannot find name 'user'. Did you mean 'User'?
+src/components/Sidebar.tsx(173,59): error TS2304: Cannot find name 'user'.
+src/components/Sidebar.tsx(175,18): error TS2304: Cannot find name 'user'.

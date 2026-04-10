@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSidebar } from '@/context/SidebarContext';
+import { useAuthContext } from '@/context/AuthContext';
 import {
   Menu,
   X,
@@ -32,6 +33,7 @@ const bottomNavigation = [
 
 export function Sidebar() {
   const { isOpen, setIsOpen } = useSidebar();
+  const { user } = useAuthContext();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href;

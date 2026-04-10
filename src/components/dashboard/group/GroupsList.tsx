@@ -1,4 +1,6 @@
 import React from 'react';
+import { useAuthContext } from '@/context/AuthContext';
+import { Group, Expense } from '@/types/globalTypes';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -12,6 +14,7 @@ interface GroupsListProps {
   expenses: Expense[];
 }
 function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
+  const { user } = useAuthContext();
 
   function getgrouptotalexpense(groupid: string) {
     const total = expenses.filter((ex) => ex.groupId.includes(groupid));

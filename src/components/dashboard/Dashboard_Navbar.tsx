@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuthContext } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -31,6 +32,7 @@ const navLinks = [
 export function TopNavbar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { user } = useAuthContext();
 
   const isActive = (href: string) => pathname === href;
 

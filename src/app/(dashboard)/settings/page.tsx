@@ -12,10 +12,12 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import bcrypt from 'bcryptjs';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuthContext } from '@/context/AuthContext';
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const { user } = useAuthContext();
 
 
   const profileForm = useForm({

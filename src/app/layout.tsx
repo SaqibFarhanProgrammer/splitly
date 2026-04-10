@@ -13,15 +13,32 @@ export const metadata = {
   description: 'Track and split expenses',
 };
 
+import Providers from './Providers';
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const userPromise = getUser();
+  const groupsPromise = GetAllGroups();
+  const expensePromise = GetExpense();
+  // We need dashboard and states as well
+  let dashboardPromise = GetDashboardAllStateData();
+  let statesPromise = GetNetBalance();
+
   return (
     <html lang="en">
-      <body className="antialiased bg-[#08080B]" cz-shortcut-listen="true">
-        <>{children}</>
+      <body className="antialiased bg-[#08080B]">
+        <Providers
+          userPromise={userPromise}
+          groupsPromise={groupsPromise}
+          expensePromise={expensePromise}
+          dashboardPromise={dashboardPromise}
+          statesPromise={statesPromise}
+        >
+          {children}
+        </Providers>
       </body>
     </html>
   );
