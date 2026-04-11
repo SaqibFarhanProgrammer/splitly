@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuth } from '@/context/AuthContext';
 import React from 'react';
 import { ArrowRight, CheckCircle2, Wallet, User } from 'lucide-react';
 import { SettlementT } from '@/types/settlementTypes';
@@ -11,7 +10,6 @@ interface SettlementListProps {
 }
 
 function SettlementList({ settlements }: SettlementListProps) {
-  const { user } = useAuth();
 
   const toStringId = (
     id: mongoose.Types.ObjectId | string | undefined

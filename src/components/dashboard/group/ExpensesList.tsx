@@ -1,13 +1,32 @@
+'use cleint';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuth } from '@/context/AuthContext';
+import { IUser } from '@/models/user.model';
 import { Expense } from '@/types/globalTypes';
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 interface Proptype {
   expense: Expense[];
 }
+
 function ExpensesList({ expense }: Proptype) {
-  const { user } = useAuth();
+  const [UserData, setUserData] = useState<IUser>();
+
+  async function GetUser() {
+    try {
+      const res = await axios.get('/api/users/me');
+      if (res.status === 200) {
+        setUserData(res.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
+
+  useEffect(() => {
+    GetUser();
+  }, []);
+
   return expense.map((exp, index) => (
     <div key={index} className="flex gap-3 items-start">
       <Avatar className="w-11 h-11 flex-shrink-0 ring-2 ring-zinc-800">
@@ -26,11 +45,12 @@ function ExpensesList({ expense }: Proptype) {
                   <h3 className="text-white font-semibold text-base font-['inter-bold'] truncate leading-tight">
                     {exp.title}
                   </h3>
-                  {user?._id && exp.paidBy.toString() === user._id && (
-                    <span className="flex-shrink-0 text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-['inter-bold'] border border-emerald-500/20">
-                      You
-                    </span>
-                  )}
+                  {UserData?._id.toString() &&
+                    exp.paidBy.toString() === UserData._id.toString() && (
+                      <span className="flex-shrink-0 text-[10px] bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full font-['inter-bold'] border border-emerald-500/20">
+                        You
+                      </span>
+                    )}
                 </div>
 
                 <p className="text-sm text-zinc-400 font-['inter-light-betaa'] flex items-center gap-1.5">

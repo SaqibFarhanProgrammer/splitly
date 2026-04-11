@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
   try {
     await ConnectDB();
     const { groupid } = await req.json();
-    console.log(groupid);
 
     if (!groupid) {
       return NextResponse.json(

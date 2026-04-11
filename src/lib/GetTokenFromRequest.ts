@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { NextRequest } from 'next/server';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 interface TokenPayload extends JwtPayload {
   userId: string;
@@ -8,8 +8,8 @@ interface TokenPayload extends JwtPayload {
 export function getUserIdFromToken(request: NextRequest): string | null {
   try {
     const token =
-      request.cookies.get("token")?.value ||
-      request.headers.get("authorization")?.replace("Bearer ", "");
+      request.cookies.get('token')?.value ||
+      request.headers.get('authorization')?.replace('Bearer ', '');
 
     if (!token) return null;
 

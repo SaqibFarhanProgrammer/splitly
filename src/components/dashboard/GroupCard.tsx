@@ -3,7 +3,6 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { useExpenses } from '@/context/Expenses.Context';
 import { Users, Clock, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -37,7 +36,6 @@ export function GroupCard({
   youOwe = 0,
   youAreOwed = 0,
 }: GroupCardProps) {
-  const { expenses } = useExpenses();
 
   function getgrouptotalexpense(groupid: string) {
     const total = expenses.filter((ex) => ex.groupId.includes(groupid));

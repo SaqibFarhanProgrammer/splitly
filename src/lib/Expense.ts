@@ -10,7 +10,6 @@ export async function GetExpense(userid: string | Promise<string | null>) {
     useridd = res;
   });
 
-  console.log(useridd   );
   
 
   await ConnectDB();

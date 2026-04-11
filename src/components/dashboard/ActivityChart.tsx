@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useExpenses } from '@/context/Expenses.Context';
 import React, { useMemo } from 'react';
 import {
   BarChart,
@@ -14,7 +13,6 @@ import {
 } from 'recharts';
 
 export function ActivityChart() {
-  const { expenses } = useExpenses();
 
   const chartData = useMemo(() => {
     const today = new Date();

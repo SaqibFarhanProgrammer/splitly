@@ -62,7 +62,6 @@ export async function POST(req: NextRequest) {
     }
 
     const uniqeid = uid(20)
-    console.log(uniqeid);
     
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       cloudinary.uploader

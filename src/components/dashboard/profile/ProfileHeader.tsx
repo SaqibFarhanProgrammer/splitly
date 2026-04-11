@@ -7,16 +7,19 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Plus, Edit2Icon } from 'lucide-react';
 import { useProfileContext } from '@/context/Profile.Context';
 import { useAuthContext } from '@/context/AuthContext';
+import { User } from '@/types/globalTypes';
+
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
+  userData: User | undefined;
 }
 
 export default function ProfileHeader({
   setIsCreateGroupOpen,
+  userData,
 }: ProfileHeaderProps) {
   const { isUploadImageShow, setisUploadImageShow } = useProfileContext();
-  const { user } = useAuthContext();
 
   const getInitials = (name: string) =>
     name
@@ -25,7 +28,7 @@ export default function ProfileHeader({
       .join('')
       .toUpperCase();
 
-  if (!user) {
+  if (!userData) {
     return (
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
         <div className="flex items-center gap-4">
@@ -43,27 +46,28 @@ export default function ProfileHeader({
       </div>
     );
   }
+  
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
       <div className="flex items-center gap-4">
         <Avatar className="w-20 h-20 border-2 border-white/10">
-          <AvatarImage src={user.avatar || ''} className="object-cover" />
+          <AvatarImage src={userData.avatar || ''} className="object-cover" />
           <AvatarFallback className="bg-white text-black text-2xl font-bold font-['inter-bold']">
-            {user.username ? getInitials(user.username) : 'U'}
+            {userData.username ? getInitials(userData.username) : 'U'}
           </AvatarFallback>
         </Avatar>
         <div>
           <h1 className="text-3xl font-bold mb-1 font-['inter-bold']">
-            {user.username}
+            {userData.username}
           </h1>
-          <p className="text-zinc-400 font-['inter-beta']">{user.email}</p>
+          <p className="text-zinc-400 font-['inter-beta']">{userData.email}</p>
           <div className="flex items-center gap-2 mt-2">
             <Badge
               variant="outline"
               className="border-white/20 text-zinc-400 font-['inter-beta']"
             >
-              Since {new Date(user.createdAt).getFullYear()}
+              Since {new Date(userData.createdAt).getFullYear()}
             </Badge>
           </div>
         </div>

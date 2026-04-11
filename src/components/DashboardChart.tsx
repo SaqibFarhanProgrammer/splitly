@@ -1,6 +1,5 @@
 'use client';
 
-import { useExpenses } from '@/context/Expenses.Context';
 import React, { useMemo } from 'react';
 import {
   BarChart,
@@ -14,7 +13,6 @@ import {
 import { format, subDays } from 'date-fns';
 
 function DashboardChart() {
-  const { expenses } = useExpenses();
 
   const chartData = useMemo(() => {
     const today = new Date();

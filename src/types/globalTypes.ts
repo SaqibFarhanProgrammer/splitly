@@ -6,6 +6,15 @@ export interface Member {
   avatar?: string;
 }
 
+export interface User {
+  _id: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Group {
   _id: string;
   name: string;

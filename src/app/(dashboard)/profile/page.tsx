@@ -31,7 +31,9 @@ import {
 
 import GroupsList from '@/components/dashboard/group/GroupsList';
 import axios from 'axios';
-import { Group } from '@/types/globalTypes';
+import { Group, User } from '@/types/globalTypes';
+import { ProfileProvider } from '@/context/Profile.Context';
+import { useStatesContext } from '@/context/States.context';
 
 const CreateGroupModal = dynamic(() =>
   import('@/components/CreateGroup').then((m) => m.CreateGroupModal)
@@ -75,6 +77,8 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [groupData, setgroupData] = useState<Group[]>([]);
   const [expenseData, setexpenseData] = useState<Expense[]>([]);
+  const [userData, setuserData] = useState<User>();
+
   const handleAddExpense = async (data: {
     description: string;
     amount: string;
@@ -82,17 +86,32 @@ export default function Page() {
     notes?: string;
   }) => {};
 
-  async function GetGroupsdata() {
+  async function GetUser() {
     try {
-      const res = await fetch('/api/users/me');
-      console.log(res);
+      const res = await axios.get('/api/users/me');
+      if (res.status === 200) {
+        setuserData(res.data.data);
+      }
+
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   }
 
+  async function GetAllGroups() {
+    try {
+      const res = await axios.get('/api/group/getallgroups');
+      if(res.status === 200){
+        setgroupData(res.data.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    GetGroupsdata();
+    GetUser();
+    GetAllGroups();
   }, []);
 
   useEffect(() => {
@@ -104,8 +123,13 @@ export default function Page() {
   return (
     <section className="min-h-screen mt-10 py-14 px-6 text-white font-['inter-reguler']">
       <div className="max-w-6xl mx-auto">
-        <ProfileHeader setIsCreateGroupOpen={setIsCreateGroupOpen} />
-        <UploadImageModal />
+        <ProfileProvider>
+          <ProfileHeader
+            userData={userData}
+            setIsCreateGroupOpen={setIsCreateGroupOpen}
+          />
+          <UploadImageModal />
+        </ProfileProvider>
 
         <Tabs defaultValue="groups" className="w-full">
           <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 font-['inter-beta']">

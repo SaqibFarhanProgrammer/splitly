@@ -75,6 +75,7 @@ import SettlementList from '@/components/dashboard/group/SettlementList';
 import { SettlementT } from '@/types/settlementTypes';
 import { fi } from 'zod/locales';
 import { Expense } from '@/types/globalTypes';
+import { IUser } from '@/models/user.model';
 
 const AddMembers = dynamic(
   () => import('@/components/dashboard/group/AddMemebers'),
@@ -153,8 +154,7 @@ export default function GroupPage() {
   const [ShowAddmember, setShowAddmember] = useState(false);
   const [expense, setexpense] = useState<Expense[]>([]);
   const [settlements, setsettlements] = useState<SettlementT[]>([]);
-
-
+  const [UserData, setUserData] = useState<IUser>();
   const expenseForm = useForm<ExpenseFormValues>({
     defaultValues: {
       amount: '',
@@ -257,16 +257,19 @@ export default function GroupPage() {
     const groupid = params.groupID as string;
 
     const selectedMember = groupData.members.find(
-      (m) => m.username === data.memberId
+      (m) => m.userId === data.memberId // ✅ FIXED
     );
 
-    if (!selectedMember || !user?._id) return;
+    if (!selectedMember || !user?._id) {
+      console.log('Missing user or member');
+      return;
+    }
 
     try {
-      const res = await axios.post('/api/settlement/adddsettlement', {
+      const res = await axios.post('/api/settlement/addsettlement', {
         paidBy: user._id,
         paidTo: selectedMember.userId,
-        amount: data.amount,
+        amount: Number(data.amount), // ✅ FIXED
         note: data.note,
         paidByUserAvatar: user.avatar || '',
         paidByUserName: user.username || '',
@@ -276,18 +279,7 @@ export default function GroupPage() {
       });
 
       if (res.status === 200 || res.status === 201) {
-        const newSettlement: SettlementT = {
-          groupId: groupid,
-          paidBy: user._id.toString(),
-          paidTo: selectedMember.userId as string,
-          amount: Number(data.amount),
-          paidByUserAvatar: user.avatar || '',
-          paidByUserName: user.username || '',
-          paidToUserName: selectedMember.username || '',
-          note: data.note || '',
-        };
-
-        setsettlements((prev) => [newSettlement, ...prev]);
+        await getallSettlement(); // ✅ sync with backend
       }
     } catch (error) {
       console.error('Settlement error:', error);
@@ -421,6 +413,18 @@ export default function GroupPage() {
 
     return 0;
   }
+
+  async function GetUser() {
+    try {
+      const res = await axios.get('/api/users/me');
+      if (res.status === 200) {
+        setUserData(res.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
+
   useEffect(() => {
     GetGroupData().then((data) => {
       if (data) setgroupData(data);
@@ -428,6 +432,7 @@ export default function GroupPage() {
 
     getallSettlement();
     getExpenses();
+    GetUser();
   }, [params.groupID]);
 
   return (
@@ -476,7 +481,7 @@ export default function GroupPage() {
               className="w-56 bg-zinc-950 border-white/10 text-white font-['inter-reguler']"
             >
               {groupData.isActive &&
-              groupData.createdBy.toString() === user?._id ? (
+              groupData.createdBy.toString() === UserData?._id.toString() ? (
                 <>
                   <DropdownMenuItem className="hover:bg-white/10 cursor-pointer font-['inter-bold']">
                     <Edit3 className="w-4 h-4 mr-2" />
@@ -702,7 +707,7 @@ export default function GroupPage() {
                                       />
                                     )}
                                   </Avatar>
-                                  {member.userId === user?._id
+                                  {member.userId === UserData?._id
                                     ? 'You'
                                     : member.username}
                                 </div>
@@ -769,6 +774,7 @@ export default function GroupPage() {
                         <FormLabel className="text-zinc-400 text-sm">
                           Pay To
                         </FormLabel>
+
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -778,13 +784,14 @@ export default function GroupPage() {
                               <SelectValue placeholder="Select member" />
                             </SelectTrigger>
                           </FormControl>
+
                           <SelectContent className="bg-zinc-900 border-white/10">
                             {groupData.members
                               .filter((m) => m.userId !== user?._id)
                               .map((member) => (
                                 <SelectItem
-                                  key={member.username}
-                                  value={member.username}
+                                  key={member.userId?.toString()}
+                                  value={member.userId as string} // ✅ FIXED
                                   className="text-white text-sm"
                                 >
                                   <div className="flex items-center gap-2">
@@ -808,6 +815,7 @@ export default function GroupPage() {
                               ))}
                           </SelectContent>
                         </Select>
+
                         <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     )}

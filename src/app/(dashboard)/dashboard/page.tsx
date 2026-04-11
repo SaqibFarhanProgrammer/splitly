@@ -14,7 +14,6 @@ import { ExpenseItem, Expense } from '@/components/dashboard/ExpenseItem';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
 import { useGroupContext } from '@/context/GroupContext';
-import { useExpensesContext } from '@/context/Expenses.Context';
 import { useDashboardContext } from '@/context/Dashboard.context';
 import { useStatesContext } from '@/context/States.context';
 import {
@@ -34,7 +33,6 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function DashboardPage() {
   const { groups } = useGroupContext();
-  const { expenses } = useExpensesContext();
   const { dashboardstate } = useDashboardContext();
   const { stateData } = useStatesContext();
   const [showSelectGroup, setshowSelectGroup] = useState(false);
