@@ -11,8 +11,13 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { format, subDays } from 'date-fns';
+import { ExpenseType } from './dashboard/ExpenseItem';
 
-function DashboardChart() {
+interface Chartprop{
+  expenses:ExpenseType[]
+}
+
+function DashboardChart({ expenses }: Chartprop) {
 
   const chartData = useMemo(() => {
     const today = new Date();

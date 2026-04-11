@@ -12,7 +12,7 @@ import { User } from '@/types/globalTypes';
 
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
-  userData: User | undefined;
+  userData: User | null;
 }
 
 export default function ProfileHeader({

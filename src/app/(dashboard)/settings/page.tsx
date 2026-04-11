@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,13 +12,23 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import bcrypt from 'bcryptjs';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAuthContext } from '@/context/AuthContext';
+import { IUser } from '@/models/user.model';
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-  const { user } = useAuthContext();
+  const [user, setuser] = useState<IUser>();
 
+  async function GetUser() {
+    try {
+      const res = await axios.get('/api/users/me');
+      if (res.status === 200) {
+        setuser(res.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  }
 
   const profileForm = useForm({
     defaultValues: {
@@ -94,6 +104,10 @@ export default function SettingsPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    GetUser();
+  }, []);
 
   return (
     <div className="min-h-screen bg-black py-12 px-4 mt-10">

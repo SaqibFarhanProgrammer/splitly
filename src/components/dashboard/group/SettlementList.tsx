@@ -4,12 +4,14 @@ import { Card, CardContent } from '@/components/ui/card';
 import React from 'react';
 import { ArrowRight, CheckCircle2, Wallet, User } from 'lucide-react';
 import { SettlementT } from '@/types/settlementTypes';
+import { IUser } from '@/models/user.model';
 
 interface SettlementListProps {
   settlements: SettlementT[];
+  user:IUser | null | undefined
 }
 
-function SettlementList({ settlements }: SettlementListProps) {
+function SettlementList({ settlements , user }: SettlementListProps) {
 
   const toStringId = (
     id: mongoose.Types.ObjectId | string | undefined

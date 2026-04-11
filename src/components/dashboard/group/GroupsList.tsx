@@ -7,11 +7,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, Crown, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
+import { ExpenseType } from '@/app/(dashboard)/profile/page';
 
 interface GroupsListProps {
     loading: boolean;
   groupData: Group[];
-  expenses: Expense[];
+  expenses: ExpenseType[];
 }
 function GroupsList({ loading, groupData, expenses }: GroupsListProps) {
   const { user } = useAuthContext();

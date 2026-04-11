@@ -154,7 +154,7 @@ export default function GroupPage() {
   const [ShowAddmember, setShowAddmember] = useState(false);
   const [expense, setexpense] = useState<Expense[]>([]);
   const [settlements, setsettlements] = useState<SettlementT[]>([]);
-  const [UserData, setUserData] = useState<IUser>();
+  const [UserData, setUserData] = useState<IUser | null>();
   const expenseForm = useForm<ExpenseFormValues>({
     defaultValues: {
       amount: '',
@@ -601,7 +601,7 @@ export default function GroupPage() {
       </div>
       <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
         <p className="text-2xl text-white">Settlements</p>
-        <SettlementList settlements={settlements} />
+        <SettlementList user={UserData} settlements={settlements} />
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">

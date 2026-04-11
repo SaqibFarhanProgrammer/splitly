@@ -4,7 +4,7 @@
 import { Clock, Receipt } from 'lucide-react';
 import React from 'react';
 
-export interface Expense {
+export interface ExpenseType {
   createdAt: string;
   groupId: string;
   paidBy: string;
@@ -12,13 +12,13 @@ export interface Expense {
   paidmemberUsername: string;
   title: string;
   totalAmount?: number;
-  type: string;
+  type: string | boolean;
   updatedAt: string;
   _id: string;
 }
 
 interface ExpenseItemProps {
-  expense: Expense;
+  expense: ExpenseType;
 }
 
 export function ExpenseItem({ expense }: ExpenseItemProps) {

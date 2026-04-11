@@ -35,7 +35,7 @@ export interface Expense {
   paidmemberAvatar?: string;
   paidmemberUsername?: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | string;
 }
 
 export interface ExpenseFormValues {

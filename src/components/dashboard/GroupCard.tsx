@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Users, Clock, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import { ExpenseType } from './ExpenseItem';
 
 interface IMember {
   userId?: string;
@@ -14,7 +15,7 @@ interface IMember {
   isAdmin?: boolean;
 }
 
-export interface Group {
+export interface GroupType {
   _id: string;
   name: string;
   createdAt: string;
@@ -26,7 +27,8 @@ export interface Group {
 }
 
 interface GroupCardProps {
-  group: Group;
+  group: GroupType;
+  expense:ExpenseType[]
   youOwe?: number; // Optional, if you track per user
   youAreOwed?: number; // Optional
 }
@@ -35,10 +37,11 @@ export function GroupCard({
   group,
   youOwe = 0,
   youAreOwed = 0,
+  expense
 }: GroupCardProps) {
 
   function getgrouptotalexpense(groupid: string) {
-    const total = expenses.filter((ex) => ex.groupId.includes(groupid));
+    const total = expense.filter((ex) => ex.groupId.includes(groupid));
     const finalamount = total.reduce((total, ex) => {
       return total + Number(ex.totalAmount);
     }, 0);

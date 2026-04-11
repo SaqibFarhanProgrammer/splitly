@@ -3,14 +3,12 @@ import { cookies } from 'next/headers';
 import { ConnectDB } from './ConnectDB';
 import { Expense } from '@/models/expense.model';
 
-export async function GetExpense(userid: string | Promise<string | null>) {
+export async function GetExpense(userid: string | null) {
   let useridd;
 
   Promise.resolve(userid).then((res) => {
     useridd = res;
   });
-
-  
 
   await ConnectDB();
 

@@ -2,18 +2,14 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Users,
-  Receipt,
-} from 'lucide-react';
-import React, { useState } from 'react';
+import { Users, Receipt } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 // Import components
-import { GroupCard, Group } from '@/components/dashboard/GroupCard';
-import { ExpenseItem, Expense } from '@/components/dashboard/ExpenseItem';
+import { GroupCard, GroupType } from '@/components/dashboard/GroupCard';
+import { ExpenseItem, ExpenseType } from '@/components/dashboard/ExpenseItem';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { ActivityChart } from '@/components/dashboard/ActivityChart';
-import { useGroupContext } from '@/context/GroupContext';
 import { useDashboardContext } from '@/context/Dashboard.context';
 import { useStatesContext } from '@/context/States.context';
 import {
@@ -28,15 +24,16 @@ import SelectGroups from '@/components/dashboard/group/SelectGroup';
 import GroupSelect from '@/components/dashboard/group/SelectGroup';
 import { redirect } from 'next/navigation';
 import DashboardChart from '@/components/DashboardChart';
- 
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { IGroup } from '@/models/group.model';
+import axios from 'axios';
+import { IExpense } from '@/models/expense.model';
 
 export default function DashboardPage() {
-  const { groups } = useGroupContext();
-  const { dashboardstate } = useDashboardContext();
-  const { stateData } = useStatesContext();
   const [showSelectGroup, setshowSelectGroup] = useState(false);
-
+  const [GroupData, setGroupData] = useState<GroupType[]>([]);
+  const [expenses, setexpenses] = useState<ExpenseType[]>([])
   function handleQuickAction(id?: string, groupid?: string) {
     if (id === 'add-expense') {
       setshowSelectGroup(true);
@@ -48,10 +45,38 @@ export default function DashboardPage() {
     }
   }
 
+  async function GetAllGroups() {
+    try {
+      const res = await axios.get('/api/group/getallgroups');
+      if (res.status === 200) {
+        setGroupData(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function GetAllExpenses() {
+    try {
+      const res = await axios.get('/api/expense/getallexpenses');
+      console.log(res);
+      if(res.status === 200){
+        setexpenses(res.data)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    GetAllExpenses();
+    GetAllGroups();
+  }, []);
+
   return (
     <section className="min-h-screen h-screen mt-12  py-7 px-6  text-white font-['inter-reguler'] ">
       <div className="max-w-7xl mx-auto">
-        <DashboardChart />
+        <DashboardChart expenses={expenses} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -74,12 +99,14 @@ export default function DashboardPage() {
               </TabsList>
 
               <TabsContent value="groups" className="space-y-4">
-                {groups.length === 0 ? (
-                  <p className=' text-center pt-20 text-zinc-200'>No Group yet</p>
+                {GroupData?.length === 0 ? (
+                  <p className=" text-center pt-20 text-zinc-200">
+                    No Group yet
+                  </p>
                 ) : (
                   <div className="grid md:grid-cols-2 gap-4">
-                    {groups.map((group) => (
-                      <GroupCard key={group._id} group={group} />
+                    {GroupData.map((group) => (
+                      <GroupCard key={group._id} expense={expenses} group={group} />
                     ))}
                   </div>
                 )}
@@ -116,8 +143,8 @@ export default function DashboardPage() {
           <div className="space-y-6">
             <QuickActions onActionClick={handleQuickAction} />
 
-            <ActivityChart />
-
+            <ActivityChart expenses={expenses} />
+{/* 
             <Card className="bg-zinc-950 border-white/10 mb-5">
               <CardHeader>
                 <CardTitle className="text-white text-lg">This Month</CardTitle>
@@ -133,7 +160,7 @@ export default function DashboardPage() {
                   <span className="text-zinc-400">Groups Active</span>
 
                   <span className="text-white font-semibold">
-                    {groups.length}
+                    {GroupData.length}
                   </span>
                 </div>
 
@@ -154,7 +181,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
         </div>
       </div>

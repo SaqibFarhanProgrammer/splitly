@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { X, Loader2 } from 'lucide-react';
 import axios from 'axios';
-import { Group } from '@/context/GroupContext';
+import { IGroup } from '@/models/group.model';
 
 interface CreateGroupData {
   groupName: string;
@@ -17,7 +17,7 @@ interface CreateGroupData {
 interface CreateGroupModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onGroupCreated: (group: Group) => void;
+  onGroupCreated: (group: IGroup) => void;
 }
 
 export function CreateGroupModal({
