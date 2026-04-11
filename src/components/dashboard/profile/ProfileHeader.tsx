@@ -9,7 +9,6 @@ import { useProfileContext } from '@/context/Profile.Context';
 import { useAuthContext } from '@/context/AuthContext';
 import { User } from '@/types/globalTypes';
 
-
 interface ProfileHeaderProps {
   setIsCreateGroupOpen: (open: boolean) => void;
   userData: User | null;
@@ -46,7 +45,6 @@ export default function ProfileHeader({
       </div>
     );
   }
-  
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">

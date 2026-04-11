@@ -9,16 +9,26 @@ type GroupContextType = {
 
 const GroupContext = createContext<GroupContextType | undefined>(undefined);
 
-export function GroupProvider({ children, groupsPromise }: { children: React.ReactNode, groupsPromise?: Promise<Group[]> }) {
+export function GroupProvider({
+  children,
+  groupsPromise,
+}: {
+  children: React.ReactNode;
+  groupsPromise?: Promise<Group[]>;
+}) {
   const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
     if (groupsPromise) {
-      groupsPromise.then((data) => setGroups(data || [])).catch((err) => console.error(err));
+      groupsPromise
+        .then((data) => setGroups(data || []))
+        .catch((err) => console.error(err));
     }
   }, [groupsPromise]);
 
-  return <GroupContext.Provider value={{ groups }}>{children}</GroupContext.Provider>;
+  return (
+    <GroupContext.Provider value={{ groups }}>{children}</GroupContext.Provider>
+  );
 }
 
 export function useGroupContext() {

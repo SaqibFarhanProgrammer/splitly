@@ -3,32 +3,37 @@ import dns from 'node:dns';
 
 dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
 
-let cashed = global.mongoose;
+const MONGODB_URI = process.env.MONGODB_URI!;
 
-const url = process.env.MONGODB_URI!;
-
-if (url === undefined) {
+if (!MONGODB_URI) {
   throw new Error('MONGODB_URI is not defined');
 }
 
-if (!cashed) {
-  cashed = global.mongoose = { conn: null, promise: null };
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
 export async function ConnectDB() {
-  if (cashed.conn) return cashed.conn;
-}
-if (!cashed.promise) {
-  const opt = {
-    bufferCommands: true,
-    maxPoolSize: 10,
-  };
-  cashed.promise = mongoose.connect(url, opt).then(() => mongoose.connection);
-}
-try {
-  cashed.conn = await cashed.promise;
-  console.log('Mongodb Connected');
-} catch (error) {
-  cashed.promise = null;
-  console.log('from connect db', error);
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+      maxPoolSize: 10,
+      family: 4,
+    }).then((mongoose) => mongoose.connection);
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    console.log('MongoDB Connected');
+  } catch (error) {
+    cached.promise = null;
+    console.log('from connect db', error);
+    throw error;
+  }
+
+  return cached.conn;
 }

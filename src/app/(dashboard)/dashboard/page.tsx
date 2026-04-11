@@ -33,7 +33,7 @@ import { IExpense } from '@/models/expense.model';
 export default function DashboardPage() {
   const [showSelectGroup, setshowSelectGroup] = useState(false);
   const [GroupData, setGroupData] = useState<GroupType[]>([]);
-  const [expenses, setexpenses] = useState<ExpenseType[]>([])
+  const [expenses, setexpenses] = useState<ExpenseType[]>([]);
   function handleQuickAction(id?: string, groupid?: string) {
     if (id === 'add-expense') {
       setshowSelectGroup(true);
@@ -60,8 +60,8 @@ export default function DashboardPage() {
     try {
       const res = await axios.get('/api/expense/getallexpenses');
       console.log(res);
-      if(res.status === 200){
-        setexpenses(res.data)
+      if (res.status === 200) {
+        setexpenses(res.data);
       }
     } catch (error) {
       console.log(error);
@@ -106,7 +106,11 @@ export default function DashboardPage() {
                 ) : (
                   <div className="grid md:grid-cols-2 gap-4">
                     {GroupData.map((group) => (
-                      <GroupCard key={group._id} expense={expenses} group={group} />
+                      <GroupCard
+                        key={group._id}
+                        expense={expenses}
+                        group={group}
+                      />
                     ))}
                   </div>
                 )}
@@ -144,8 +148,9 @@ export default function DashboardPage() {
             <QuickActions onActionClick={handleQuickAction} />
 
             <ActivityChart expenses={expenses} />
-{/* 
-            <Card className="bg-zinc-950 border-white/10 mb-5">
+            {/* 
+
+<Card className="bg-zinc-950 border-white/10 mb-5">
               <CardHeader>
                 <CardTitle className="text-white text-lg">This Month</CardTitle>
               </CardHeader>

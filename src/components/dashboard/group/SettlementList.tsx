@@ -8,11 +8,10 @@ import { IUser } from '@/models/user.model';
 
 interface SettlementListProps {
   settlements: SettlementT[];
-  user:IUser | null | undefined
+  user: IUser | null | undefined;
 }
 
-function SettlementList({ settlements , user }: SettlementListProps) {
-
+function SettlementList({ settlements, user }: SettlementListProps) {
   const toStringId = (
     id: mongoose.Types.ObjectId | string | undefined
   ): string => {

@@ -334,7 +334,7 @@ export default function GroupPage() {
   async function getallSettlement() {
     try {
       const res = await axios.post(
-        '/api/settlement/getallsettlementbyGroupid',
+        '/api/settlement/getSettlementsbyid',
         {
           groupId: params.groupID,
         }

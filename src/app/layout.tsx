@@ -12,13 +12,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   return (
     <html lang="en">
-      <body className="antialiased bg-[#08080B]"
-       cz-shortcut-listen="true"
-      >
-          {children}
+      <body className="antialiased bg-[#08080B]" cz-shortcut-listen="true">
+        {children}
       </body>
     </html>
   );

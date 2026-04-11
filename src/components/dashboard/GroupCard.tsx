@@ -28,7 +28,7 @@ export interface GroupType {
 
 interface GroupCardProps {
   group: GroupType;
-  expense:ExpenseType[]
+  expense: ExpenseType[];
   youOwe?: number; // Optional, if you track per user
   youAreOwed?: number; // Optional
 }
@@ -37,9 +37,8 @@ export function GroupCard({
   group,
   youOwe = 0,
   youAreOwed = 0,
-  expense
+  expense,
 }: GroupCardProps) {
-
   function getgrouptotalexpense(groupid: string) {
     const total = expense.filter((ex) => ex.groupId.includes(groupid));
     const finalamount = total.reduce((total, ex) => {

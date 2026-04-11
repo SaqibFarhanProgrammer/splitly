@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { ExpenseType } from '@/app/(dashboard)/profile/page';
 
 interface GroupsListProps {
-    loading: boolean;
+  loading: boolean;
   groupData: Group[];
   expenses: ExpenseType[];
 }

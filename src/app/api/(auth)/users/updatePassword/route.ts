@@ -4,7 +4,6 @@ import { User } from '@/models/user.model';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
-
 export async function POST(request: NextRequest) {
   try {
     const cookiesStore = await cookies();
@@ -22,7 +21,8 @@ export async function POST(request: NextRequest) {
       process.env.JWT_SECRET!
     ) as JwtPayload;
 
-    if (!payload.userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!payload.userId)
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const userid = payload.userId;
 

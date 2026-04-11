@@ -13,12 +13,11 @@ import {
 import { format, subDays } from 'date-fns';
 import { ExpenseType } from './dashboard/ExpenseItem';
 
-interface Chartprop{
-  expenses:ExpenseType[]
+interface Chartprop {
+  expenses: ExpenseType[];
 }
 
 function DashboardChart({ expenses }: Chartprop) {
-
   const chartData = useMemo(() => {
     const today = new Date();
     const last30Days = [];
@@ -43,8 +42,6 @@ function DashboardChart({ expenses }: Chartprop) {
       };
     });
   }, [expenses]);
-
-  
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {

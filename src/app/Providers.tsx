@@ -30,9 +30,7 @@ export default function Providers({
         <ExpensesProvider expensePromise={expensePromise}>
           <DashboardProvider dataPromise={dashboardPromise}>
             <StateProvider statePromise={statesPromise}>
-              <ProfileProvider>
-                {children}
-              </ProfileProvider>
+              <ProfileProvider>{children}</ProfileProvider>
             </StateProvider>
           </DashboardProvider>
         </ExpensesProvider>

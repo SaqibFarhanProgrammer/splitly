@@ -8,29 +8,19 @@ interface TokenPayload extends JwtPayload {
 }
 
 function isJwtPayload(obj: unknown): obj is TokenPayload {
-  return (
-    typeof obj === 'object' &&
-    obj !== null &&
-    'userId' in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'userId' in obj;
 }
 
 export async function GET(req: NextRequest) {
   try {
-    await ConnectDB()
+    await ConnectDB();
     const token = req.cookies.get('token')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { message: 'Token not found' },
-        { status: 401 }
-      );
+      return NextResponse.json({ message: 'Token not found' }, { status: 401 });
     }
 
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    );
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
     if (!isJwtPayload(decoded)) {
       return NextResponse.json(
@@ -42,10 +32,7 @@ export async function GET(req: NextRequest) {
     const user = await User.findById(decoded.userId).select('-password');
 
     if (!user) {
-      return NextResponse.json(
-        { message: 'User not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
     return NextResponse.json({

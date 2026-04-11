@@ -3,7 +3,9 @@ import { ConnectDB } from './ConnectDB';
 import { Group } from '@/models/group.model';
 import { ObjectId } from 'mongoose';
 
-export async function GetDashboardAllStateData(userid: string | Promise<string | null>) {
+export async function GetDashboardAllStateData(
+  userid: string | Promise<string | null>
+) {
   const userId = await Promise.resolve(userid);
   await ConnectDB();
 
@@ -28,7 +30,7 @@ export async function GetDashboardAllStateData(userid: string | Promise<string |
   // Fetch groups the user is part of
   const groups = await Group.find({
     createdBy: userId,
-    'members.userId': userId ,
+    'members.userId': userId,
   }).select('_id');
 
   const mygroups = groups.map((g) => g._id);

@@ -17,9 +17,7 @@ interface Chartprop {
   expenses: ExpenseType[] | [];
 }
 export function ActivityChart({ expenses }: Chartprop) {
-
   console.log(expenses);
-  
 
   const chartData = useMemo(() => {
     const today = new Date();

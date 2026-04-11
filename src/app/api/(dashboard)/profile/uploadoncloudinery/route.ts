@@ -6,7 +6,7 @@ import { ConnectDB } from '@/lib/ConnectDB';
 import { getUser } from '@/lib/getUser';
 import bcrypt from 'bcryptjs';
 
-import {uid} from "uid"
+import { uid } from 'uid';
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -45,24 +45,25 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
 
-    const MAX_SIZE = 5 * 1024 * 1024; 
+    const MAX_SIZE = 5 * 1024 * 1024;
     if (file.size > MAX_SIZE)
       return NextResponse.json({ error: 'File too large' }, { status: 400 });
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-
-    if(user.cloudineryimagePublicid){
-
-      cloudinary.uploader.destroy(user.cloudineryimagePublicid, (error:any, result: any) => {
-        if (error) console.error('Error deleting old image:', error);
-        else console.log('Old image deleted:', result);
-      });
+    if (user.cloudineryimagePublicid) {
+      cloudinary.uploader.destroy(
+        user.cloudineryimagePublicid,
+        (error: any, result: any) => {
+          if (error) console.error('Error deleting old image:', error);
+          else console.log('Old image deleted:', result);
+        }
+      );
     }
 
-    const uniqeid = uid(20)
-    
+    const uniqeid = uid(20);
+
     const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -86,9 +87,8 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json({ url: result.secure_url });
-  } catch (error : any) {
+  } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
   }
 }
-

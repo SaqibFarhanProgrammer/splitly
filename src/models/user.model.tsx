@@ -6,7 +6,7 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   avatarUploadedAt: Date;
-  cloudineryimagePublicid:string;
+  cloudineryimagePublicid: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -23,8 +23,8 @@ const UserSchema = new Schema<IUser>(
       type: Date,
     },
     cloudineryimagePublicid: {
-      type: String, 
-    }
+      type: String,
+    },
   },
   { timestamps: true }
 );

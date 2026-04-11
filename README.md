@@ -8,10 +8,10 @@ Splitly is a simple and reliable group expense splitting application that helps 
 
 Managing group expenses manually often leads to confusion and conflict. Common problems include:
 
-* One person paying more than others
-* People forgetting who paid for what
-* Spreadsheet calculation mistakes
-* Awkward conversations when asking for money
+- One person paying more than others
+- People forgetting who paid for what
+- Spreadsheet calculation mistakes
+- Awkward conversations when asking for money
 
 Splitly solves these problems by automatically tracking expenses and calculating who owes whom.
 
@@ -21,11 +21,11 @@ Splitly solves these problems by automatically tracking expenses and calculating
 
 Splitly provides a smart system that:
 
-* Tracks all shared expenses
-* Automatically calculates fair shares
-* Shows clear balances for each member
-* Provides a simple settlement summary
-* Keeps a transparent expense history
+- Tracks all shared expenses
+- Automatically calculates fair shares
+- Shows clear balances for each member
+- Provides a simple settlement summary
+- Keeps a transparent expense history
 
 The goal is to make group expense management simple, transparent, and accurate.
 
@@ -83,10 +83,10 @@ The application works on mobile, tablet, and desktop devices.
 
 Splitly can be used for:
 
-* Friends going on trips
-* Roommates sharing rent and utilities
-* Office teams managing shared expenses
-* Family events like weddings and parties
+- Friends going on trips
+- Roommates sharing rent and utilities
+- Office teams managing shared expenses
+- Family events like weddings and parties
 
 ---
 
@@ -94,11 +94,11 @@ Splitly can be used for:
 
 Splitly is built with a focus on reliability and correct calculations.
 
-* Balances are calculated dynamically from expense records
-* Totals are not stored to prevent data inconsistency
-* Server validates all transactions and amounts
-* Simple architecture focused on core functionality
-* Secure data handling and encryption
+- Balances are calculated dynamically from expense records
+- Totals are not stored to prevent data inconsistency
+- Server validates all transactions and amounts
+- Simple architecture focused on core functionality
+- Secure data handling and encryption
 
 ---
 
@@ -106,11 +106,11 @@ Splitly is built with a focus on reliability and correct calculations.
 
 You can modify this section according to your project.
 
-* Frontend: Next.js / React
-* Backend: Node.js / FastAPI
-* Database: PostgreSQL / MySQL
-* ORM: Drizzle / Prisma
-* Authentication: JWT
+- Frontend: Next.js / React
+- Backend: Node.js / FastAPI
+- Database: PostgreSQL / MySQL
+- ORM: Drizzle / Prisma
+- Authentication: JWT
 
 ---
 
@@ -139,11 +139,11 @@ NEXT_PUBLIC_API_URL=
 
 ## Future Improvements
 
-* Recurring expenses
-* Expense categories
-* File/image receipt upload
-* Smart debt minimization algorithm
-* Notifications and reminders
+- Recurring expenses
+- Expense categories
+- File/image receipt upload
+- Smart debt minimization algorithm
+- Notifications and reminders
 
 ---
 

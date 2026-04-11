@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     const emailQuery = email.trim().toLowerCase();
     const user = await User.findOne({ email: emailQuery });
-    
+
     if (!user) {
       return NextResponse.json(
         { error: 'Invalid email or password' },

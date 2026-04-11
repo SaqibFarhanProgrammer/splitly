@@ -36,7 +36,6 @@ export function TopNavbar() {
 
   const isActive = (href: string) => pathname === href;
 
-
   async function handleLogout() {
     const response = await axios.get('/api/users/logout');
     router.push('/auth');

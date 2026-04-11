@@ -201,7 +201,7 @@ export default function Page() {
         <CreateGroupModal
           isOpen={isCreateGroupOpen}
           onClose={() => setIsCreateGroupOpen(false)}
-          onGroupCreated={(newGroup:any) =>
+          onGroupCreated={(newGroup: any) =>
             setGroupData((prev) => [...prev, newGroup])
           }
         />

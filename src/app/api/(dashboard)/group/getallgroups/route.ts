@@ -8,8 +8,8 @@ export async function GET(req: NextRequest) {
     await ConnectDB();
 
     const id = getUserIdFromToken(req);
-    console.log("chala");
-    
+    console.log('chala');
+
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get('userId');
 
