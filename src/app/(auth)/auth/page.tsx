@@ -89,10 +89,10 @@ export default function AuthPage() {
     <div className="h-screen mt-20  flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-zinc-950/80 backdrop-blur-sm border-zinc-800/60 shadow-2xl shadow-black/50">
         <CardHeader className="text-center space-y-3 pb-8 pt-6">
-          <CardTitle className="text-4xl font-[inter-reguler] text-white tracking-tight bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+          <CardTitle className="text-4xl font-[inter-reguler] text-white tracking-tight text-white">
             Welcome to Splitly
           </CardTitle>
-          <CardDescription className="text-zinc-500 text-sm font-medium tracking-wide uppercase">
+          <CardDescription className="text-zinc-200 text-sm font-medium tracking-wide capitalize leading-tight">
             Manage your expenses with friends
           </CardDescription>
         </CardHeader>
