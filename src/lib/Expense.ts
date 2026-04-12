@@ -9,7 +9,6 @@ export async function GetExpense(userid: string | null) {
     useridd = res;
   });
 
-
   const expenses = await Expense.find({ paidBy: useridd }).lean();
 
   return JSON.parse(JSON.stringify(expenses));

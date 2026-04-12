@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-
 let cached = global.mongoose;
 
 if (!cached) {
@@ -17,11 +16,13 @@ export async function ConnectDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
-      bufferCommands: false,
-      maxPoolSize: 10,
-      family: 4,
-    }).then((mongoose) => mongoose.connection);
+    cached.promise = mongoose
+      .connect(MONGODB_URI, {
+        bufferCommands: false,
+        maxPoolSize: 10,
+        family: 4,
+      })
+      .then((mongoose) => mongoose.connection);
   }
 
   try {

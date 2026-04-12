@@ -333,12 +333,9 @@ export default function GroupPage() {
 
   async function getallSettlement() {
     try {
-      const res = await axios.post(
-        '/api/settlement/getSettlementsbyid',
-        {
-          groupId: params.groupID,
-        }
-      );
+      const res = await axios.post('/api/settlement/getSettlementsbyid', {
+        groupId: params.groupID,
+      });
       if (res.data) setsettlements(res?.data.settlemnts);
     } catch (error) {
       console.error('Error fetching settlements:', error);
