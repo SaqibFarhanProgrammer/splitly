@@ -145,6 +145,8 @@ interface SettlementType {
 
 export default function GroupPage() {
   const params = useParams();
+  const { groupiD } = params;
+
   const router = useRouter();
   const { user } = useAuthContext();
   const [isSettlementOpen, setIsSettlementOpen] = useState(false);
@@ -170,6 +172,24 @@ export default function GroupPage() {
       note: '',
     },
   });
+
+  async function GetGroupData() {
+    try {
+      console.log(groupiD);
+
+      const res = await axios.post('/api/group/getgroupdatabyid', {
+        groupid: groupiD,
+      });
+
+      if (res?.status === 200) {
+        setgroupData(res.data?.data);
+      } else {
+        redirect('/profile');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const validateExpense = (data: ExpenseFormValues): boolean => {
     let isValid = true;
@@ -236,7 +256,7 @@ export default function GroupPage() {
         groupid: groupid as string,
       };
 
-      const res = await axios.post('/api/expense/addexpense', formdata);
+       const res=  await axios.post('/api/expense/addexpense', formdata);
 
       setIsExpenseOpen(false);
       expenseForm.reset();
@@ -254,7 +274,7 @@ export default function GroupPage() {
   const onSettlementSubmit = async (data: SettlementFormValues) => {
     if (!validateSettlement(data)) return;
 
-    const groupid = params.groupID as string;
+    const groupid = groupiD as string;
 
     const selectedMember = groupData.members.find(
       (m) => m.userId === data.memberId // ✅ FIXED
@@ -269,7 +289,7 @@ export default function GroupPage() {
       const res = await axios.post('/api/settlement/addsettlement', {
         paidBy: user._id,
         paidTo: selectedMember.userId,
-        amount: Number(data.amount), // ✅ FIXED
+        amount: Number(data.amount),
         note: data.note,
         paidByUserAvatar: user.avatar || '',
         paidByUserName: user.username || '',
@@ -290,9 +310,8 @@ export default function GroupPage() {
   };
   async function deleteGroup() {
     try {
-      const groupid = params.groupID;
       const res = await axios.post(`/api/group/delete`, {
-        groupid: groupid,
+        groupid: groupiD,
       });
 
       router.push('/profile');
@@ -301,28 +320,10 @@ export default function GroupPage() {
     }
   }
 
-  async function GetGroupData() {
-    try {
-      const { groupID } = params;
-
-      const res = await axios.post('/api/group/getgroupdatabyid', {
-        groupid: groupID,
-      });
-
-      if (res?.status === 200) {
-        return res.data?.data;
-      } else {
-        redirect('/profile');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   async function handleleavegroup() {
     try {
       const res = await axios.post('/api/group/leavegroup', {
-        groupid: params.groupID,
+        groupid: groupiD,
       });
 
       router.push('/profile');
@@ -334,7 +335,7 @@ export default function GroupPage() {
   async function getallSettlement() {
     try {
       const res = await axios.post('/api/settlement/getSettlementsbyid', {
-        groupId: params.groupID,
+        groupId: groupiD,
       });
       if (res.data) setsettlements(res?.data.settlemnts);
     } catch (error) {
@@ -344,10 +345,8 @@ export default function GroupPage() {
 
   async function getExpenses() {
     try {
-      const groupid = params.groupID;
-
       const res = await axios.post('/api/expense/getallexpensesbygroupid', {
-        groupId: groupid,
+        groupId: groupiD,
       });
       setexpense(res.data.expenses);
     } catch (error) {
@@ -423,14 +422,12 @@ export default function GroupPage() {
   }
 
   useEffect(() => {
-    GetGroupData().then((data) => {
-      if (data) setgroupData(data);
-    });
+    GetGroupData();
 
     getallSettlement();
     getExpenses();
     GetUser();
-  }, [params.groupID]);
+  }, [groupiD]);
 
   return (
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">

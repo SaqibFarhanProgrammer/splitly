@@ -8,15 +8,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, Receipt, Plus, Clock } from 'lucide-react';
+import { Users, Plus } from 'lucide-react';
 
-import GroupsList from '@/components/dashboard/group/GroupsList';
 import { Group, User } from '@/types/globalTypes';
 import { ProfileProvider } from '@/context/Profile.Context';
 
@@ -24,7 +20,7 @@ import ProfileHeader from '@/components/dashboard/profile/ProfileHeader';
 import { UploadImageModal } from '@/components/dashboard/profile/UploadProfileImage';
 import { CreateGroupModal } from '@/components/CreateGroup';
 import { AddExpenseModal } from '@/components/AddExpenseModal';
-
+import GroupsList from '@/components/dashboard/group/GroupsList';
 export interface ExpenseType {
   _id: string;
   title: string;
@@ -45,7 +41,6 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
 
   const [groupData, setGroupData] = useState<Group[]>([]);
-  const [expenseData, setExpenseData] = useState<ExpenseType[]>([]);
   const [userData, setUserData] = useState<User | null>(null);
 
   const handleAddExpense = async () => {};
@@ -58,33 +53,30 @@ export default function Page() {
       console.log(err);
     }
   }
-
   async function GetAllGroups() {
+    setLoading(true);
+
     try {
       const res = await axios.get('/api/group/getallgroups');
-      if (res.status === 200) setGroupData(res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
-  async function GetAllExpenses() {
-    try {
-      const res = await axios.get('/api/expense/getall');
-      if (res.status === 200) setExpenseData(res.data.data);
+      const groups = res?.data?.data;
+
+      if (Array.isArray(groups)) {
+        setGroupData(groups);
+      } else {
+        setGroupData([]);
+      }
     } catch (err) {
       console.log(err);
+      setGroupData([]);
+    } finally {
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    const init = async () => {
-      setLoading(true);
-      await Promise.all([GetUser(), GetAllGroups(), GetAllExpenses()]);
-      setLoading(false);
-    };
-
-    init();
+    GetAllGroups();
+    GetUser();
   }, []);
 
   return (
@@ -104,11 +96,6 @@ export default function Page() {
               <Users className="w-4 h-4 mr-2" />
               My Groups
             </TabsTrigger>
-
-            <TabsTrigger value="expenses">
-              <Receipt className="w-4 h-4 mr-2" />
-              Recent Expenses
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="groups" className="space-y-4">
@@ -121,80 +108,26 @@ export default function Page() {
               </Button>
             </div>
 
-            <GroupsList
-              expenses={expenseData}
-              loading={loading}
-              groupData={groupData}
-            />
-          </TabsContent>
-
-          <TabsContent value="expenses">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Recent Expenses</h2>
-
-              <Button onClick={() => setIsAddExpenseOpen(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Expense
-              </Button>
-            </div>
-
-            <Card className="bg-zinc-950 border-white/10">
-              <CardHeader>
-                <CardTitle>Recent Expenses</CardTitle>
-                <CardDescription>
-                  Latest transactions across groups
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                {loading
-                  ? Array.from({ length: 3 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="flex justify-between p-4 bg-white/5 rounded-xl"
-                      >
-                        <Skeleton className="w-10 h-10 rounded-full" />
-                        <Skeleton className="w-40 h-4" />
-                        <Skeleton className="w-20 h-4" />
-                      </div>
-                    ))
-                  : expenseData.map((expense) => (
-                      <div
-                        key={expense._id}
-                        className="flex justify-between items-center p-4 bg-white/5 rounded-xl"
-                      >
-                        <div className="flex items-center gap-4">
-                          <img
-                            src={expense.paidmemberAvatar}
-                            className="w-10 h-10 rounded-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src =
-                                'https://via.placeholder.com/40';
-                            }}
-                          />
-
-                          <div>
-                            <h4 className="font-medium">{expense.title}</h4>
-                            <p className="text-xs text-gray-400">
-                              @{expense.paidmemberUsername} •{' '}
-                              {expense.groupId.slice(0, 6)}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="text-right">
-                          <p className="font-bold">
-                            Rs {expense.totalAmount.toLocaleString()}
-                          </p>
-                          <p className="text-xs text-gray-500 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {new Date(expense.createdAt).toLocaleString()}
-                          </p>
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i} className="bg-zinc-950 border-white/10">
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-5 w-32 bg-zinc-800" />
+                          <Skeleton className="h-3 w-20 bg-zinc-800" />
                         </div>
                       </div>
-                    ))}
-              </CardContent>
-            </Card>
+                      <Skeleton className="h-5 w-16 bg-zinc-800 rounded-full" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <GroupsList loading={loading} groupData={groupData} />
+            )}
           </TabsContent>
         </Tabs>
 

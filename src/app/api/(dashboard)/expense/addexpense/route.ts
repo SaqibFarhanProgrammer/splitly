@@ -5,7 +5,7 @@ import { ExpenseFormValues } from '@/types/globalTypes';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const { amount, description, paidBy, groupid }: ExpenseFormValues =
+    const { amount, description, paidBy, groupid }: ExpenseFormValues =
     await request.json();
 
   // Validation
