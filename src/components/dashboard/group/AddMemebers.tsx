@@ -22,11 +22,16 @@ import { IMember } from '@/types/member';
 interface AddMembersProps {
   isOpen: boolean;
   onClose: () => void;
+  GroupMemebers: IMember[];
 }
 
-export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
+export default function AddMembers({
+  isOpen,
+  onClose,
+  GroupMemebers,
+}: AddMembersProps) {
   const params = useParams();
-  const groupID = params?.groupID as string;
+  const gID = params.groupiD;
 
   const [members, setMembers] = useState<IMember[]>([]);
   const [loading, setLoading] = useState(false);
@@ -45,7 +50,7 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
 
       const res = await axios.post('/api/group/addmemeber', {
         username: data.username.trim().toLowerCase(),
-        groupId: groupID,
+        groupId: gID,
       });
 
       const newUser: IMember = res.data?.data;
@@ -53,6 +58,8 @@ export default function AddMembers({ isOpen, onClose }: AddMembersProps) {
         return;
       }
       setMembers((prev) => [...prev, newUser]);
+
+      GroupMemebers.push(newUser);
 
       form.reset();
     } catch (err: any) {

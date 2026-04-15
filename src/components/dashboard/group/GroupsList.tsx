@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ChevronRight, Crown, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
 interface GroupsListProps {
-  loading:Boolean
+  loading: Boolean;
   groupData: Group[];
 }
 function GroupsList({ loading, groupData }: GroupsListProps) {
@@ -25,14 +25,14 @@ function GroupsList({ loading, groupData }: GroupsListProps) {
                   <div className="flex items-start gap-3">
                     <Avatar className="w-10 h-10 shrink-0 border border-white/10">
                       <AvatarFallback className="bg-gradient-to-br from-zinc-700 to-zinc-800 text-white text-sm font-bold">
-                        {group?.name?.charAt(0)?.toUpperCase() || "?"}
+                        {group?.name?.charAt(0)?.toUpperCase() || '?'}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-base font-semibold text-white truncate">
-                          {group?.name || "Unnamed Group"}
+                          {group?.name || 'Unnamed Group'}
                         </h3>
                       </div>
 

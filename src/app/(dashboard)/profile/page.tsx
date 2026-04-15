@@ -5,10 +5,7 @@ import axios from 'axios';
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, Plus } from 'lucide-react';
@@ -109,22 +106,24 @@ export default function Page() {
             </div>
 
             {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} className="bg-zinc-950 border-white/10">
-                  <CardContent className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
-                        <div className="space-y-2">
-                          <Skeleton className="h-5 w-32 bg-zinc-800" />
-                          <Skeleton className="h-3 w-20 bg-zinc-800" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <Card key={i} className="bg-zinc-950 border-white/10">
+                    <CardContent className="p-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="w-10 h-10 rounded-full bg-zinc-800" />
+                          <div className="space-y-2">
+                            <Skeleton className="h-5 w-32 bg-zinc-800" />
+                            <Skeleton className="h-3 w-20 bg-zinc-800" />
+                          </div>
                         </div>
+                        <Skeleton className="h-5 w-16 bg-zinc-800 rounded-full" />
                       </div>
-                      <Skeleton className="h-5 w-16 bg-zinc-800 rounded-full" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             ) : (
               <GroupsList loading={loading} groupData={groupData} />
             )}

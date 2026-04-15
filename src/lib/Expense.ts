@@ -3,13 +3,7 @@ import { cookies } from 'next/headers';
 import { Expense } from '@/models/expense.model';
 
 export async function GetExpense(userid: string | null) {
-  let useridd;
-
-  Promise.resolve(userid).then((res) => {
-    useridd = res;
-  });
-
-  const expenses = await Expense.find({ paidBy: useridd }).lean();
+  const expenses = await Expense.find({ paidBy: userid }).lean();
 
   return JSON.parse(JSON.stringify(expenses));
 }

@@ -175,8 +175,6 @@ export default function GroupPage() {
 
   async function GetGroupData() {
     try {
-      console.log(groupiD);
-
       const res = await axios.post('/api/group/getgroupdatabyid', {
         groupid: groupiD,
       });
@@ -247,16 +245,16 @@ export default function GroupPage() {
     if (!validateExpense(data)) return;
 
     try {
-      const groupid = params.groupID;
-
       const formdata: ExpenseFormValues = {
         amount: data.amount,
         description: data.description,
         paidBy: data.paidBy,
-        groupid: groupid as string,
+        groupid: groupiD as string,
       };
 
-       const res=  await axios.post('/api/expense/addexpense', formdata);
+      const res = await axios.post('/api/expense/addexpense', formdata);
+
+      console.log(res);
 
       setIsExpenseOpen(false);
       expenseForm.reset();
@@ -273,8 +271,6 @@ export default function GroupPage() {
 
   const onSettlementSubmit = async (data: SettlementFormValues) => {
     if (!validateSettlement(data)) return;
-
-    const groupid = groupiD as string;
 
     const selectedMember = groupData.members.find(
       (m) => m.userId === data.memberId // ✅ FIXED
@@ -295,7 +291,7 @@ export default function GroupPage() {
         paidByUserName: user.username || '',
         paidToUserAvatar: selectedMember.avatar || '',
         paidToUserName: selectedMember.username || '',
-        groupid: groupid,
+        groupid: groupiD,
       });
 
       if (res.status === 200 || res.status === 201) {
@@ -433,13 +429,14 @@ export default function GroupPage() {
     <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">
       {ShowAddmember && (
         <AddMembers
+          GroupMemebers={groupData.members}
           isOpen={ShowAddmember}
           onClose={() => setShowAddmember(false)}
         />
       )}
 
-      <header className="sticky backdrop-blur-[10px] top-15 z-30 px-20">
-        <div className="w-full px-4 mx-auto h-16 flex items-center justify-between">
+      <header className="sticky backdrop-blur-[10px] top-15 z-30 px-20 max-[420px]:px-1">
+        <div className="w-full px-4  mx-auto h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/profile">
               <Button
