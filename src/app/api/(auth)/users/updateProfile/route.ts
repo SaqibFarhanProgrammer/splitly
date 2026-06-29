@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
 import { User } from '@/models/user.model';
 import { getUserIdFromToken } from '@/lib/GetToken';
 
