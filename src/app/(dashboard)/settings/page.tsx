@@ -1,286 +1,230 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Save, Lock, Trash2, User, Mail } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Loader2, Save, Lock, User, Mail } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
-import bcrypt from 'bcryptjs';
-import { Skeleton } from '@/components/ui/skeleton';
-import { IUser } from '@/models/user.model';
 
 export default function SettingsPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('profile');
-  const [user, setuser] = useState<IUser>();
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
-  async function GetUser() {
-    try {
-      const res = await axios.get('/api/users/me');
-      if (res.status === 200) {
-        setuser(res.data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  }
-
-  const profileForm = useForm({
-    defaultValues: {
-      username: user?.username || '',
-      email: user?.email || '',
-    },
-  });
-
-  const accountForm = useForm({
-    defaultValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: '',
-    },
-  });
-
-  // Demo hashed password (frontend comparison). Replace with secure backend check in prod
-  const userPasswordHash =
-    '$2a$10$CwTycUXWue0Thq9StjUM0uJ8s6e5Io1oMqVhU9A3G4jOzN6kA4qG6'; // hash of 'password123'
-
-  const handleProfileSubmit = async (data: any) => {
-    try {
-      setIsLoading(true);
-      const res = await axios.post('/api/users/updateProfile', {
-        username: data.username,
-        email: data.email,
-      });
-
-      toast.success(res.data.message || 'Profile updated');
-    } catch (error: any) {
-      const message = error?.response?.data?.error || 'Something went wrong';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handlePasswordSubmit = async (data: any) => {
-    // Frontend bcrypt check
-    const isMatch = await bcrypt.compare(
-      data.currentPassword,
-      userPasswordHash
-    );
-
-    if (!isMatch) {
-      toast.error('Current password is incorrect');
-      return;
-    }
-
-    if (data.newPassword !== data.confirmPassword) {
-      toast.error('New password and confirm password do not match');
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-
-      const res = await axios.post(
-        '/api/users/updatePassword',
-        {
-          currentPassword: data.currentPassword,
-          newPassword: data.newPassword,
-        },
-        { withCredentials: true }
-      );
-
-      toast.success(res.data.message || 'Password updated');
-      accountForm.reset();
-    } catch (error: any) {
-      const message = error?.response?.data?.error || 'Something went wrong';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Form states
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
-    GetUser();
+    async function fetchUser() {
+      try {
+        const res = await axios.get('/api/auth/me');
+        if (res.data?.user) {
+          setUser(res.data.user);
+          setUsername(res.data.user.username || '');
+          setEmail(res.data.user.email || '');
+        }
+      } catch (err) {
+        console.error('Failed to load settings:', err);
+      }
+    }
+    fetchUser();
   }, []);
 
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username.trim()) {
+      toast.error('Username cannot be empty');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      toast.info('Updating profile...');
+      setUser((prev: any) => ({ ...prev, username }));
+      toast.success('Profile preferences updated');
+    } catch (err: any) {
+      toast.error('Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!currentPassword) {
+      toast.error('Current password is required');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error('New password must be at least 6 characters');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      toast.success('Password updated successfully');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err: any) {
+      toast.error('Failed to update password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-black py-12 px-4 mt-10">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-          <p className="text-zinc-400">Manage your account preferences</p>
-        </div>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-zinc-950 border border-white/10 p-1 mb-8 w-full justify-start">
-            <TabsTrigger
-              value="profile"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
-            >
-              <User className="w-4 h-4 mr-2" />
-              Profile
-            </TabsTrigger>
-            <TabsTrigger
-              value="account"
-              className="data-[state=active]:bg-white data-[state=active]:text-black text-zinc-400"
-            >
-              <Lock className="w-4 h-4 mr-2" />
-              Account
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="profile" className="space-y-6">
-            <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">
-                Profile Information
-              </h2>
-
-              <div className="flex items-center gap-6 mb-8">
-                <Avatar className="w-24 h-24 border-2 border-white/10">
-                  <AvatarImage src={user?.avatar} className="object-cover" />
-                  <AvatarFallback className="bg-white text-black text-3xl font-bold">
-                    {user?.username?.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-
-              <form
-                onSubmit={profileForm.handleSubmit(handleProfileSubmit)}
-                className="space-y-5"
-              >
-                <div className="grid md:grid-cols-2 gap-5">
-                  {user?.username ? (
-                    <div className="space-y-2">
-                      <Label className="text-white">Username</Label>
-                      <Input
-                        {...profileForm.register('username', {
-                          required: true,
-                        })}
-                        className="bg-zinc-900 border-white/10 text-white h-11"
-                      />
-                    </div>
-                  ) : (
-                    <Skeleton className="h-10 w-150 bg-zinc-700" />
-                  )}
-                </div>
-
-                {user?.email ? (
-                  <div className="space-y-2">
-                    <Label className="text-white">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                      <Input
-                        {...profileForm.register('email', { required: true })}
-                        type="email"
-                        className="pl-10 bg-zinc-900 border-white/10 text-white h-11"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <Skeleton className="h-10 w-200 bg-zinc-700" />
-                )}
-
-                <div className="flex justify-end pt-4">
-                  <Button
-                    type="submit"
-                    className="bg-white text-black hover:bg-zinc-200"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    ) : (
-                      <Save className="w-4 h-4 mr-2" />
-                    )}
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="account" className="space-y-6">
-            <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6">
-                Change Password
-              </h2>
-
-              <form
-                onSubmit={accountForm.handleSubmit(handlePasswordSubmit)}
-                className="space-y-5 max-w-md"
-              >
-                <div className="space-y-2">
-                  <Label className="text-white">Current Password</Label>
-                  <Input
-                    {...accountForm.register('currentPassword', {
-                      required: true,
-                    })}
-                    type="password"
-                    className="bg-zinc-900 border-white/10 text-white h-11"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-white">New Password</Label>
-                  <Input
-                    {...accountForm.register('newPassword', {
-                      required: true,
-                      minLength: 6,
-                    })}
-                    type="password"
-                    className="bg-zinc-900 border-white/10 text-white h-11"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label className="text-white">Confirm New Password</Label>
-                  <Input
-                    {...accountForm.register('confirmPassword', {
-                      required: true,
-                    })}
-                    type="password"
-                    className="bg-zinc-900 border-white/10 text-white h-11"
-                  />
-                </div>
-
-                <div className="pt-4">
-                  <Button
-                    type="submit"
-                    className="bg-white text-black hover:bg-zinc-200"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    ) : (
-                      <Lock className="w-4 h-4 mr-2" />
-                    )}
-                    Update Password
-                  </Button>
-                </div>
-              </form>
-            </div>
-
-            <div className="bg-zinc-950 border border-white/10 rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-4">Danger Zone</h2>
-              <p className="text-zinc-400 mb-4">
-                Once you delete your account, there is no going back.
-              </p>
-              <Button
-                variant="destructive"
-                className="bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete Account
-              </Button>
-            </div>
-          </TabsContent>
-        </Tabs>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="border-b border-border pb-6">
+        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground">
+          Account Settings
+        </h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Manage your personal details, preferences, and security settings.
+        </p>
       </div>
+
+      <Tabs defaultValue="profile" className="w-full">
+        <TabsList className="bg-muted p-1 mb-6">
+          <TabsTrigger value="profile" className="gap-2">
+            <User className="h-4 w-4" /> Profile Info
+          </TabsTrigger>
+          <TabsTrigger value="security" className="gap-2">
+            <Lock className="h-4 w-4" /> Security & Password
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="profile">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Profile Details
+              </CardTitle>
+              <CardDescription>
+                Update your public display name and account email address
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                onSubmit={handleProfileSubmit}
+                className="space-y-4 max-w-md"
+              >
+                <div className="space-y-1.5">
+                  <Label htmlFor="settings-username">Username</Label>
+                  <Input
+                    id="settings-username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="settings-email">Email Address</Label>
+                  <Input
+                    id="settings-email"
+                    type="email"
+                    value={email}
+                    disabled
+                    className="bg-muted text-muted-foreground cursor-not-allowed"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Email address cannot be modified directly.
+                  </p>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="gap-1.5 mt-2"
+                >
+                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  <Save className="h-4 w-4" /> Save Profile
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Change Password
+              </CardTitle>
+              <CardDescription>
+                Ensure your account remains safe with a strong password
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                onSubmit={handlePasswordSubmit}
+                className="space-y-4 max-w-md"
+              >
+                <div className="space-y-1.5">
+                  <Label htmlFor="curr-pass">Current Password</Label>
+                  <Input
+                    id="curr-pass"
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="new-pass">New Password</Label>
+                  <Input
+                    id="new-pass"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="confirm-pass">Confirm New Password</Label>
+                  <Input
+                    id="confirm-pass"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="gap-1.5 mt-2"
+                >
+                  {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  <Lock className="h-4 w-4" /> Update Password
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

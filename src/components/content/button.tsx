@@ -1,15 +1,15 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 type ButtonProps = {
   children: React.ReactNode;
-  variant?: "default" | "destructive" | "success";
-  size?: "default" | "sm" | "lg" | "icon";
+  variant?: 'default' | 'destructive' | 'success';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 function Button({
   children,
-  variant = "default",
-  size = "default",
+  variant = 'default',
+  size = 'default',
   className,
   ...props
 }: ButtonProps) {
@@ -18,23 +18,28 @@ function Button({
 
   const variantClasses = {
     default:
-      "bg-gray-900 text-white hover:bg-gray-700 focus-visible:outline-gray-900 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200 dark:focus-visible:outline-gray-50",
+      'bg-gray-900 text-white hover:bg-gray-700 focus-visible:outline-gray-900 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200 dark:focus-visible:outline-gray-50',
     destructive:
-      "bg-red-500 text-white hover:bg-red-700 focus-visible:outline-red-600 dark:bg-red-700 dark:hover:bg-red-800 dark:focus-visible:outline-red-700",
+      'bg-red-500 text-white hover:bg-red-700 focus-visible:outline-red-600 dark:bg-red-700 dark:hover:bg-red-800 dark:focus-visible:outline-red-700',
     success:
-      "bg-emerald-500 text-white hover:bg-emerald-700 focus-visible:outline-emerald-600 dark:bg-emerald-700 dark:hover:bg-emerald-800 dark:focus-visible:outline-emerald-700",
+      'bg-emerald-500 text-white hover:bg-emerald-700 focus-visible:outline-emerald-600 dark:bg-emerald-700 dark:hover:bg-emerald-800 dark:focus-visible:outline-emerald-700',
   };
 
   const sizeClasses = {
-    default: "h-9 px-4 py-2 has-[>svg]:px-3",
-    sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-    lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-    icon: "size-9",
+    default: 'h-9 px-4 py-2 has-[>svg]:px-3',
+    sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
+    lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+    icon: 'size-9',
   };
 
   return (
     <button
-      className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)}
+      className={cn(
+        baseClasses,
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+      )}
       {...props}
     >
       {children}
@@ -43,6 +48,6 @@ function Button({
 }
 
 export { Button, type ButtonProps };
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 // DevelopedBy: AetherUI

@@ -8,7 +8,7 @@ interface TokenPayload extends JwtPayload {
 export function getUserIdFromToken(request: NextRequest): string | null {
   try {
     const token =
-      request.cookies.get('token')?.value ||
+      request.cookies.get('splitly-token')?.value ||
       request.headers.get('authorization')?.replace('Bearer ', '');
 
     if (!token) return null;

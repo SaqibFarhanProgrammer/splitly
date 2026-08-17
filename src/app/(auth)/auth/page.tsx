@@ -15,6 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import axios from 'axios';
 
 interface LoginData {
@@ -32,7 +33,6 @@ export default function AuthPage() {
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
   const router = useRouter();
 
   const {
@@ -40,152 +40,138 @@ export default function AuthPage() {
     handleSubmit: handleLoginSubmit,
     formState: { errors: loginErrors },
   } = useForm<LoginData>();
+
   const {
     register: registerRegister,
     handleSubmit: handleRegisterSubmit,
     watch,
     formState: { errors: registerErrors },
   } = useForm<RegisterData>();
+
   const password = watch('password');
 
   const onLogin = async (data: LoginData) => {
-    setServerError(null);
     try {
       setIsLoading(true);
-      const res = await axios.post('/api/users/login', data);
-      if (res.status >= 400) throw new Error(res.data.error || 'Login failed');
-      router.push('/profile');
+      const res = await axios.post('/api/auth/login', data);
+      toast.success(res.data.message || 'Logged in successfully');
+      router.push('/dashboard');
+      router.refresh();
     } catch (error: any) {
-      setServerError(error.response?.data?.error || error.message);
+      toast.error(error.response?.data?.error || 'Login failed');
     } finally {
       setIsLoading(false);
     }
   };
 
   const onRegister = async (data: RegisterData) => {
-    setServerError(null);
     if (data.password !== data.confirmPassword) {
-      setServerError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     try {
       setIsLoading(true);
-      const res = await axios.post('/api/users/register', {
+      const res = await axios.post('/api/auth/register', {
         username: data.username,
         email: data.email,
         password: data.password,
       });
 
-      setServerError('User Created Success Please Login');
+      toast.success('Account created successfully! Redirecting...');
+      router.push('/dashboard');
+      router.refresh();
     } catch (error: any) {
-      setServerError(error.response?.data?.error || error.message);
+      toast.error(error.response?.data?.error || 'Registration failed');
     } finally {
       setIsLoading(false);
     }
   };
 
+  const handleOAuthLogin = (provider: 'google' | 'github') => {
+    setIsLoading(true);
+    // Redirect to your OAuth endpoint
+    window.location.href = `/api/auth/${provider}`;
+  };
+
   return (
-    <div className="h-screen mt-20  flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-zinc-950/80 backdrop-blur-sm border-zinc-800/60 shadow-2xl shadow-black/50">
-        <CardHeader className="text-center space-y-3 pb-8 pt-6">
-          <CardTitle className="text-4xl font-[inter-reguler] text-white tracking-tight text-white">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <Card className="w-full max-w-md border-border bg-card shadow-lg">
+        <CardHeader className="text-center space-y-2 pb-6 pt-6">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-2xl shadow-sm mb-2">
+            S
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
             Welcome to Splitly
           </CardTitle>
-          <CardDescription className="text-zinc-200 text-sm font-medium tracking-wide capitalize leading-tight">
-            Manage your expenses with friends
+          <CardDescription className="text-sm text-muted-foreground">
+            Effortless group expense management and fair settlements
           </CardDescription>
         </CardHeader>
-        <CardContent className="pb-8">
+        <CardContent className="pb-6">
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-zinc-900/30 p-1 rounded-xl mb-8 border border-zinc-800/50">
-              <TabsTrigger
-                value="login"
-                className="rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-lg"
-              >
-                Sign In
-              </TabsTrigger>
-              <TabsTrigger
-                value="register"
-                className="rounded-lg text-sm font-medium text-zinc-400 hover:text-zinc-200 transition-all duration-200 data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-lg"
-              >
-                Create Account
-              </TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 bg-muted p-1 rounded-lg mb-6">
+              <TabsTrigger value="login">Sign In</TabsTrigger>
+              <TabsTrigger value="register">Create Account</TabsTrigger>
             </TabsList>
 
-            {serverError && (
-              <div
-                className={`mb-6 p-4 rounded-xl ${serverError === 'User Created Success Please Login' ? 'bg-green-500/10' : 'bg-red-600'} border border-red-500/20 animate-in fade-in slide-in-from-top-2`}
-              >
-                <p
-                  className={` text-sm ${serverError === 'User Created Success Please Login' ? 'text-green-500' : 'text-red-400'} text-center font-medium`}
-                >
-                  {serverError === 'User Created Success Please Login'
-                    ? serverError
-                    : serverError}
-                </p>
-              </div>
-            )}
-
             <TabsContent value="login" className="mt-0">
-              <form onSubmit={handleLoginSubmit(onLogin)} className="space-y-5">
-                <div className="space-y-2.5">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Email
-                  </Label>
+              <form onSubmit={handleLoginSubmit(onLogin)} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="login-email">Email Address</Label>
                   <Input
+                    id="login-email"
                     type="email"
                     placeholder="you@example.com"
-                    className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
-                    {...registerLogin('email', { required: 'Email required' })}
+                    {...registerLogin('email', {
+                      required: 'Email is required',
+                    })}
                   />
                   {loginErrors.email && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {loginErrors.email.message}
                     </p>
                   )}
                 </div>
-                <div className="space-y-2.5 relative">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Password
-                  </Label>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="login-password">Password</Label>
                   <div className="relative">
                     <Input
+                      id="login-password"
                       type={showLoginPassword ? 'text' : 'password'}
                       placeholder="••••••••"
-                      className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl pr-12"
+                      className="pr-10"
                       {...registerLogin('password', {
-                        required: 'Password required',
+                        required: 'Password is required',
                       })}
                     />
                     <button
                       type="button"
                       onClick={() => setShowLoginPassword(!showLoginPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                     >
                       {showLoginPassword ? (
-                        <EyeOff size={18} />
+                        <EyeOff size={16} />
                       ) : (
-                        <Eye size={18} />
+                        <Eye size={16} />
                       )}
                     </button>
                   </div>
                   {loginErrors.password && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {loginErrors.password.message}
                     </p>
                   )}
                 </div>
+
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-full transition-all duration-200   disabled:opacity-50"
+                  className="w-full gap-2 mt-2"
                 >
-                  {isLoading ? (
-                    <Loader2 className="animate-spin" size={20} />
-                  ) : (
-                    'Sign In'
-                  )}
+                  {isLoading && <Loader2 className="animate-spin" size={16} />}
+                  Sign In
                 </Button>
               </form>
             </TabsContent>
@@ -195,54 +181,53 @@ export default function AuthPage() {
                 onSubmit={handleRegisterSubmit(onRegister)}
                 className="space-y-4"
               >
-                <div className="space-y-2.5">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Username
-                  </Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-username">Username</Label>
                   <Input
+                    id="reg-username"
                     placeholder="johndoe"
-                    className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
                     {...registerRegister('username', {
-                      required: 'Username required',
+                      required: 'Username is required',
                     })}
                   />
                   {registerErrors.username && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {registerErrors.username.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2.5">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Email
-                  </Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-email">Email Address</Label>
                   <Input
+                    id="reg-email"
                     type="email"
                     placeholder="you@example.com"
-                    className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
                     {...registerRegister('email', {
-                      required: 'Email required',
+                      required: 'Email is required',
                     })}
                   />
                   {registerErrors.email && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {registerErrors.email.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2.5 relative">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Password
-                  </Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-password">Password</Label>
                   <div className="relative">
                     <Input
+                      id="reg-password"
                       type={showRegisterPassword ? 'text' : 'password'}
                       placeholder="••••••••"
-                      className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl pr-12"
+                      className="pr-10"
                       {...registerRegister('password', {
-                        required: 'Password required',
+                        required: 'Password is required',
+                        minLength: {
+                          value: 6,
+                          message: 'Password must be at least 6 characters',
+                        },
                       })}
                     />
                     <button
@@ -250,38 +235,36 @@ export default function AuthPage() {
                       onClick={() =>
                         setShowRegisterPassword(!showRegisterPassword)
                       }
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                      className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground"
                     >
                       {showRegisterPassword ? (
-                        <EyeOff size={18} />
+                        <EyeOff size={16} />
                       ) : (
-                        <Eye size={18} />
+                        <Eye size={16} />
                       )}
                     </button>
                   </div>
                   {registerErrors.password && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {registerErrors.password.message}
                     </p>
                   )}
                 </div>
 
-                <div className="space-y-2.5">
-                  <Label className="text-sm font-medium text-zinc-300 ml-1">
-                    Confirm Password
-                  </Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="reg-confirm">Confirm Password</Label>
                   <Input
+                    id="reg-confirm"
                     type={showRegisterPassword ? 'text' : 'password'}
                     placeholder="••••••••"
-                    className="h-12 bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:ring-2 focus:ring-zinc-800/50 transition-all rounded-xl"
                     {...registerRegister('confirmPassword', {
-                      required: 'Confirm required',
+                      required: 'Confirmation is required',
                       validate: (val) =>
                         val === password || 'Passwords do not match',
                     })}
                   />
                   {registerErrors.confirmPassword && (
-                    <p className="text-xs text-red-400 ml-1">
+                    <p className="text-xs text-destructive">
                       {registerErrors.confirmPassword.message}
                     </p>
                   )}
@@ -290,13 +273,10 @@ export default function AuthPage() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 mt-2 bg-white text-black hover:bg-zinc-200 font-semibold rounded-full transition-all "
+                  className="w-full gap-2 mt-2"
                 >
-                  {isLoading ? (
-                    <Loader2 className="animate-spin" size={20} />
-                  ) : (
-                    'Create Account'
-                  )}
+                  {isLoading && <Loader2 className="animate-spin" size={16} />}
+                  Create Account
                 </Button>
               </form>
             </TabsContent>

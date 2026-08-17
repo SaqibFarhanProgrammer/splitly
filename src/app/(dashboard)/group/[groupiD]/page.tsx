@@ -1,895 +1,505 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import { redirect, useParams, useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { useAuthContext } from '@/context/AuthContext';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-
-import { Input } from '@/components/ui/input';
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
-import {
-  ArrowLeft,
+  Users,
   Plus,
-  CheckCircle2,
-  MoreVertical,
-  Send,
-  Wallet,
   Receipt,
-  Settings,
+  Scale,
+  ArrowRight,
+  CheckCircle2,
   Trash2,
-  UserMinus,
   UserPlus,
-  LogOut,
-  Edit3,
+  ArrowUpRight,
+  ArrowDownLeft,
+  DollarSign,
+  Info,
 } from 'lucide-react';
-
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { formatCurrency, SuggestedSettlement } from '@/lib/financial-engine';
+import { AddExpenseModal } from '@/components/expenses/AddExpenseModal';
+import { SettleModal } from '@/components/settlements/SettleModal';
+import { toast } from 'sonner';
 import axios from 'axios';
 
-import { IMember } from '@/types/member';
-import mongoose from 'mongoose';
-
-import { Skeleton } from '@/components/ui/skeleton';
-import { ExpenseSkeleton } from '@/components/Skeliton/ExpenseListSkeliton';
-import { MembersListSkeleton } from '@/components/Skeliton/MembersListSkeleton';
-import SettlementList from '@/components/dashboard/group/SettlementList';
-import { SettlementT } from '@/types/settlementTypes';
-import { fi } from 'zod/locales';
-import { Expense } from '@/types/globalTypes';
-import { IUser } from '@/models/user.model';
-
-const AddMembers = dynamic(
-  () => import('@/components/dashboard/group/AddMemebers'),
-  { loading: () => <Skeleton className="h-10 w-full" /> }
-);
-
-const ManageMembers = dynamic(
-  () => import('@/components/dashboard/group/ManageMembers'),
-  { loading: () => <Skeleton className="h-10 w-full" /> }
-);
-
-const MembersList = dynamic(
-  () => import('@/components/dashboard/group/MembersList'),
-  { loading: () => <MembersListSkeleton /> }
-);
-
-const ExpensesList = dynamic(
-  () => import('@/components/dashboard/group/ExpensesList'),
-  { loading: () => <ExpenseSkeleton /> }
-);
-
-interface SettlementFormValues {
-  memberId: string;
-  amount: string;
-  note: string;
-}
-
-export interface ExpenseFormValues {
-  amount: number | string;
-  description: string;
-  paidBy: string | mongoose.Types.ObjectId;
-  groupid: string;
-}
-
-interface IgroupData {
-  name: string;
-  totalAmount: number;
-  isActive: boolean;
-  members: IMember[];
-  createdBy: string;
-  createdAt: number;
-  upnumberdAt: number;
-  _id: string;
-}
-
-const GroupdataDefault: IgroupData = {
-  name: 'Hunza Trip 2024',
-  isActive: true,
-  members: [],
-  totalAmount: 45800,
-  createdBy: '',
-  createdAt: 100,
-  upnumberdAt: 100,
-  _id: '',
-};
-
-interface SettlementType {
-  groupId: string;
-  paidBy: string;
-  paidTo: string;
-  amount: number;
-  paidByUserAvatar: string;
-  paidByUserName: string;
-  paidToUserName: string;
-  note: string;
-}
-
-export default function GroupPage() {
+export default function GroupDetailPage() {
   const params = useParams();
-  const { groupiD } = params;
-
   const router = useRouter();
-  const { user } = useAuthContext();
-  const [isSettlementOpen, setIsSettlementOpen] = useState(false);
-  const [isExpenseOpen, setIsExpenseOpen] = useState(false);
-  const [groupData, setgroupData] = useState<IgroupData>(GroupdataDefault);
-  const [isManageOpen, setIsManageOpen] = useState(false);
-  const [ShowAddmember, setShowAddmember] = useState(false);
-  const [expense, setexpense] = useState<Expense[]>([]);
-  const [settlements, setsettlements] = useState<SettlementT[]>([]);
-  const [UserData, setUserData] = useState<IUser | null>();
-  const expenseForm = useForm<ExpenseFormValues>({
-    defaultValues: {
-      amount: '',
-      description: '',
-      paidBy: '',
-    },
-  });
+  const groupID = (params?.groupiD as string) || '';
 
-  const settlementForm = useForm<SettlementFormValues>({
-    defaultValues: {
-      memberId: '',
-      amount: '',
-      note: '',
-    },
-  });
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  async function GetGroupData() {
+  // Modals
+  const [addExpenseOpen, setAddExpenseOpen] = useState(false);
+  const [settleOpen, setSettleOpen] = useState(false);
+  const [selectedSuggestedSettlement, setSelectedSuggestedSettlement] =
+    useState<SuggestedSettlement | null>(null);
+
+  // Add Member inline
+  const [memberInput, setMemberInput] = useState('');
+  const [addingMember, setAddingMember] = useState(false);
+
+  const fetchGroupData = async () => {
+    if (!groupID) return;
     try {
-      const res = await axios.post('/api/group/getgroupdatabyid', {
-        groupid: groupiD,
-      });
-
-      if (res?.status === 200) {
-        setgroupData(res.data?.data);
-      } else {
-        redirect('/profile');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  const validateExpense = (data: ExpenseFormValues): boolean => {
-    let isValid = true;
-
-    if (!data.amount || Number(data.amount) <= 0) {
-      expenseForm.setError('amount', {
-        type: 'manual',
-        message: 'Valid amount required',
-      });
-      isValid = false;
-    }
-
-    if (!data.description) {
-      expenseForm.setError('description', {
-        type: 'manual',
-        message: 'Description required',
-      });
-      isValid = false;
-    }
-
-    if (!data.paidBy) {
-      expenseForm.setError('paidBy', {
-        type: 'manual',
-        message: 'Select who paid',
-      });
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  const validateSettlement = (data: SettlementFormValues): boolean => {
-    let isValid = true;
-
-    if (!data.memberId) {
-      settlementForm.setError('memberId', {
-        type: 'manual',
-        message: 'Select a member',
-      });
-      isValid = false;
-    }
-
-    if (!data.amount || parseFloat(data.amount) <= 0) {
-      settlementForm.setError('amount', {
-        type: 'manual',
-        message: 'Valid amount required',
-      });
-      isValid = false;
-    }
-
-    return isValid;
-  };
-
-  const onExpenseSubmit = async (data: ExpenseFormValues) => {
-    if (!validateExpense(data)) return;
-
-    try {
-      const formdata: ExpenseFormValues = {
-        amount: data.amount,
-        description: data.description,
-        paidBy: data.paidBy,
-        groupid: groupiD as string,
-      };
-
-      const res = await axios.post('/api/expense/addexpense', formdata);
-
-      console.log(res);
-
-      setIsExpenseOpen(false);
-      expenseForm.reset();
-      getExpenses();
-    } catch (error) {
-      console.error('Error adding expense:', error);
-
-      expenseForm.setError('amount', {
-        type: 'manual',
-        message: 'Failed to add expense',
-      });
+      setLoading(true);
+      const res = await axios.get(
+        `/api/group/getgroupdatabyid?groupId=${groupID}`
+      );
+      setData(res.data);
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Failed to load group details');
+    } finally {
+      setLoading(false);
     }
   };
-
-  const onSettlementSubmit = async (data: SettlementFormValues) => {
-    if (!validateSettlement(data)) return;
-
-    const selectedMember = groupData.members.find(
-      (m) => m.userId === data.memberId // ✅ FIXED
-    );
-
-    if (!selectedMember || !user?._id) {
-      console.log('Missing user or member');
-      return;
-    }
-
-    try {
-      const res = await axios.post('/api/settlement/addsettlement', {
-        paidBy: user._id,
-        paidTo: selectedMember.userId,
-        amount: Number(data.amount),
-        note: data.note,
-        paidByUserAvatar: user.avatar || '',
-        paidByUserName: user.username || '',
-        paidToUserAvatar: selectedMember.avatar || '',
-        paidToUserName: selectedMember.username || '',
-        groupid: groupiD,
-      });
-
-      if (res.status === 200 || res.status === 201) {
-        await getallSettlement(); // ✅ sync with backend
-      }
-    } catch (error) {
-      console.error('Settlement error:', error);
-    }
-
-    setIsSettlementOpen(false);
-    settlementForm.reset();
-  };
-  async function deleteGroup() {
-    try {
-      const res = await axios.post(`/api/group/delete`, {
-        groupid: groupiD,
-      });
-
-      router.push('/profile');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function handleleavegroup() {
-    try {
-      const res = await axios.post('/api/group/leavegroup', {
-        groupid: groupiD,
-      });
-
-      router.push('/profile');
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async function getallSettlement() {
-    try {
-      const res = await axios.post('/api/settlement/getSettlementsbyid', {
-        groupId: groupiD,
-      });
-      if (res.data) setsettlements(res?.data.settlemnts);
-    } catch (error) {
-      console.error('Error fetching settlements:', error);
-    }
-  }
-
-  async function getExpenses() {
-    try {
-      const res = await axios.post('/api/expense/getallexpensesbygroupid', {
-        groupId: groupiD,
-      });
-      setexpense(res.data.expenses);
-    } catch (error) {
-      console.error('Error fetching expenses:', error);
-    }
-  }
-  function calculateBalance() {
-    if (!expense || !groupData?.members || !user?._id) return 0;
-
-    const totalAmount = expense.reduce((sum, exp) => {
-      return sum + Number(exp.totalAmount);
-    }, 0);
-
-    const membersCount = groupData.members.length;
-    if (membersCount === 0) return 0;
-
-    const share = totalAmount / membersCount;
-
-    const youPaid = expense
-      .filter((exp) => exp.paidBy.toString() === user._id)
-      .reduce((sum, exp) => {
-        return sum + Number(exp.totalAmount);
-      }, 0);
-
-    const settlementsPaid = settlements
-      .filter((s) => s.paidBy === user._id)
-      .reduce((sum, s) => {
-        return sum + Number(s.amount);
-      }, 0);
-
-    const settlementsReceived = settlements
-      .filter((s) => s.paidTo === user._id)
-      .reduce((sum, s) => {
-        return sum + Number(s.amount);
-      }, 0);
-
-    const expenseBalance = youPaid - share;
-
-    const balance = expenseBalance - settlementsReceived + settlementsPaid;
-
-    return balance;
-  }
-
-  function calculateYouOwe() {
-    const balance = calculateBalance();
-
-    if (balance < 0) {
-      return Math.abs(Math.round(balance));
-    }
-
-    return 0;
-  }
-
-  function calculateYouGet() {
-    const balance = calculateBalance();
-
-    if (balance > 0) {
-      return Math.round(balance);
-    }
-
-    return 0;
-  }
-
-  async function GetUser() {
-    try {
-      const res = await axios.get('/api/users/me');
-      if (res.status === 200) {
-        setUserData(res.data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  }
 
   useEffect(() => {
-    GetGroupData();
+    fetchGroupData();
+  }, [groupID]);
 
-    getallSettlement();
-    getExpenses();
-    GetUser();
-  }, [groupiD]);
+  const handleAddMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!memberInput.trim()) return;
+
+    try {
+      setAddingMember(true);
+      const res = await axios.post('/api/group/addmemeber', {
+        groupId: groupID,
+        memberIdentifier: memberInput.trim(),
+      });
+      toast.success(res.data.message || 'Member added');
+      setMemberInput('');
+      fetchGroupData();
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Failed to add member');
+    } finally {
+      setAddingMember(false);
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      await axios.post('/api/group/delete', { groupId: groupID });
+      toast.success('Group deleted successfully');
+      router.push('/allgroups');
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Failed to delete group');
+    }
+  };
+
+  const openSettlementFor = (settlement?: SuggestedSettlement) => {
+    setSelectedSuggestedSettlement(settlement || null);
+    setSettleOpen(true);
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-20 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+          <Skeleton className="h-32 w-full" />
+        </div>
+        <Skeleton className="h-96 w-full" />
+      </div>
+    );
+  }
+
+  const group = data?.group;
+  const expenses = data?.expenses || [];
+  const settlements = data?.settlements || [];
+  const summary = data?.financialSummary;
 
   return (
-    <div className="min-h-screen bg-[#08080B] flex flex-col mt-15 font-['inter-reguler']">
-      {ShowAddmember && (
-        <AddMembers
-          GroupMemebers={groupData.members}
-          isOpen={ShowAddmember}
-          onClose={() => setShowAddmember(false)}
-        />
-      )}
-
-      <header className="sticky backdrop-blur-[10px] top-15 z-30 px-20 max-[420px]:px-1">
-        <div className="w-full px-4  mx-auto h-16 flex items-center justify-between">
+    <div className="space-y-8">
+      {/* Group Header Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
+        <div>
           <div className="flex items-center gap-3">
-            <Link href="/profile">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-zinc-400 hover:text-white"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-lg font-['inter-bold'] text-white">
-                {groupData.name}
-              </h1>
-              <p className="text-xs font-['inter-light-betaa'] text-zinc-400">
-                {groupData.members?.length || 0} members
-              </p>
-            </div>
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground">
+              {group?.name || 'Group Details'}
+            </h2>
+            <Badge variant="outline">
+              {group?.members?.length || 0} Members
+            </Badge>
           </div>
+          <p className="text-sm text-muted-foreground mt-1">
+            Created on {new Date(group?.createdAt).toLocaleDateString()}
+          </p>
+        </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={() => setAddExpenseOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" /> Add Expense
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => openSettlementFor()}
+            className="gap-2"
+          >
+            <DollarSign className="h-4 w-4" /> Settle Up
+          </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-zinc-400 hover:text-white"
+                className="text-destructive hover:bg-destructive/10"
               >
-                <MoreVertical className="w-5 h-5" />
+                <Trash2 className="h-4 w-4" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-56 bg-zinc-950 border-white/10 text-white font-['inter-reguler']"
-            >
-              {groupData.isActive &&
-              groupData.createdBy.toString() === UserData?._id.toString() ? (
-                <>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer font-['inter-bold']">
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit Group
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setShowAddmember(!ShowAddmember)}
-                    className="hover:bg-white/10 cursor-pointer font-['inter-bold']"
-                  >
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Add Member
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => setIsManageOpen(true)}
-                    className="hover:bg-white/10 cursor-pointer font-['inter-bold']"
-                  >
-                    <UserMinus className="w-4 h-4 mr-2" />
-                    Manage Members
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={deleteGroup}
-                    className="hover:bg-red-500/20 text-red-400 cursor-pointer font-['inter-bold']"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete Group
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                </>
-              ) : (
-                <>
-                  <DropdownMenuItem className="hover:bg-white/10 cursor-pointer font-['inter-bold']">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Group Info
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator className="bg-white/10" />
-                  <DropdownMenuItem
-                    onClick={handleleavegroup}
-                    className="hover:bg-red-500/20 text-red-400 cursor-pointer font-['inter-bold']"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Leave Group
-                  </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure you want to delete this group?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This operation is permanent. All expenses and settlement
+                  records in this group will be deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteGroup}
+                  className="bg-destructive text-destructive-foreground hover:opacity-90"
+                >
+                  Delete Group
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-      </header>
-
-      <div className="max-w-3xl mx-auto w-full px-4 py-4">
-        <Card className="bg-zinc-950 border-white/10 font-['inter-reguler']">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-['inter-bold'] text-zinc-400">
-                Overall Summary
-              </h2>
-              <Badge
-                variant="outline"
-                className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 font-['inter-bold']"
-              >
-                Active
-              </Badge>
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center">
-                <p className="text-xs font-['inter-light-betaa'] text-zinc-400 mb-1">
-                  Total Expense
-                </p>
-                <p className="text-lg font-['inter-bold'] text-white">
-                  PKR{' '}
-                  {expense
-                    .reduce((sum, exp) => sum + exp.totalAmount, 0)
-                    .toLocaleString()}
-                </p>
-              </div>
-              <div className="text-center border-x border-white/10">
-                <p className="text-xs font-['inter-light-betaa'] text-zinc-400 mb-1">
-                  You Get
-                </p>
-                <p className="text-lg font-['inter-bold'] text-emerald-400">
-                  PKR {calculateYouGet().toLocaleString()}
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-['inter-light-betaa'] text-zinc-400 mb-1">
-                  You Owe
-                </p>
-                <p className="text-lg font-['inter-bold'] text-red-400">
-                  PKR {calculateYouOwe().toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
-      <div className="max-w-3xl mx-auto w-full px-4 pb-4">
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          {!groupData.members ? (
-            <MembersListSkeleton />
+      {/* Debt Simplification & Settlement Matrix Banner */}
+      <Card className="border-border bg-card shadow-xs">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Scale className="h-5 w-5 text-foreground" />
+              <CardTitle className="text-base font-bold">
+                Suggested Minimal Settlements
+              </CardTitle>
+            </div>
+            <Badge variant="secondary" className="text-xs">
+              Total Expenses: {formatCurrency(summary?.totalExpenses || 0)}
+            </Badge>
+          </div>
+          <CardDescription className="text-xs">
+            Optimized minimal payment transactions required to zero out all
+            balances in this group.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {!summary?.suggestedSettlements ||
+          summary.suggestedSettlements.length === 0 ? (
+            <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 font-medium py-2">
+              <CheckCircle2 className="h-5 w-5" /> Everyone is completely
+              settled up in this group!
+            </div>
           ) : (
-            <MembersList groupData={groupData} />
+            <div className="space-y-3">
+              {summary.suggestedSettlements.map(
+                (s: SuggestedSettlement, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border border-border bg-muted/30"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8 border border-border">
+                        <AvatarImage src={s.fromAvatar} alt={s.fromUsername} />
+                        <AvatarFallback className="text-xs bg-muted">
+                          {s.fromUsername.substring(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        <span>{s.fromUsername}</span>
+                        <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                        <span>{s.toUsername}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end gap-3">
+                      <span className="text-base font-bold text-foreground">
+                        {formatCurrency(s.amount)}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => openSettlementFor(s)}
+                        className="h-8 text-xs gap-1"
+                      >
+                        Record Payment
+                      </Button>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
-        {!expense ? (
-          <ExpenseSkeleton />
-        ) : expense.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground py-10">
-            No expenses yet
-          </p>
-        ) : (
-          <ExpensesList expense={expense} />
-        )}
-      </div>
-      <div className="flex-1 max-w-3xl mx-auto w-full px-4 pb-28 space-y-3">
-        <p className="text-2xl text-white">Settlements</p>
-        <SettlementList user={UserData} settlements={settlements} />
-      </div>
+      {/* Group Detail Tabs */}
+      <Tabs defaultValue="expenses" className="w-full">
+        <TabsList className="bg-muted p-1">
+          <TabsTrigger value="expenses" className="gap-2">
+            <Receipt className="h-4 w-4" /> Expenses ({expenses.length})
+          </TabsTrigger>
+          <TabsTrigger value="balances" className="gap-2">
+            <Scale className="h-4 w-4" /> Member Balances
+          </TabsTrigger>
+          <TabsTrigger value="members" className="gap-2">
+            <Users className="h-4 w-4" /> Members ({group?.members?.length || 0}
+            )
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-[#08080B]/90 backdrop-blur-xl border-t border-white/10 z-40">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex gap-3">
-          <Dialog open={isExpenseOpen} onOpenChange={setIsExpenseOpen}>
-            <DialogTrigger asChild>
-              <Button className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm font-medium">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Expense
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                  <Receipt className="w-5 h-5" />
-                  Add Expense
-                </DialogTitle>
-              </DialogHeader>
-
-              <Form {...expenseForm}>
-                <form
-                  onSubmit={expenseForm.handleSubmit(onExpenseSubmit)}
-                  className="space-y-5 mt-4"
-                >
-                  <FormField
-                    control={expenseForm.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Amount (PKR)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0.00"
-                            className="bg-zinc-900 border-white/10 text-white h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={expenseForm.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Description
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="What was this for?"
-                            className="bg-zinc-900 border-white/10 text-white h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={expenseForm.control}
-                    name="paidBy"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Paid By
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value.toString()}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
-                              <SelectValue placeholder="Who paid?" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="bg-zinc-900 border-white/10">
-                            {groupData.members.map((member, index) => (
-                              <SelectItem
-                                key={index}
-                                value={member.userId as string}
-                                className="text-white text-sm"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="w-6 h-6">
-                                    {member.avatar === '' ? (
-                                      <AvatarFallback className="bg-zinc-800 text-xs">
-                                        {member.username
-                                          .charAt(0)
-                                          .toUpperCase()}
-                                      </AvatarFallback>
-                                    ) : (
-                                      <AvatarImage
-                                        src={member.avatar}
-                                        className="h-full w-full object-cover"
-                                      />
-                                    )}
-                                  </Avatar>
-                                  {member.userId === UserData?._id
-                                    ? 'You'
-                                    : member.username}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
-                      onClick={() => setIsExpenseOpen(false)}
+        {/* Expenses Tab */}
+        <TabsContent value="expenses" className="space-y-4">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Expense Log
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {expenses.length === 0 ? (
+                <div className="py-12 text-center text-sm text-muted-foreground space-y-3">
+                  <p>No expenses added to this group yet.</p>
+                  <Button
+                    onClick={() => setAddExpenseOpen(true)}
+                    className="gap-2"
+                  >
+                    <Plus className="h-4 w-4" /> Add First Expense
+                  </Button>
+                </div>
+              ) : (
+                <div className="divide-y divide-border">
+                  {expenses.map((exp: any) => (
+                    <div
+                      key={exp._id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between py-4 gap-3 first:pt-0 last:pb-0"
                     >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add
-                    </Button>
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-9 w-9 mt-0.5 border border-border">
+                          <AvatarImage
+                            src={exp.paidmemberAvatar}
+                            alt={exp.paidmemberUsername}
+                          />
+                          <AvatarFallback className="text-xs bg-muted">
+                            {exp.paidmemberUsername
+                              ? exp.paidmemberUsername.substring(0, 2)
+                              : 'M'}
+                          </AvatarFallback>
+                        </Avatar>
+
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">
+                            {exp.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Paid by{' '}
+                            <span className="font-medium">
+                              {exp.paidmemberUsername || 'Member'}
+                            </span>{' '}
+                            •{' '}
+                            {new Date(
+                              exp.date || exp.createdAt
+                            ).toLocaleDateString()}
+                          </p>
+                          {exp.splits && exp.splits.length > 0 && (
+                            <p className="text-[11px] text-muted-foreground mt-0.5">
+                              Split between {exp.splits.length} participants (
+                              {exp.splitType || 'EQUAL'})
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between sm:justify-end gap-3">
+                        <Badge variant="secondary" className="text-xs">
+                          {exp.category || 'General'}
+                        </Badge>
+                        <span className="text-base font-bold text-foreground">
+                          {formatCurrency(exp.totalAmount)}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Member Balances Tab */}
+        <TabsContent value="balances" className="space-y-4">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Individual Net Standings
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.values(summary?.memberSummaries || {}).map((m: any) => (
+                  <div
+                    key={m.userId}
+                    className="p-4 rounded-lg border border-border bg-muted/20 space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-8 w-8 border border-border">
+                          <AvatarImage src={m.avatar} alt={m.username} />
+                          <AvatarFallback className="text-xs bg-muted">
+                            {m.username.substring(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-bold text-foreground">
+                          {m.username}
+                        </span>
+                      </div>
+
+                      <div
+                        className={`text-sm font-bold ${
+                          m.netBalance > 0
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : m.netBalance < 0
+                              ? 'text-destructive'
+                              : 'text-muted-foreground'
+                        }`}
+                      >
+                        {m.netBalance > 0
+                          ? `gets back ${formatCurrency(m.netBalance)}`
+                          : m.netBalance < 0
+                            ? `owes ${formatCurrency(Math.abs(m.netBalance))}`
+                            : 'settled up'}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between text-xs text-muted-foreground border-t border-border/50 pt-2">
+                      <span>Total paid: {formatCurrency(m.totalPaid)}</span>
+                      <span>Total share: {formatCurrency(m.totalOwed)}</span>
+                    </div>
                   </div>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          <Dialog open={isSettlementOpen} onOpenChange={setIsSettlementOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex-1 border-zinc-700 text-zinc-800 hover:bg-zinc-800 hover:text-white h-10 text-sm font-medium"
-              >
-                <Wallet className="w-4 h-4 mr-2" />
-                Settlement
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md">
-              <DialogHeader>
-                <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                  <Send className="w-5 h-5" />
-                  Record Payment
-                </DialogTitle>
-              </DialogHeader>
-
-              <Form {...settlementForm}>
-                <form
-                  onSubmit={settlementForm.handleSubmit(onSettlementSubmit)}
-                  className="space-y-5 mt-4"
+        {/* Members Tab */}
+        <TabsContent value="members" className="space-y-4">
+          <Card className="border-border bg-card">
+            <CardHeader>
+              <CardTitle className="text-base font-semibold">
+                Group Roster
+              </CardTitle>
+              <CardDescription>
+                Members who can add and split expenses in this group
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Add Member inline form */}
+              <form onSubmit={handleAddMember} className="flex gap-2">
+                <Input
+                  placeholder="Enter email or username to add member..."
+                  value={memberInput}
+                  onChange={(e) => setMemberInput(e.target.value)}
+                  className="max-w-md text-sm"
+                />
+                <Button
+                  type="submit"
+                  disabled={addingMember}
+                  className="gap-1.5"
                 >
-                  <FormField
-                    control={settlementForm.control}
-                    name="memberId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Pay To
-                        </FormLabel>
+                  <UserPlus className="h-4 w-4" /> Add Member
+                </Button>
+              </form>
 
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="bg-zinc-900 border-white/10 text-white h-11">
-                              <SelectValue placeholder="Select member" />
-                            </SelectTrigger>
-                          </FormControl>
+              <div className="divide-y divide-border border-t border-border pt-4">
+                {group?.members?.map((m: any, idx: number) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-9 w-9 border border-border">
+                        <AvatarImage src={m.avatar} alt={m.username} />
+                        <AvatarFallback className="text-xs bg-muted">
+                          {m.username ? m.username.substring(0, 2) : 'M'}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          {m.username}
+                        </p>
+                      </div>
+                    </div>
 
-                          <SelectContent className="bg-zinc-900 border-white/10">
-                            {groupData.members
-                              .filter((m) => m.userId !== user?._id)
-                              .map((member) => (
-                                <SelectItem
-                                  key={member.userId?.toString()}
-                                  value={member.userId as string} // ✅ FIXED
-                                  className="text-white text-sm"
-                                >
-                                  <div className="flex items-center gap-2">
-                                    <Avatar className="w-6 h-6">
-                                      {member.avatar === '' ? (
-                                        <AvatarFallback className="bg-zinc-800 text-xs">
-                                          {member.username
-                                            .charAt(0)
-                                            .toUpperCase()}
-                                        </AvatarFallback>
-                                      ) : (
-                                        <AvatarImage
-                                          src={member.avatar}
-                                          className="h-full w-full object-cover"
-                                        />
-                                      )}
-                                    </Avatar>
-                                    {member.username}
-                                  </div>
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
+                    {m.isAdmin && (
+                      <Badge variant="outline" className="text-xs">
+                        Admin
+                      </Badge>
                     )}
-                  />
-
-                  <FormField
-                    control={settlementForm.control}
-                    name="amount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Amount (PKR)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="0.00"
-                            className="bg-zinc-900 border-white/10 text-white h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={settlementForm.control}
-                    name="note"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-zinc-400 text-sm">
-                          Note (Optional)
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="What's this for?"
-                            className="bg-zinc-900 border-white/10 text-white h-11"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-red-400 text-xs" />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="flex-1 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white h-10 text-sm"
-                      onClick={() => setIsSettlementOpen(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      className="flex-1 bg-zinc-100 text-black hover:bg-zinc-200 h-10 text-sm"
-                    >
-                      <CheckCircle2 className="w-4 h-4 mr-2" />
-                      Confirm
-                    </Button>
                   </div>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
-      <ManageMembers
-        isOpen={isManageOpen}
-        onClose={() => setIsManageOpen(false)}
-        members={groupData.members}
-        currentUserId="your-user-id"
-        onMemberDeleted={(deletedMemberId) =>
-          setgroupData((prev) => ({
-            ...prev,
-            members: prev.members.filter(
-              (m) => (m.userId?.toString() as string) !== deletedMemberId
-            ),
-          }))
-        }
+      {/* Modals */}
+      <AddExpenseModal
+        open={addExpenseOpen}
+        onOpenChange={setAddExpenseOpen}
+        groups={[group]}
+        defaultGroupId={groupID}
+        onExpenseAdded={fetchGroupData}
+      />
+
+      <SettleModal
+        open={settleOpen}
+        onOpenChange={setSettleOpen}
+        groupId={groupID}
+        groupMembers={group?.members || []}
+        suggestedSettlement={selectedSuggestedSettlement}
+        onSettlementRecorded={fetchGroupData}
       />
     </div>
   );

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 export async function getUserIdFromToken() {
   try {
     const cookiesStore = await cookies();
-    const token = cookiesStore.get('token')?.value;
+    const token = cookiesStore.get('splitly-token')?.value;
 
     if (!token) {
       throw new Error('No token found');

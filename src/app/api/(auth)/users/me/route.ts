@@ -14,7 +14,7 @@ function isJwtPayload(obj: unknown): obj is TokenPayload {
 export async function GET(req: NextRequest) {
   try {
     await ConnectDB();
-    const token = req.cookies.get('token')?.value;
+    const token = req.cookies.get('splitly-token')?.value;
 
     if (!token) {
       return NextResponse.json({ message: 'Token not found' }, { status: 401 });

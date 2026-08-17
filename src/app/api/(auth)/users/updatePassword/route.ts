@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 export async function POST(request: NextRequest) {
   try {
     const cookiesStore = await cookies();
-    const token = cookiesStore.get('token')?.value;
+    const token = cookiesStore.get('splitly-token')?.value;
 
     if (!token) {
       return NextResponse.json(
