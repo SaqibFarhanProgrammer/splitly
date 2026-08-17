@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findById(userid).select('+password');
 
-    if (!user) {
+    if (!user || !user.password) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
